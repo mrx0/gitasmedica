@@ -783,6 +783,8 @@
 							htelephoneo: $("#htelephoneo").val(),
 
                             email: $("#email").val(),
+                            no_sms: $("input[name=no_sms]:checked").val(),
+
                             inn: $("#inn").val(),
 
 							passport: $("#passport").val(),
@@ -879,6 +881,8 @@
 							htelephoneo: $("#htelephoneo").val(),
 
                             email: $("#email").val(),
+                            no_sms: $("input[name=no_sms]:checked").val(),
+
                             inn: $("#inn").val(),
 
 							passport: $("#passport").val(),
@@ -4150,6 +4154,7 @@
             client:$("#search_client").val(),
             //К кому запись
             worker:$("#search_client4").val(),
+            percent_cat:$("#percent_cat").val(),
             filial:$("#filial").val(),
 
             typeW:typeW,
@@ -4193,124 +4198,9 @@
                 //console.log(res);
                 $('#qresult').html(res);
 
-                /*if (res.result == "success") {
-                    //console.log(res.query);
-                    //console.log(res.data);
-
-                    $('#qresult').html('Всего: ' + res.data.length + '<br>' +
-					'Первичных: <span id="res_pervich">0</span><br>' +
-					'Ночных: <span id="res_noch">0</span><br>' +
-					'Страховых: <span id="res_insured">0</span><br>' +
-					'<span id="res_temp"></span><br>' +
-					'');
-
-                    var pervich = 0;
-                    var noch = 0;
-                    var insured = 0;
-
-                    var noch_pervich = 0;
-                    var noch_insured = 0;
-                    var insured_pervich = 0;
-
-                    //массив пациентов
-                    var clients_arr = [];
-
-                    res.data.forEach(function(element) {*/
-
-                        //showZapisRezult2($journal, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit, 0, true, false, $dop);
-
-						//Вывод на экран
-                        /*link = "showZapisRezult3.php";
-
-                        reqData = {
-                            data: element
-						};
-
-                        $.ajax({
-                            url: link,
-                            global: false,
-                            type: "POST",
-                            //dataType: "JSON",
-                            data: reqData,
-                            cache: false,
-                            //async: false,
-                            beforeSend: function() {
-                                //$('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-                            },
-                            success:function(res){
-                            	//console.log(res);
-
-                                $('#res_temp').append(res);
-                            }
-                        });*/
-
-                        //$('#qresult').append(element.id + '<br>');
-
-                /*        if (element.pervich == 1) {
-                            pervich++;
-                        }
-						if (element.noch == 1){
-							noch++
-
-							if (element.pervich == 1){
-                                noch_pervich++;
-							}
-							if (element.insured == 1){
-                                noch_insured++;
-							}
-						}
-						if (element.insured == 1) {
-                            insured++;
-
-                            if (element.pervich == 1){
-                                insured_pervich++;
-                            }
-                        }*/
-                        //console.log(element.patient);
-
-                        //Хочу собрать массив пациентов
-                        //console.log(clients_arr.indexOf(element.patient));
-
-                /*        if (clients_arr.indexOf(element.patient) == -1) {
-                            clients_arr.push(element.patient);
-                        }else{
-
-                        }
-
-                    });
-                    console.log(clients_arr.length);
-
-                    $('#res_pervich').html(pervich);
-                    $('#res_noch').html(noch);
-                    $('#res_insured').html(insured);
-
-                    if (noch_pervich != 0){
-                        $('#res_noch').append('. Из них первичные: ' + noch_pervich);
-					}
-                    if (noch_insured != 0){
-                        $('#res_noch').append('. Из них страховые: ' + noch_insured);
-					}
-                    if (insured_pervich != 0){
-                        $('#res_insured').append('. Из них первичные: ' + insured_pervich);
-					}*/
-
-                    //console.log('Done');
-
                     blockWhileWaiting (false);
-
-
-
                     //Показываем график
-                	showChart ();
-
-                    //$('#qresult').html('Ok');
-
-                /*} else {
-                    $('#qresult').html(res.data);
-
-                    blockWhileWaiting (false);
-                }
-*/
+                	//showChart ();
 
             }
         })

@@ -299,6 +299,18 @@ ORDER BY `name`;
 									</div>
 								</div>';
 
+                if ($client_j['no_sms'] == 1) {
+                    echo '
+								<div class="cellsBlock2">
+									
+									<div class="cellRight" style="color: red; font-size: 80%;">
+                                        Отказ от рассылки';
+
+                    echo '
+									</div>
+								</div>';
+                }
+
                 echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Email</div>

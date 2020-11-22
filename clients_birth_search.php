@@ -33,7 +33,7 @@
 
             $msql_cnnct = ConnectToDB ('config');
 
-            $query = "SELECT * FROM `spr_clients` WHERE MONTH(`birthday2`) = '{$month}' AND `birthday` <> '-1577934000' AND `birthday` <> '-1577923200'  ORDER BY `full_name` ASC";
+            $query = "SELECT * FROM `spr_clients` WHERE MONTH(`birthday2`) = '{$month}' AND `birthday` <> '-1577934000' AND `birthday` <> '-1577923200' AND `no_sms`<>'1'  ORDER BY `full_name` ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -77,7 +77,7 @@
 				
 					<div id="data">
 					    <span>
-					    Всего: '.$number.'
+					    Всего: '.$number.' (только те, у кого не запрещена рассылка)
 					    </span>
                         <table>
 							<tr class="cellsBlock" style="font-weight:bold;">	

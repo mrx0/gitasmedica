@@ -361,7 +361,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 $rez_str_fio .= '
                                     <tr style="background-color: rgba(225, 226, 110, 0.2);">
                                         <td></td>
-                                        <td><b><a href="invoice.php?id='.$rezult_arr_time['id'].'" class="ahref">'.date('d.m.y' ,strtotime($fio_time)).'</a></b></td>
+                                        <td><b><a href="invoice.php?id='.$rezult_arr_time['id'].'" class="ahref" target="_blank" rel="nofollow noopener">'.date('d.m.y' ,strtotime($fio_time)).'</a></b></td>
                                         <td style="font-weight: bold;">'. WriteSearchUser('spr_workers', $rezult_arr_time['worker_id'], 'user', true).'</td>
                                         <td colspan="3">';
 

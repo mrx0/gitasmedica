@@ -649,30 +649,30 @@
 	}
 	
 	//Вставка и обновление списка пациентов из-под Web
-	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $fo, $io, $oo, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $htelephone, $telephoneo, $htelephoneo, $email, $inn, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $polisdata, $insurecompany){
+	function WriteClientToDB_Edit ($session_id, $name, $full_name, $f, $i, $o, $fo, $io, $oo, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $htelephone, $telephoneo, $htelephoneo, $email, $inn, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $polisdata, $insurecompany, $no_sms){
 
 	    $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 
 		$query = "INSERT INTO `spr_clients` (
-			`name`, `full_name`, `f`, `i`, `o`, `fo`, `io`, `oo`, `comment`, `card`, `sex`, `birthday`, `birthday2`, `telephone`, `htelephone`, `telephoneo`, `htelephoneo`, `email`, `inn`, `passport`, `alienpassportser`, `alienpassportnom`, `passportvidandata`, `passportvidankem`, `address`, `polis`, `polisdata`, `insure`, `therapist`, `therapist2`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`)
+			`name`, `full_name`, `f`, `i`, `o`, `fo`, `io`, `oo`, `comment`, `card`, `sex`, `birthday`, `birthday2`, `telephone`, `htelephone`, `telephoneo`, `htelephoneo`, `email`, `no_sms`, `inn`, `passport`, `alienpassportser`, `alienpassportnom`, `passportvidandata`, `passportvidankem`, `address`, `polis`, `polisdata`, `insure`, `therapist`, `therapist2`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`)
 			VALUES (
-			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$fo}', '{$io}', '{$oo}', '{$comment}', '{$card}', '{$sex}', '{$birthday}', '{$birthday2}', '{$telephone}', '{$htelephone}', '{$telephoneo}', '{$htelephoneo}', '{$email}', '{$inn}', '{$passport}', '{$alienpassportser}', '{$alienpassportnom}', '{$passportvidandata}', '{$passportvidankem}', '{$address}', '{$polis}', '{$polisdata}', '{$insurecompany}', '{$therapist}', '{$therapist2}', '{$time}', '{$session_id}', '0', '0') ";
+			'{$name}', '{$full_name}', '{$f}', '{$i}', '{$o}', '{$fo}', '{$io}', '{$oo}', '{$comment}', '{$card}', '{$sex}', '{$birthday}', '{$birthday2}', '{$telephone}', '{$htelephone}', '{$telephoneo}', '{$htelephoneo}', '{$email}', '{$no_sms}', '{$inn}', '{$passport}', '{$alienpassportser}', '{$alienpassportnom}', '{$passportvidandata}', '{$passportvidankem}', '{$address}', '{$polis}', '{$polisdata}', '{$insurecompany}', '{$therapist}', '{$therapist2}', '{$time}', '{$session_id}', '0', '0') ";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
 		//логирование
-		AddLog (GetRealIp(), $session_id, '', 'Добавлен пациент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Телефон: ['.$telephone.']. Телефон2: ['.$htelephone.'].  Email: ['.$email.'].  ИНН: ['.$inn.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата полиса ['.$polisdata.']. Страховая компания ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен пациент. ['.date('d.m.y H:i', $time).']. ['.$full_name.']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Пол: ['.$sex.']. Дата рождения: ['.$birthday.']. Телефон: ['.$telephone.']. Телефон2: ['.$htelephone.'].  Email: ['.$email.'].  Не делать рассылку: ['.$no_sms.'].  ИНН: ['.$inn.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата полиса ['.$polisdata.']. Страховая компания ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 		
 		return ($mysql_insert_id);
 	}
 	
 	
 	//Обновление карточки пациента из-под Web
-	function WriteClientToDB_Update ($session_id, $id, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $email, $inn, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $fo, $io, $oo, $htelephone, $telephoneo, $htelephoneo, $polisdata, $insurecompany){
+	function WriteClientToDB_Update ($session_id, $id, $comment, $card, $therapist, $therapist2, $birthday, $birthday2, $sex, $telephone, $email, $inn, $passport, $alienpassportser, $alienpassportnom, $passportvidandata, $passportvidankem, $address, $polis, $fo, $io, $oo, $htelephone, $telephoneo, $htelephoneo, $polisdata, $insurecompany, $no_sms){
 
 	    $old = '';
 
@@ -694,12 +694,12 @@
 
 		$time = time();
 
-		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `birthday2`='{$birthday2}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `email`='{$email}', `inn`='{$inn}', `passport`='{$passport}', `alienpassportser`='{$alienpassportser}', `alienpassportnom`='{$alienpassportnom}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}', `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `fo`='{$fo}', `io`='{$io}', `oo`='{$oo}', `htelephone`='{$htelephone}', `telephoneo`='{$telephoneo}', `htelephoneo`='{$htelephoneo}', `polisdata`='{$polisdata}', `insure`='{$insurecompany}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_clients` SET `sex`='{$sex}', `birthday`='{$birthday}', `birthday2`='{$birthday2}', `therapist`='{$therapist}', `therapist2`='{$therapist2}', `comment`='{$comment}', `card`='{$card}', `telephone`='{$telephone}', `email`='{$email}', `no_sms`='{$no_sms}', `inn`='{$inn}', `passport`='{$passport}', `alienpassportser`='{$alienpassportser}', `alienpassportnom`='{$alienpassportnom}', `passportvidandata`='{$passportvidandata}', `passportvidankem`='{$passportvidankem}', `address`='{$address}', `polis`='{$polis}', `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `fo`='{$fo}', `io`='{$io}', `oo`='{$oo}', `htelephone`='{$htelephone}', `telephoneo`='{$telephoneo}', `htelephoneo`='{$htelephoneo}', `polisdata`='{$polisdata}', `insure`='{$insurecompany}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 		//логирование
-		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Email: ['.$email.']. ИНН: ['.$inn.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата ['.$polisdata.']. Страховая ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
+		AddLog (GetRealIp(), $session_id, $old, 'Отредактирован пациент ['.$id.']. ['.date('d.m.y H:i', $time).']. Комментарий: ['.$comment.']. Карта: ['.$card.']. Дата рождения: ['.$birthday.']. Пол: ['.$sex.']. Телефон: ['.$telephone.']. Email: ['.$email.']. Не делать рассылку: ['.$no_sms.'].  ИНН: ['.$inn.']. Серия/номер паспорта ['.$passport.']. Серия/номер паспорта (иностр.) ['.$alienpassportser.'/'.$passportvidandata.']. Дата выдачи ['.$passportvidandata.']. Выдан кем ['.$passportvidankem.']. Адрес ['.$address.']. Полис ['.$polis.']. Дата ['.$polisdata.']. Страховая ['.$insurecompany.']. Лечащий врач [стоматология]: ['.$therapist.']. Лечащий врач [косметология]: ['.$therapist2.']');
 	}
 
 	//Удаление(блокировка) карточки пациента из-под Web
@@ -1547,7 +1547,7 @@
         $msql_cnnct = ConnectToDB ();
 		
 		$query = "SELECT * FROM `$datatable`".$q;
-		//echo $query;
+		//var_dump($query);
 
 		//$res = mysql_query($query) or die(mysql_error().' -> '.$query);
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

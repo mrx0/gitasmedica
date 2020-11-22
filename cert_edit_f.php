@@ -34,16 +34,21 @@
                     if ($number != 0) {
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Сертификат с таким номером уже присутствует в базе.</div>'));
                     } else {
-                        $time = date('Y-m-d H:i:s', time());
+                        if (mb_strlen($_POST['num']) <= 2) {
+                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Номер должен содержать минимум 3 символа.</div>'));
+                        }else {
 
-                        //Обновляем
-                        $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `num`='{$_POST['num']}', `nominal`='{$_POST['nominal']}' WHERE `id`='{$_POST['cert_id']}'";
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                            $time = date('Y-m-d H:i:s', time());
 
-                        //логирование
-                        AddLog (GetRealIp(), $_SESSION['id'], $old, 'Изменён сертификат ['.$_POST['cert_id'].']. ['.$time.']. Номер ['.$_POST['num'].']. Номинал: ['.$_POST['nominal'].'].');
+                            //Обновляем
+                            $query = "UPDATE `journal_cert` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `num`='{$_POST['num']}', `nominal`='{$_POST['nominal']}' WHERE `id`='{$_POST['cert_id']}'";
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
-                        echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="certificate.php?id=' . $_POST['cert_id'] . '" class="ahref">Сертификат</a> обновлён.</div>'));
+                            //логирование
+                            AddLog(GetRealIp(), $_SESSION['id'], $old, 'Изменён сертификат [' . $_POST['cert_id'] . ']. [' . $time . ']. Номер [' . $_POST['num'] . ']. Номинал: [' . $_POST['nominal'] . '].');
+
+                            echo json_encode(array('result' => 'success', 'data' => '<div class="query_ok"><a href="certificate.php?id=' . $_POST['cert_id'] . '" class="ahref">Сертификат</a> обновлён.</div>'));
+                        }
                     }
 
                 }else{

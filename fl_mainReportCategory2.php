@@ -22,7 +22,7 @@
 				echo '
                     <div`> 
 					<header style="margin-bottom: 5px;">
-						<h1>Отчёт по категориям</h1>
+						<h1>Отчёт по категориям (общее соотношение)</h1>
 					</header>
 					<ul style="margin-left: 6px; margin-bottom: 2px;">
 						<li style="width: auto; color:#777; font-size: 90%;">

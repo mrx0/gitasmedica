@@ -8,7 +8,7 @@
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		if (($zapis['see_all'] == 1) || ($zapis['see_own'] == 1) || $god_mode){
+		if (($zapis['see_all'] == 1) || $god_mode){
 
             include_once 'functions.php';
 

@@ -69,7 +69,7 @@
         $query = "SELECT jann.*, jannrm.status AS read_status
         FROM `journal_announcing_readmark` jannrm
         RIGHT JOIN (
-          SELECT * FROM `journal_announcing` j_ann  WHERE j_ann.status <> '9' AND (j_ann.type = '1' OR j_ann.type = '4' OR j_ann.type = '5')
+          SELECT * FROM `journal_announcing` j_ann  WHERE j_ann.status <> '9' AND (j_ann.type = '1' OR j_ann.type = '2' OR j_ann.type = '3' OR j_ann.type = '4' OR j_ann.type = '5')
           {$query_dop}
         ) jann ON jann.id = jannrm.announcing_id
         AND jannrm.create_person = '{$_SESSION['id']}'
@@ -119,22 +119,24 @@
                         $topicTheme = 'Объявление';
                     }
                 }
-//                if ($announcing['type'] == 2){
-//                    $annColor = '73, 208, 183';
-//                    $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
-//                    $annColorAlpha = '0.35';
-//                    if ($topicTheme == ''){
-//                        $topicTheme = 'Обновление';
-//                    }
-//                }
-//                if ($announcing['type'] == 3){
-//                    $annColor = '21, 209, 33';
-//                    $annIco = '<i class="fa fa-book" aria-hidden="true"></i>';
-//                    $annColorAlpha = '0.35';
-//                    if ($topicTheme == ''){
-//                        $topicTheme = 'Инструкция';
-//                    }
-//                }
+
+                if ($announcing['type'] == 2){
+                    $annColor = '252, 255, 51';
+                    $annIco = '<i class="fa fa-refresh" aria-hidden="true"></i>';
+                    $annColorAlpha = '0.35';
+                    if ($topicTheme == ''){
+                        $topicTheme = 'Обновление';
+                    }
+                }
+
+                if ($announcing['type'] == 3){
+                    $annColor = '252, 255, 51';
+                    $annIco = '<i class="fa fa-book" aria-hidden="true"></i>';
+                    $annColorAlpha = '0.35';
+                    if ($topicTheme == ''){
+                        $topicTheme = 'Инструкция';
+                    }
+                }
 
                 if ($announcing['type'] == 4){
                     $annColor = '21, 209, 33';
@@ -246,7 +248,7 @@
                 //var_dump($announcing['read_status']);
 
 
-                if ($announcing['type'] == 1){
+                if (($announcing['type'] == 1) || ($announcing['type'] == 2) || ($announcing['type'] == 3)){
                     $news_str .= $temp_str;
                 }
                 if ($announcing['type'] == 4){
@@ -407,7 +409,7 @@
                 <tr>
                     <td colspan="2" style="text-align: center; width: 100%; border:1px solid #BFBCB5;">
                         <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(233 255 0); color: rgb(39, 0, 255); margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
-                            <i>Объявления</i>
+                            <i>Объявления / обновления</i>
                         </div>
                         <div style="height: 350px; max-height: 350px; overflow-y: scroll; text-align: center;">
                             '.$news_str.'

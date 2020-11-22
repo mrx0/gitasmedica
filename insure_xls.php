@@ -8,11 +8,43 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 		if (($spravka['see_all'] == 1) || $god_mode){
-			
+
+            //include_once 'DBWork.php';
+            include_once('DBWorkPDO.php');
+            include_once 'functions.php';
+
+            //Деление на странички пагинатор paginator
+            $limit_pos[0] = 0;
+            $limit_pos[1] = 30;
+            $pages = 0;
+            $dop = '';
+            $dop_link_str = '';
+
+            //Для выделения кнопки
+            $option1_color = 'background-color: #fff261;';
+            $option2_color = '';
+            $option3_color = '';
+            $option4_color = '';
+            $option5_color = '';
+
+            $current_page = '';
+
+            if (isset($_GET['page'])){
+                $limit_pos[0] = ($_GET['page']-1) * $limit_pos[1];
+                $current_page = 'page='.$_GET['page'];
+            }else{
+                $_GET['page'] = 1;
+            }
+
 			echo '
 				<header>
 					<h1>Выгрузки по страховым</h1>
 				</header>';
+
+            $msql_cnnct = ConnectToDB ();
+
+            //Пагинатор
+            echo paginationCreate ($limit_pos[1], $_GET['page'], 'journal_insure_download', 'insure_xls.php', $msql_cnnct, $dop, $dop_link_str);
 
 			echo '
 						<!--<p style="margin: 5px 0; padding: 2px;">
@@ -31,17 +63,24 @@
 							<div class="cellText" style="text-align: center;">Комментарий</div>
 							<div class="cellOffice" style="text-align: center;">Ссылка</div>
 						</li>';
-			
-			include_once 'DBWork.php';
-			include_once 'functions.php';
 
-			$insure_xls_j = SelDataFromDB('journal_insure_download', '', '');
-			//var_dump ($insure_xls_j);
+//            $insure_xls_j = SelDataFromDB('journal_insure_download', '', '');
+            //var_dump ($insure_xls_j);
+
+            $db = new DB();
+
+            $args = [
+
+            ];
+
+            $query = "SELECT * FROM `journal_insure_download` ORDER BY `id` DESC LIMIT {$limit_pos[0]}, {$limit_pos[1]}";
+
+            $insure_xls_j = $db::getRows($query, $args);
 
             $deleted_str = '';
             $non_exist_str = '';
 
-			if ($insure_xls_j !=0){
+			if (!empty($insure_xls_j)){
 				for ($i = 0; $i < count($insure_xls_j); $i++) {
 
 				    $path = 'download\insure_xls'.'\\'.$insure_xls_j[$i]['id'].'.xls';
