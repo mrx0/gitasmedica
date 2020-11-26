@@ -38,6 +38,7 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat2.php" class="b3">Пропавшая первичка</a>
 							</li>';
+
 			/*echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_stomat3.php" class="b3">Выборка</a>
@@ -107,7 +108,15 @@
 								<a href="phone_calls.php" class="b3">Статистика звонков</a>
 							</li>';
 
-			echo '
+            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_lost_pervich.php" class="b3">Пропавшая первичка v2.0</a>
+							</li>';
+            }
+
+
+            echo '
 						</ul>';
             if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
 

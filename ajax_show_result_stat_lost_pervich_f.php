@@ -330,7 +330,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         WHERE ji.status <> '9'
                         AND 
                         CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) BETWEEN :start_time AND :end_time
-                        AND (z.enter = '1' OR z.enter = '6') 
+                        AND (z.enter = '1'/* OR z.enter = '6'*/) 
                         {$filial_str}
                         {$type_str}
                         ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) DESC";
@@ -339,7 +339,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     $journal_j = $db::getRows($query, $args);
 
-                    var_dump($journal_j);
+                    //var_dump($journal_j);
 
 
                     //Типы посещений - первичка/нет (количество) (pervich)
