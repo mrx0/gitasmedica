@@ -26,7 +26,7 @@
 				echo '
                     <div class="no_print"> 
 					<header style="margin-bottom: 5px;">
-						<h1>Поиск тех, у кого была консультация и они больше не пришли</h1>
+						<h1>Пропавшая первичка v2.0</h1>
 					</header>
 					</div>';
 

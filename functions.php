@@ -234,7 +234,7 @@
 					}
 				}else{
 					if ($link){
-						return '<a href="'.$uri.'?id='.$sw.'" class="ahref">'.$user[0]['name'].'</a>'.$info_str;
+						return '<a href="'.$uri.'?id='.$sw.'" class="ahref" target="_blank" rel="nofollow noopener">'.$user[0]['name'].'</a>'.$info_str;
 					}else{
 						return $user[0]['name'].''.$info_str.'';
 					}
@@ -1110,10 +1110,11 @@
 
             return $exist;
 
+			CloseDB($msql_cnnct);
 
         }
 
-        CloseDB($msql_cnnct);
+
 
         return $exist;
 	}

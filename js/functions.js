@@ -3073,6 +3073,7 @@
 
     //Выборка тех, у кого была консультация и они больше не пришли
     function Ajax_show_result_stat_lost_pervich(){
+        $('#q2result').html('');
 
         let typeW = document.querySelector('input[name="typeW"]:checked').value;
 
@@ -3221,7 +3222,7 @@
             },
             success:function(data){
                 $('#qresult').html(data);
-                $('#q2result').html('');
+                //$('#q2result').html('');
 
                 Ajax_show_result_stat_lost_pervich_analiz();
             }
@@ -3230,10 +3231,42 @@
 
     //Функция анализа записей первичек
     function Ajax_show_result_stat_lost_pervich_analiz(){
+
         $(".zapis_id").each(function(){
             //console.log($(this).val());
 
-            getInvoiceByZapis($(this).val());
+            let zapis_id = $(this).val();
+
+            let link = "lost_pervich_analiz.php";
+
+            let reqData = {
+                zapis_id: zapis_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                //dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+                    //  $('#q2result').append(zapis_id);
+                    // $('#q2result').append(res);
+
+                    //console.log(res.data);
+
+                    getInvoiceByZapis(res);
+
+                    $('#q2result').html('');
+                }
+            })
+
+
         })
 
     }
