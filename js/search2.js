@@ -2,13 +2,6 @@ $(function(){
 	    
 	//Живой поиск
 	$('.who2').bind("change keyup input click", function() {
-
-        // if(this.value.length > 0){
-        //     $(".button_in_input").show();
-        // }else {
-        //     $(".button_in_input").hide();
-        // }
-
 		if(this.value.length > 2){
 			$.ajax({
 				url: "FastSearchNameW.php", //Путь к обработчику
@@ -41,11 +34,10 @@ $(function(){
         //s_user = $(this).text();
         //Теперь так, потому что добавили должность во вложенном тэге, поэтому стараемся брать только текст без вложенных тэгов, пример !!!
         s_user = this.firstChild.textContent;
+		//console.log(s_user);
 
 		$(".who2").val(s_user);
-
         //$(".who").val(s_user).attr('disabled', 'disabled'); //деактивируем input, если нужно
-
         $(".search_result2").fadeOut();
 
     });

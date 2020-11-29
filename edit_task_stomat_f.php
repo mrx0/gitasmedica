@@ -198,9 +198,9 @@
 							$time = time();
 							$query = "
 									INSERT INTO `notes` (
-										`description`, `dtable`, `client`, `task`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `dead_line`, `closed`) 
+										`type`, `description`, `dtable`, `client`, `task`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `dead_line`, `closed`) 
 									VALUES (
-										'{$_POST['add_notes_type']}', 'journal_tooth_status', '{$_POST['client']}', '{$_POST['id']}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', {$dead_line}, 0) ";
+										'5', '{$_POST['add_notes_type']}', 'journal_tooth_status', '{$_POST['client']}', '{$_POST['id']}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', {$dead_line}, 0) ";
 							//echo $query.'<br />';
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -236,9 +236,9 @@
                                         $time = time();
                                         $query = "
                                                 INSERT INTO `removes` (
-                                                    `description`, `dtable`, `client`, `task`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `whom`, `closed`) 
+                                                    `type`, `description`, `dtable`, `client`, `task`, `create_time`, `create_person`, `last_edit_time`, `last_edit_person`, `whom`, `closed`) 
                                                 VALUES (
-                                                    '{$val}', 'journal_tooth_status', '{$_POST['client']}', '{$_POST['id']}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', {$RemWorker}, 0) ";
+                                                   '5', '{$val}', 'journal_tooth_status', '{$_POST['client']}', '{$_POST['id']}', '{$time}', '{$_SESSION['id']}', '{$time}', '{$_SESSION['id']}', {$RemWorker}, 0) ";
                                         //echo $query.'<br />';
 
                                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);

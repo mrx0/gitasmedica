@@ -11,6 +11,8 @@
 		if (($stom['edit'] == 1) || $god_mode){
 			if ($_GET){
 
+                include_once('DBWorkPDO.php');
+
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 
@@ -562,21 +564,10 @@
 										
 												<select name="add_notes_type" id="add_notes_type">
 													<option value="0" selected>Выберите</option>';
-                            foreach ($for_notes as $for_notes_id =>  $for_notes_descr){
+                            foreach ($for_notes[5] as $for_notes_id =>  $for_notes_descr){
                                 echo '<option value="'.$for_notes_id.'">'.$for_notes_descr.'</option>';
                             }
 
-                            /*echo '
-													<option value="1">Каласепт, Метапекс, Септомиксин (Эндосольф)</option>
-													<option value="2">Временная пломба</option>
-													<option value="3">Открытый зуб</option>
-													<option value="4">Депульпин</option>
-													<option value="5">Распломбирован под вкладку (вкладка)</option>
-													<option value="6">Имплантация (ФДМ ,  абатмент, временная коронка на импланте)</option>
-													<option value="7">Временная коронка</option>
-													<option value="10">Установлены брекеты</option>
-													<option value="8">Санированные пациенты ( поддерживающее лечение через 6 мес)</option>
-													<option value="9">Прочее</option>';*/
                             echo '
 												</select>
 											
@@ -607,9 +598,31 @@
 						}
 
                         //Направления
-						$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
+						//$removes = SelDataFromDB ('removes', $task[0]['id'], 'task');
+						//var_dump($removes);
+
+
+                        //Направления
+                        //!!! Привести к одному виду с напоминаниями получение данных
+                        $removes = array();
+
+                        $args = [
+                            'task' => $task[0]['id']
+                        ];
+
+                        $query = "SELECT r.*, s_c.name, s_w.name AS w_name FROM `removes` r 
+                            RIGHT JOIN `spr_clients` s_c 
+                            ON s_c.id = r.client  
+                            RIGHT JOIN `spr_workers` s_w
+                            ON s_w.id = r.create_person 
+                            WHERE r.task = :task
+                            ORDER BY r.create_time DESC";
+
+                        //Выбрать все
+                        $removes = $db::getRows($query, $args);
 
 						echo WriteRemoves($removes, 0, 0, false, $finances);
+
 						echo '
 							<div class="cellsBlock3">
 								<div class="cellLeft">
@@ -1123,50 +1136,50 @@
 	
 				};
 					
-				$(function(){
-						
-					//Живой поиск
-					$(\'.who3\').bind("change keyup input click", function() {
-						//alert(123);
-						if(this.value.length > 2){
-							$.ajax({
-								url: "FastSearchNameW.php", //Путь к обработчику
-								//statbox:"status",
-								type:"POST",
-								data:
-								{
-									\'searchdata3\':this.value
-								},
-								response: \'text\',
-								success: function(data){
-									$(".search_result3").html(data).fadeIn(); //Выводим полученые данные в списке
-								}
-							})
-						}else{
-							var elem1 = $("#search_result3"); 
-							elem1.hide(); 
-						}
-					})
-						
-					$(".search_result3").hover(function(){
-						$(".who3").blur(); //Убираем фокус с input
-					})
-						
-					//При выборе результата поиска, прячем список и заносим выбранный результат в input
-					$(".search_result3").on("click", "li", function(){
-						s_user = $(this).text();
-						$(".who3").val(s_user);
-						//$(".who").val(s_user).attr(\'disabled\', \'disabled\'); //деактивируем input, если нужно
-						$(".search_result3").fadeOut();
-					})
-					//Если click за пределами результатов поиска - убираем эти результаты
-					$(document).click(function(e){
-						var elem = $("#search_result3"); 
-						if(e.target!=elem[0]&&!elem.has(e.target).length){
-							elem.hide(); 
-						} 
-					})
-				})
+//				$(function(){
+//						
+//					//Живой поиск
+//					$(\'.who3\').bind("change keyup input click", function() {
+//						//alert(123);
+//						if(this.value.length > 2){
+//							$.ajax({
+//								url: "FastSearchNameW.php", //Путь к обработчику
+//								//statbox:"status",
+//								type:"POST",
+//								data:
+//								{
+//									\'searchdata3\':this.value
+//								},
+//								response: \'text\',
+//								success: function(data){
+//									$(".search_result3").html(data).fadeIn(); //Выводим полученые данные в списке
+//								}
+//							})
+//						}else{
+//							var elem1 = $("#search_result3"); 
+//							elem1.hide(); 
+//						}
+//					})
+//						
+//					$(".search_result3").hover(function(){
+//						$(".who3").blur(); //Убираем фокус с input
+//					})
+//						
+//					//При выборе результата поиска, прячем список и заносим выбранный результат в input
+//					$(".search_result3").on("click", "li", function(){
+//						s_user = $(this).text();
+//						$(".who3").val(s_user);
+//						//$(".who").val(s_user).attr(\'disabled\', \'disabled\'); //деактивируем input, если нужно
+//						$(".search_result3").fadeOut();
+//					})
+//					//Если click за пределами результатов поиска - убираем эти результаты
+//					$(document).click(function(e){
+//						var elem = $("#search_result3"); 
+//						if(e.target!=elem[0]&&!elem.has(e.target).length){
+//							elem.hide(); 
+//						} 
+//					})
+//				})
 					
 					
 					
