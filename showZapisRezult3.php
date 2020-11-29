@@ -363,7 +363,7 @@
                                         $rezult .= '
                                                         <li>
                                                             <div>
-                                                                <a href="add_task_stomat.php?client=' . $data['patient'] . '&filial=' . $data['office'] . '&insured=' . $data['insured'] . '&pervich=' . $data['pervich'] . '&noch=' . $data['noch'] . '&date=' . strtotime($data['day'] . '.' . $month . '.' . $data['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $data['id'] . '&worker=' . $data['worker'] . '" class="ahref">
+                                                                <a href="add_task_stomat.php?client=' . $data['patient'] . '&filial=' . $data['office'] . '&insured=' . $data['insured'] . '&pervich=' . $data['pervich'] . '&noch=' . $data['noch'] . '&date=' . strtotime($data['day'] . '.' . $month . '.' . $data['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&zapis_id=' . $data['id'] . '&worker=' . $data['worker'] . '" class="ahref">
                                                                     Внести Осмотр/Зубную формулу
                                                                 </a>
                                                             </div>
@@ -373,7 +373,7 @@
                                         $rezult .= '
                                                         <li>
                                                             <div>
-                                                                <a href="add_task_cosmet.php?client=' . $data['patient'] . '&filial=' . $data['office'] . '&insured=' . $data['insured'] . '&pervich=' . $data['pervich'] . '&noch=' . $data['noch'] . '&date=' . strtotime($data['day'] . '.' . $month . '.' . $data['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $data['id'] . '&worker=' . $data['worker'] . '" class="ahref">
+                                                                <a href="add_task_cosmet.php?client=' . $data['patient'] . '&filial=' . $data['office'] . '&insured=' . $data['insured'] . '&pervich=' . $data['pervich'] . '&noch=' . $data['noch'] . '&date=' . strtotime($data['day'] . '.' . $month . '.' . $data['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&zapis_id=' . $data['id'] . '&worker=' . $data['worker'] . '" class="ahref">
                                                                     Внести посещение косм.
                                                                 </a>
                                                             </div>

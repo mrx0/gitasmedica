@@ -11,25 +11,55 @@
 		//var_dump($permissions);
 		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
 			if ($_GET){
+                include_once('DBWorkPDO.php');
 				include_once 'DBWork.php';
 				include_once 'functions.php';
+
+                include_once 'showZapisRezult.php';
+
+                $db = new DB();
 				
 				$task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'task_cosmet');
 				//var_dump($task);
 				
 				//$closed = FALSE;
-				
+
 				if ($task !=0){
-					if ($task[0]['office'] == 99){
-						$office = 'Во всех';
-					}else{
-						$offices = SelDataFromDB('spr_filials', $task[0]['office'], 'offices');
-						//var_dump ($offices);
-						$office = $offices[0]['name'];
-						
-						$actions_cosmet = SelDataFromDB('actions_cosmet', '', '');
-						//var_dump ($actions_cosmet);
-					}	
+//					if ($task[0]['office'] == 99){
+//						$office = 'Во всех';
+//					}else{
+//						$offices = SelDataFromDB('spr_filials', $task[0]['office'], 'offices');
+//						//var_dump ($offices);
+//						$office = $offices[0]['name'];
+//
+//
+//					}
+//
+                    $zapis_id = $task[0]['zapis_id'];
+
+                    $args = [
+                        'zapis_id' => $zapis_id
+                    ];
+
+                    //Получаем данные по записи
+                    $query = "SELECT * FROM `zapis` WHERE `id`=:zapis_id LIMIT 1";
+
+                    //Выбрать все
+                    $sheduler_zapis = $db::getRows($query, $args);
+                    //var_dump($sheduler_zapis);
+
+                    //Если запись есть (а она должна быть, если ЗФ не очень старая, ведь раньше записи не было)
+                    if (!empty($sheduler_zapis)) {
+                        $client_id = $sheduler_zapis[0]['patient'];
+                        $filial_id = $sheduler_zapis[0]['office'];
+                    }else{
+                        $client_id = $task[0]['client'];
+                        $filial_id = $task[0]['office'];
+                    }
+
+					$actions_cosmet = SelDataFromDB('actions_cosmet', '', '');
+                    //var_dump ($actions_cosmet);
+
 					echo '
 						<div id="status">
 							<header>
@@ -58,6 +88,9 @@
                     echo '
 							</header>';
 
+                    //Показываем карточку записи
+                    echo showZapisRezult($sheduler_zapis, false, false, false, false, false, false, 0, false, false);
+
 					echo '
 							<div id="data">';
 							
@@ -70,32 +103,34 @@
 					}*/
 					echo '
 								<form>';
-					echo '
-									<div class="cellsBlock2">
-										<div class="cellLeft">
-											Время посещения<br>
-											<span style="font-size:70%;">
-												Согласно записи
-											</span>
-										</div>
-										<div class="cellRight">';
-					if ($task[0]['zapis_date'] != 0){
-							echo date('d.m.y H:i', $task[0]['zapis_date']);
-					}else{
-						echo 'не было привязано к записи';
-					}
-					echo '
-										</div>
-									</div>
-									<div class="cellsBlock2">
-										<div class="cellLeft">Филиал</div>
-										<div class="cellRight">'.$office.'</div>
-									</div>
-
-									<div class="cellsBlock2">
-										<div class="cellLeft">Пациент</div>
-										<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', true).'</div>
-									</div>
+//					echo '
+//									<div class="cellsBlock2">
+//										<div class="cellLeft">
+//											Время посещения<br>
+//											<span style="font-size:70%;">
+//												Согласно записи
+//											</span>
+//										</div>
+//										<div class="cellRight">';
+//					if ($task[0]['zapis_date'] != 0){
+//							echo date('d.m.y H:i', $task[0]['zapis_date']);
+//					}else{
+//						echo 'не было привязано к записи';
+//					}
+//					echo '
+//										</div>
+//									</div>';
+//                    echo '
+//									<div class="cellsBlock2">
+//										<div class="cellLeft">Филиал</div>
+//										<div class="cellRight">'.$office.'</div>
+//									</div>';
+//                    echo '
+//									<div class="cellsBlock2">
+//										<div class="cellLeft">Пациент</div>
+//										<div class="cellRight">'.WriteSearchUser('spr_clients', $task[0]['client'], 'user', true).'</div>
+//									</div>';
+                    echo '
 									
 									<div class="cellsBlock2">
 										<div class="cellLeft">Описание</div>
@@ -141,19 +176,21 @@
 					
 					echo '	
 										</div>
-									</div>
+									</div>';
 									
-
+                    echo '	
 									<div class="cellsBlock2">
 										<div class="cellLeft">Комментарий</div>
 										<div class="cellRight">'.$task[0]['comment'].'</div>
-									</div>
-									
-									<div class="cellsBlock2">
-										<div class="cellLeft">Врач</div>
-										<div class="cellRight">'.WriteSearchUser('spr_workers', $task[0]['worker'], 'user', true).'</div>
-									</div>
-									
+									</div>';
+
+//                    echo '
+//									<div class="cellsBlock2">
+//										<div class="cellLeft">Врач</div>
+//										<div class="cellRight">'.WriteSearchUser('spr_workers', $task[0]['worker'], 'user', true).'</div>
+//									</div>';
+
+                    echo '				
 									<div class="cellsBlock2">
 										<span style="font-size: 80%; color: #999;">
 											Создан: '.date('d.m.y H:i', $task[0]['create_time']).' пользователем
@@ -171,6 +208,26 @@
 									<!--<input type="hidden" id="ended" name="ended" value="">-->
 									<input type="hidden" id="task_id" name="task_id" value="'.$_GET['id'].'">
 									<input type="hidden" id="worker" name="worker" value="'.$_SESSION['id'].'">';
+
+                    //Напоминания
+                    $notes = array();
+
+                    $args = [
+                        'task' => $task[0]['id']
+                    ];
+
+                    $query = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
+                            RIGHT JOIN `spr_clients` s_c 
+                            ON s_c.id = n.client  
+                            RIGHT JOIN `spr_workers` s_w
+                            ON s_w.id = n.create_person 
+                            WHERE n.task = :task
+                            ORDER BY n.dead_line DESC";
+
+                    //Выбрать все
+                    $notes = $db::getRows($query, $args);
+
+                    echo WriteNotes($notes, 0, true, $finances, 6);
 
 
                     //Наряд (!!!2020-11-22 тест для косметологов)

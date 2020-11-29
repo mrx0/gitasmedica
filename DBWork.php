@@ -481,7 +481,7 @@
 			while ($arr = mysqli_fetch_assoc($res)){
 				array_push($rez, $arr);
 			}
-			$old = ' ОФис: ['.$rez[0]['office'].']. Комментарий: ['.$rez[0]['comment'].']';
+			$old = ' Комментарий: ['.$rez[0]['comment'].']';
 			foreach ($rez[0] as $key => $value){
 				//!!! Лайфхак
 				if (($key != 'id') && ($key != 'office') && ($key != 'client') && ($key != 'create_time') && ($key != 'create_person') && ($key != 'last_edit_time') && 
@@ -496,14 +496,14 @@
 
 		$time = time();
 
-		$query = "UPDATE `journal_cosmet1` SET $values `create_time`='{$create_time}', `last_edit_time`='{$time}', `last_edit_person`='{$last_edit_person}', `office`='{$office}', `comment`='{$comment}' WHERE `id`='{$id}'";
+		$query = "UPDATE `journal_cosmet1` SET $values `last_edit_time`='{$time}', `last_edit_person`='{$last_edit_person}', `comment`='{$comment}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
         //CloseDB ($msql_cnnct);
 
 		//логирование
-		AddLog (GetRealIp(), $last_edit_person, $old, 'Редактировано посещение косметолога ['.$id.']. ['.date('d.m.y H:i', $time).']. ОФис: ['.$office.']. Описание: ['.$for_log.']. Комментарий: ['.$comment.']');
+		AddLog (GetRealIp(), $last_edit_person, $old, 'Редактировано посещение косметолога ['.$id.']. ['.date('d.m.y H:i', $time).']. Описание: ['.$for_log.']. Комментарий: ['.$comment.']');
 	}
 	
 	//Обновление записей в журнале IT заявок из-под Web (!Назначить исполнителя)

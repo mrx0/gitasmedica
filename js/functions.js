@@ -12652,23 +12652,23 @@
     //Добавление посещения стоматолога
     function Ajax_add_task_stomat() {
 
-        var link = "add_task_stomat_f.php";
+        let link = "add_task_stomat_f.php";
 
-        var arrayRemoveAct = new Array();
-        var arrayRemoveWorker = new Array();
+        let arrayRemoveAct = new Array();
+        let arrayRemoveWorker = new Array();
 
         $(".remove_add_search").each(function() {
             if (($(this).attr("id")).indexOf("td_title") != -1){
-                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                let IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
                 arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
             }
             if (($(this).attr("id")).indexOf("td_worker") != -1){
-                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                let IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
                 arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
             }
         });
 
-        var reqData = {
+        let reqData = {
             zapis_id: $("#zapis").val(),
 
             complaints: $("#complaints").val(),
