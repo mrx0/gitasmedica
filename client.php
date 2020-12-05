@@ -1445,11 +1445,12 @@ ORDER BY `name`;
 							//$notes = SelDataFromDB ('notes', $client_j['id'], 'client');
 							//include_once 'WriteNotes.php';
 
-                            //Напоминания
+                            //Напоминания (стоматология)
                             $notes = array();
 
                             $args = [
-                                'client_id' => $client_j['id']
+                                'client_id' => $client_j['id'],
+                                'type' => 5
                             ];
 
                             //$query = "SELECT * FROM `notes` WHERE `client`= :client_id ORDER BY `dead_line` ASC";
@@ -1459,11 +1460,12 @@ ORDER BY `name`;
                             ON s_c.id = n.client  
                             RIGHT JOIN `spr_workers` s_w
                             ON s_w.id = n.create_person 
-                            WHERE n.client = :client_id
+                            WHERE n.client = :client_id AND n.type = :type
                             ORDER BY n.dead_line DESC";
 
                             //Выбрать все
                             $notes = $db::getRows($query, $args);
+                            //var_dump($notes);
 
 
                             //$query = "SELECT * FROM `notes` WHERE `client`='".$client_j['id']."' AND `closed` <> 1 ORDER BY `dead_line` ASC";
@@ -1507,7 +1509,7 @@ ORDER BY `name`;
                             if (!empty($notes) || (!empty($removes))) {
                                 echo 'Особые отметки<br>';
 
-                                echo WriteNotes($notes, 0, true, $finances);
+                                echo WriteNotes($notes, 0, true, $finances, 5);
 
                                 if (!empty($removes)){
                                     echo WriteRemoves($removes, 0, 0, false, $finances);
@@ -1726,6 +1728,37 @@ ORDER BY `name`;
 							}*/
 						}
 
+                        //Напоминания (косметология)
+                        $notes = array();
+
+                        $args = [
+                            'client_id' => $client_j['id'],
+                            'type' => 6
+                        ];
+
+                        //$query = "SELECT * FROM `notes` WHERE `client`= :client_id ORDER BY `dead_line` ASC";
+
+                        $query = "SELECT n.*, s_c.name, s_w.name AS w_name FROM `notes` n
+                            RIGHT JOIN `spr_clients` s_c 
+                            ON s_c.id = n.client  
+                            RIGHT JOIN `spr_workers` s_w
+                            ON s_w.id = n.create_person 
+                            WHERE n.client = :client_id AND n.type = :type
+                            ORDER BY n.dead_line DESC";
+
+                        //Выбрать все
+                        $notes = $db::getRows($query, $args);
+                        //var_dump($notes);
+
+                        //Вывод всего
+                        if (!empty($notes)) {
+                            echo '<br><br>Особые отметки<br>';
+
+                            echo WriteNotes($notes, 0, true, $finances, 6);
+
+                        }
+
+
 						$cosmet_task = SelDataFromDB('journal_cosmet1', $_GET['id'], 'client_cosm_id');
 						//var_dump ($cosmet_task);
 						$actions_cosmet = SelDataFromDB('actions_cosmet', '', '');
@@ -1735,7 +1768,7 @@ ORDER BY `name`;
 								//!а если нет офиса или работника??
 								$worker = SelDataFromDB('spr_workers', $cosmet_task[$i]['worker'], 'worker_id');
 								$offices = SelDataFromDB('spr_filials', $cosmet_task[$i]['office'], 'offices');
-								echo '
+								echo '<br><br>
 									<div class="cellsBlock3">
 										<div class="cellLeft">
 											<a href="task_cosmet.php?id='.$cosmet_task[$i]['id'].'" class="ahref">

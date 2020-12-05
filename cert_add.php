@@ -47,7 +47,7 @@ if ($enter_ok){
 							<div class="cellLeft">Срок годности (месяцев)</div>
 							<div class="cellRight">
 								<select name="expirationDate" id="expirationDate">
-										<option value="3">3</option>
+										<!--<option value="3">3</option>-->
 										<option value="6">6</option>
 										<option value="12">12</option>
 							    </select>

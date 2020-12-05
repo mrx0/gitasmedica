@@ -28,12 +28,12 @@
         $result .= '                            
                                     <form action="Change_notes_stomat_f.php">
                                         <select name="change_notes_type" id="change_notes_type">';
-		for ($i=1; $i <= count($for_notes); $i++){
+		for ($i=1; $i <= count($for_notes[5]); $i++){
 			$sel = '';
 			if ($i == $_POST['type']){
 				$sel = 'selected';
 			}
-            $result .= '<option value="'.$i.'" '.$sel.'>'.$for_notes[$i].'</option>';
+            $result .= '<option value="'.$i.'" '.$sel.'>'.$for_notes[5][$i].'</option>';
 		}
         $result .= '
                                         </select>

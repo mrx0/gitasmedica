@@ -856,7 +856,9 @@
                             if ($stom_summ_temp < 0) $stom_summ_temp = 0;
 
                             //                        echo number_format(array_sum($rezult_arr[5]['data']) + $child_stom_summ, 0, '.', ' ').' ';
-                            echo '<span id="summ5">'.number_format($stom_summ_temp, 0, '.', ' ').'</span>';
+                            echo '<div id="summ5">'.number_format($stom_summ_temp, 0, '.', ' ').'</div>';
+
+                            echo '<div id="average_check_5" style="display: none; font-style: normal; font-size: 70%;">Ср. чек: <span id="average_check_summ_5" style="">1000</span></div>';
 
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[5], 0, '.', ' ');

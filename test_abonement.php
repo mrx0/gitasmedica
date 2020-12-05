@@ -1,6 +1,6 @@
 <?php
 
-//abonement.php
+//test_abonement.php
 //карточка абонемента
 
 	require_once 'header.php';

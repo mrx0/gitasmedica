@@ -68,6 +68,7 @@
 			<script type="text/javascript" src="jquery.liveFilter.js"></script>
 			<script type="text/javascript" src="js/search.js"></script>
 			<script type="text/javascript" src="js/search2.js"></script>
+			<script type="text/javascript" src="js/search3.js"></script>
 
 			<script type="text/javascript" src="js/search4.js"></script>
 			

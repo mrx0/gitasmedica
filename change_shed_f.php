@@ -1,7 +1,7 @@
 <?php 
 
-//edit_task_cosmet_f.php
-//Функция для редактирования посещения косметолога
+//change_shed_f.php
+//
 
 	session_start();
 	

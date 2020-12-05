@@ -3344,7 +3344,7 @@
                         $rezult .= '
                                                         <li>
                                                             <div>
-                                                                <a href="add_task_cosmet.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&insured=' . $zapisData['insured'] . '&pervich=' . $zapisData['pervich'] . '&noch=' . $zapisData['noch'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '" class="ahref">
+                                                                <a href="add_task_cosmet.php?client=' . $zapisData['patient'] . '&filial=' . $zapisData['office'] . '&insured=' . $zapisData['insured'] . '&pervich=' . $zapisData['pervich'] . '&noch=' . $zapisData['noch'] . '&date=' . strtotime($zapisData['day'] . '.' . $month . '.' . $zapisData['year'] . ' ' . $start_time_h . ':' . $start_time_m) . '&zapis_id=' . $zapisData['id'] . '&worker=' . $zapisData['worker'] . '" class="ahref">
                                                                     Внести посещение косм.
                                                                 </a>
                                                             </div>
@@ -3721,9 +3721,14 @@
     }
 
     //Вывод напоминаний
-    function WriteNotes($notes, $worker_id, $option, $finances){
+    function WriteNotes($notes, $worker_id, $option, $finances, $type = 5){
         require 'variables.php';
         //var_dump($notes);
+
+		$link = 'task_stomat_inspection.php';
+		if ($type == 6){
+			$link = 'task_cosmet.php';
+		}
 
         $rez = '
             <div id="notes_change"></div>
@@ -3793,10 +3798,10 @@
                 $rez .= '
                     <li class="cellsBlock cellsBlockHover">
                         <div class="cellPriority" style="background-color:'.$priority_color.'"></div>
-                        <div class="cellTime" style="text-align: center; background-color: '.$for_notes_colors[$notes[$i]['description']].'">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
+                        <div class="cellTime" style="text-align: center; background-color: '.$for_notes_colors[$type][$notes[$i]['description']].'">'.date('d.m.y H:i', $notes[$i]['dead_line']).'</div>
                         <a href="client.php?id='.$notes[$i]['client'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">'.$notes[$i]['name'].'</a>
-                        <a href="task_stomat_inspection.php?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$notes[$i]['task'].'</a>
-                        <div class="cellText" style="'.$background_style.'">'.$for_notes[$notes[$i]['description']].'</div>';
+                        <a href="'.$link.'?id='.$notes[$i]['task'].'" class="ahref cellName" style="text-align: center" target="_blank" rel="nofollow noopener">#'.$notes[$i]['task'].'</a>
+                        <div class="cellText" style="'.$background_style.'">'.$for_notes[$type][$notes[$i]['description']].'</div>';
                 if ($option) {
 					if (($_SESSION['id'] == $notes[$i]['create_person']) || ($_SESSION['permissions'] == 3)) {
 						$rez .= '

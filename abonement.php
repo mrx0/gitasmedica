@@ -147,11 +147,12 @@
 									<div class="cellLeft">Осталось минут</div>
 									<div class="cellRight">'.($abonement_j[0]['min_count'] - $abonement_j[0]['debited_min']).'</div>
 								</div>';
-					if ($abonement_j[0]['status'] == 5) {
+//					if ($abonement_j[0]['status'] == 5) {
+                    if(($abonement_j[0]['status'] == 5) || ($abonement_j[0]['min_count'] == $abonement_j[0]['debited_min'])){
                         echo '
            					    <div class="cellsBlock2">
 									<div class="cellLeft">Закрыт (полностью потрачен)</div>
-									<div class="cellRight" style="background-color: rgba(119, 255, 135, 1);">' . date('d.m.y H:i', strtotime($abonement_j[0]['closed_time'])) . '</div>
+									<div class="cellRight" style="background-color: rgba(119, 255, 135, 1);"><!--' . date('d.m.y H:i', strtotime($abonement_j[0]['closed_time'])) . '--> Да</div>
 								</div>';
                     }
 
@@ -171,26 +172,40 @@
                                 <div class="cellLeft">Срок истечёт</div>
                                 <div class="cellRight">
                                     ' . date('d.m.Y', strtotime($abonement_j[0]['expires_time'])) . '
-                                </div>
-                            </div>';
+                                ';
                         } else {
                             echo '
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Истёк срок</div>
                                 <div class="cellRight" style="background-color: rgba(239,47,55, .7);">' . date('d.m.y', strtotime($abonement_j[0]['expires_time']));
-                            if ((($finances['see_all'] == 1) || $god_mode) && ($abonement_j[0]['status'] != 5) && ($abonement_j[0]['status'] != 9)) {
-                                echo '
+//                            if ((($finances['see_all'] == 1) || $god_mode) && ($abonement_j[0]['status'] != 5) && ($abonement_j[0]['status'] != 9)) {
+//                                echo '
+//                                    <div style="float: right;">
+//                                        <span style="font-size: 80%;">Изменить срок <i class="fa fa-calendar" aria-hidden="true"></i></span><br>
+//                                        <input type="text" id="dataCertEnd" name="dataCertEnd" class="dateс" value="'.date('d.m.Y', strtotime($abonement_j[0]['expires_time'])).'" onfocus="this.select();_Calendar.lcs(this)"
+//                                        onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+//                                        <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime(\'abon\','.$_GET['id'].');"></i>
+//                                    </div>';
+//                            }
+//                            echo '
+//                                </div>
+//                            </div>';
+                        }
+
+                        if ((($finances['see_all'] == 1) || $god_mode) && ($abonement_j[0]['status'] != 5) && ($abonement_j[0]['status'] != 9) && ($abonement_j[0]['min_count'] != $abonement_j[0]['debited_min'])) {
+                            echo '
                                     <div style="float: right;">
                                         <span style="font-size: 80%;">Изменить срок <i class="fa fa-calendar" aria-hidden="true"></i></span><br>
                                         <input type="text" id="dataCertEnd" name="dataCertEnd" class="dateс" value="'.date('d.m.Y', strtotime($abonement_j[0]['expires_time'])).'" onfocus="this.select();_Calendar.lcs(this)"
                                         onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
                                         <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime(\'abon\','.$_GET['id'].');"></i>
                                     </div>';
-                            }
-                            echo '    
+                        }
+
+                        echo '    
                                 </div>
                             </div>';
-                        }
+
                     }
 
 
