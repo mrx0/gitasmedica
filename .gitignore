@@ -1,4 +1,5 @@
 /config.php
+/configPDO.php
 /config_ticket.php
 /fl_config.php
 /config_zapis_online.php
