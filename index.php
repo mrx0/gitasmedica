@@ -175,12 +175,12 @@
                 if ($newTopic) {
                     $temp_str .= 'blink1';
                 }
-                $temp_str .= '" style="height: 15px; border: 1px dotted #CCC; background-color: rgba(250, 250, 250, 0.9); width: 100%; padding: 6px 13px; margin: -9px 0 5px -14px; position: relative;">
-                        <div style="position: absolute; top: 3px; left: 10px; font-size: 17px; color: rgba('.$annColor.', 1);  text-shadow: 1px 1px 3px rgb(0, 0, 0), 0 0 2px rgba(52, 152, 219, 1);">
+                $temp_str .= '" style="height: 13px; border: 1px dotted #CCC; background-color: rgba(250, 250, 250, 0.9); width: 100%; padding: 6px 13px; margin: -9px 0 5px -14px; position: relative;">
+                        <div style="position: absolute; top: 3px; left: 10px; font-size: 14px; color: rgba('.$annColor.', 1);  text-shadow: 1px 1px 3px rgb(0, 0, 0), 0 0 2px rgba(52, 152, 219, 1);">
                             '.$annIco.'
                         </div>
                                                 
-                        <div style="position: absolute; top: 5px; left: 35px; font-size: 13px;">';
+                        <div style="position: absolute; top: 5px; left: 35px; font-size: 11px;">';
 
                 if($announcing['status'] == 8){
                     $temp_str .= '  <span style="color: rgb(239,22,22) ;font-weight:bold;">ЗАКРЫТО / ЗАВЕРШЕНО</span> ';
@@ -190,7 +190,7 @@
                             <b>'.$topicTheme.'</b>
                         </div>
                               
-                        <div style="position: absolute; top: 2px; right: 50px; font-size: 11px; text-align: right;">
+                        <div style="position: absolute; top: 2px; right: 50px; font-size: 10px; text-align: right;">
                             Дата: '.date('d.m.y H:i' ,strtotime($announcing['create_time'])).'<br>
                             <span style="font-size: 10px; color: #716f6f;">Автор: '.WriteSearchUser('spr_workers', $announcing['create_person'], 'user', false).'</span>
                         </div>';
@@ -229,7 +229,7 @@
 
                 $temp_str .= '     
                     </h2>
-                    <p id="topic_'.$announcing['id'].'" style="/*margin-bottom: 30px;*/ '.$readStateClass.'">
+                    <p id="topic_'.$announcing['id'].'" style="margin-bottom: 5px; '.$readStateClass.'">
                         '.nl2br($announcing['text']).'
                     </p>';
 
@@ -271,6 +271,12 @@
             $afterMonthDate = date('Y-m-d', strtotime('+1 month', gmmktime(0, 0, 0, $month, $day, $year)));
 //            var_dump($afterMonthDate);
 
+            $order_str = 'ORDER BY MONTH (`birth`), DAY (`birth`) ASC';
+
+            if ($month == 12){
+                $order_str = 'ORDER BY MONTH (`birth`) DESC, DAY (`birth`) ASC';
+            }
+
             $query = "SELECT `id`, `full_name`, `birth` FROM `spr_workers`
             WHERE 
             `status` <> '8' 
@@ -292,7 +298,7 @@
                         (DAY (`birth`) = DAY ('$afterMonthDate'))
                     )
                 )
-            ORDER BY MONTH (`birth`), DAY (`birth`) ASC";
+            ".$order_str;
 
             $args = [
 
@@ -392,7 +398,7 @@
                         <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(0 150 15); color: white; margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
                             <i>Текущие акции</i>
                         </div>
-                        <div style="height: 300px; max-height: 300px; overflow-y: scroll; text-align: center; border:1px solid #BFBCB5;">
+                        <div style="height: 350px; max-height: 350px; overflow-y: scroll; text-align: center; border:1px solid #BFBCB5;">
                             '.$stocks_str.'
                         </div>
                     </td>

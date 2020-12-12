@@ -380,11 +380,11 @@
 			
 
 		}
+        if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
+            echo '<li><a href="clients.php">Пациенты</a></li>';
+        }
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
 			echo '<li><a href="reports.php">Отчёты</a></li>';
-		}
-		if (($clients['see_all'] == 1) || ($clients['see_own'] == 1) || $god_mode){
-			echo '<li><a href="clients.php">Пациенты</a></li>';
 		}
 		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
 			echo '<li><a href="directory.php">Справочники</a></li>';

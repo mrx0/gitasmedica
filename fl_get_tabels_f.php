@@ -79,6 +79,7 @@
 
                     }
                 }
+                //var_dump($tabels_j);
 
                 //Если что-то есть
                 if (!empty($tabels_j)){

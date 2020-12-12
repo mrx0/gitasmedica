@@ -825,8 +825,13 @@
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
 
-        echo '
+        if (!empty($sheduler_zapis)) {
+            echo '
 		    <div id="doc_title">Новый наряд /' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', false) . ' - Асмедика</div>';
+        }else{
+            echo '
+		    <div id="doc_title">Новый наряд / ...  - Асмедика</div>';
+        }
 
 	}else{
 		header("location: enter.php");

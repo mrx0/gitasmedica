@@ -25,6 +25,8 @@
 							<a href="spr_proizvcalendar.php" class="b">Производственный календарь</a>
 						</div>
                         <h2>Добавить/обновить производственный календарь</h2>
+                        Файл качаем отсюда и подкидываем в программу<br>
+                        https://data.gov.ru/opendata/7708660670-proizvcalendar
                     </header>';
 
             echo '
