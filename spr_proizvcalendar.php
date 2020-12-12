@@ -185,156 +185,159 @@
 
 			echo '
                             </div>';
-			
+
 			echo '
                         </ul>';
+            //Если заполнен календарь
+            if (!empty($holidays_arr)) {
 
-			//Календарная сетка
-            //Проход по каждому месяцу
-            for ($i=1; $i<=12; $i++) {
 
-                $di = 0;
+                //Календарная сетка
+                //Проход по каждому месяцу
+                for ($i = 1; $i <= 12; $i++) {
 
-                $month_stamp = mktime(0, 0, 0, $i, 1, $year);
-                //var_dump($month_stamp);
+                    $di = 0;
 
-                //Дней в месяце
-                $day_count = date("t", $month_stamp);
-                //var_dump($day_count);
+                    $month_stamp = mktime(0, 0, 0, $i, 1, $year);
+                    //var_dump($month_stamp);
 
-                //День недели по счёту
-                $weekday = date("w", $month_stamp);
-                if ($weekday == 0) {
-                    $weekday = 7;
-                }
-                $start = -($weekday - 2);
-                //var_dump($start);
+                    //Дней в месяце
+                    $day_count = date("t", $month_stamp);
+                    //var_dump($day_count);
 
-                $last = ($day_count + $weekday - 1) % 7;
-                //var_dump($last);
-
-                if ($last == 0) {
-                    $end = $day_count;
-                } else {
-                    $end = $day_count + 7 - $last;
-                }
-                //var_dump($end);
-
-                echo '
-                        <div style="display: inline-block; vertical-align: top; margin: 4px;">
-							<table style="border:1px solid rgba(191, 188, 181, 0.9);">
-							    <tr style="text-align:center; vertical-align: top;">
-                                    <td colspan="7" style="">
-										<i>'.$monthsName[dateTransformation($i)].'</i>
-									</td>
-							    </tr>
-								<tr style="text-align: center; vertical-align: middle; font-size: 10px; font-weight: bold; height: 20px;">
-									<td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
-										Пн
-									</td>
-									<td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
-										Вт
-									</td>
-									<td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
-										Ср
-									</td>
-									<td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
-										Чт
-									</td>
-									<td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
-										Пт
-									</td>
-									<td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px; color: red;">
-										Сб
-									</td>
-									<td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px; color: red;">
-										Вс
-									</td>
-								</tr>';
-
-                //Проход по дням месяца
-                for($d = $start; $d <= $end; $d++){
-                    if (!($di++ % 7)){
-                        echo '
-                                <tr style="height: 12px;">';
+                    //День недели по счёту
+                    $weekday = date("w", $month_stamp);
+                    if ($weekday == 0) {
+                        $weekday = 7;
                     }
+                    $start = -($weekday - 2);
+                    //var_dump($start);
 
-                    //выделение сегодня цветом
-                    $now="$year-".dateTransformation($i)."-".sprintf("%02d", $d);
-                    //var_dump($now);
+                    $last = ($day_count + $weekday - 1) % 7;
+                    //var_dump($last);
 
-                    if ($now == $today){
-                        $today_color = 'outline: 1px solid red; background-color: rgba(7, 255, 60, 0.33); font-weight: bold;';
-                    }else{
-                        $today_color = 'border:1px solid rgba(191, 188, 181, 0.3);';
+                    if ($last == 0) {
+                        $end = $day_count;
+                    } else {
+                        $end = $day_count + 7 - $last;
                     }
+                    //var_dump($end);
 
-                    $holliday_color = '';
+                    echo '
+                            <div style="display: inline-block; vertical-align: top; margin: 4px;">
+                                <table style="border:1px solid rgba(191, 188, 181, 0.9);">
+                                    <tr style="text-align:center; vertical-align: top;">
+                                        <td colspan="7" style="">
+                                            <i>' . $monthsName[dateTransformation($i)] . '</i>
+                                        </td>
+                                    </tr>
+                                    <tr style="text-align: center; vertical-align: middle; font-size: 10px; font-weight: bold; height: 20px;">
+                                        <td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
+                                            Пн
+                                        </td>
+                                        <td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
+                                            Вт
+                                        </td>
+                                        <td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
+                                            Ср
+                                        </td>
+                                        <td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
+                                            Чт
+                                        </td>
+                                        <td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px;">
+                                            Пт
+                                        </td>
+                                        <td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px; color: red;">
+                                            Сб
+                                        </td>
+                                        <td style="border: 1px solid rgba(191, 188, 181, 0.7); padding: 3px; color: red;">
+                                            Вс
+                                        </td>
+                                    </tr>';
 
-                    //Выделение цветом выходных
-//                    if (($di % 7 == 0) || ($di % 7 == 6)){
-//                        $holliday_color = 'font-size: 95%; font-weight: bold; color: red;';
-//                    }else{
-                        //Выделение цветом праздников и выходных
-                        if (in_array(dateTransformation($d), $holidays_arr[dateTransformation($i)])){
-                            $holliday_color = 'font-size: 95%; font-weight: bold; color: red;';
+                    //Проход по дням месяца
+                    for ($d = $start; $d <= $end; $d++) {
+                        if (!($di++ % 7)) {
+                            echo '
+                                    <tr style="height: 12px;">';
                         }
-//                    }
+
+                        //выделение сегодня цветом
+                        $now = "$year-" . dateTransformation($i) . "-" . sprintf("%02d", $d);
+                        //var_dump($now);
+
+                        if ($now == $today) {
+                            $today_color = 'outline: 1px solid red; background-color: rgba(7, 255, 60, 0.33); font-weight: bold;';
+                        } else {
+                            $today_color = 'border:1px solid rgba(191, 188, 181, 0.3);';
+                        }
+
+                        $holliday_color = '';
+
+                        //Выделение цветом выходных
+                        //                    if (($di % 7 == 0) || ($di % 7 == 6)){
+                        //                        $holliday_color = 'font-size: 95%; font-weight: bold; color: red;';
+                        //                    }else{
+                        //Выделение цветом праздников и выходных
+                        if (in_array(dateTransformation($d), $holidays_arr[dateTransformation($i)])) {
+                            $holliday_color = '/*background-color: grey*/ ;font-size: 95%; font-weight: bold; color: red;';
+                        }
+                        //                    }
 
 
-                    //Метки ДР на днях
-                    $day_marks = '';
-                    if (array_key_exists(dateTransformation($i)."-".sprintf("%02d", $d), $birthdays_arr)) {
-                        $day_marks = '<div style="position: absolute; color: red; font-size: 70%; top: -8px; right: -4px;">&#9679;</div>';
-                    }
+                        //Метки ДР на днях
+                        $day_marks = '';
+                        if (array_key_exists(dateTransformation($i) . "-" . sprintf("%02d", $d), $birthdays_arr)) {
+                            //$day_marks = '<div style="position: absolute; color: red; font-size: 70%; top: -8px; right: -4px;">&#9679;</div>';
+                        }
 
-
-
-                    echo '
-                                    <td class="cellsBlockHover" style="'.$today_color.' text-align: center; text-align: -moz-center; text-align: -webkit-center; vertical-align: top;">';
-                    if ($d < 1 || $d > $day_count){
-                        echo "&nbsp";
-                    }else{
 
                         echo '
-                                        <div style="vertical-align:top;'.$holliday_color.'" id="">
-                                            <div>';
-                        echo '				
-                                                <div style="text-align: right; margin: 3px; position: relative;">
-                                                    '.$d.'
-                                                    '.$day_marks.'
+                                        <td class="cellsBlockHover" style="' . $today_color . ' text-align: center; text-align: -moz-center; text-align: -webkit-center; vertical-align: top;">';
+                        if ($d < 1 || $d > $day_count) {
+                            echo "&nbsp";
+                        } else {
+
+                            echo '
+                                            <div style="vertical-align:top;' . $holliday_color . '" id="">
+                                                <div>';
+                            echo '				
+                                                    <div style="text-align: right; margin: 3px; position: relative;">
+                                                        ' . $d . '
+                                                        ' . $day_marks . '
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>';
+                                            </div>';
+                        }
+                        echo '
+                                        </td>';
+                        if (!($di % 7)) {
+                            echo '
+                                    </tr>';
+                        }
                     }
                     echo '
-                                    </td>';
-                    if (!($di % 7)){
-                        echo '
-                                </tr>';
-                    }
+                                </table>
+                            </div>';
                 }
+
+
                 echo '
-							</table>
-                        </div>';
+                        </div>
+                    </div>';
+
+                echo '
+    
+                <!-- Подложка только одна -->
+                <div id="overlay"></div>';
+
+                echo '					
+                    <script>
+                    
+    
+                            
+                    </script>';
             }
-
-
-    		echo '
-                    </div>
-                </div>';
-
-			echo '
-
-			<!-- Подложка только одна -->
-			<div id="overlay"></div>';
-
-			echo '					
-				<script>
-				
-
-						
-                </script>';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

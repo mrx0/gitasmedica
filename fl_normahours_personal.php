@@ -1,6 +1,6 @@
 <?php
 
-//fl_percent_cats_personal_4print.php
+//fl_normahours_personal.php
 //
 
 	require_once 'header.php';
@@ -137,11 +137,11 @@
                 <div id="status" class="no_print">
                     <header>
                         <div class="nav">
-                            <a href="fl_percent_cats.php" class="b">Общие</a>
+                            <a href="fl_normahours.php" class="b">Общие</a>
                             <!--<a href="fl_salaries.php" class="b">Оклады сотрудников</a>-->
                         </div>
-                        <h1>Персональные категории процентов</h1>
-                        <span style= "color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> При расчётах, если указана "Cпец. цена", проценты будут игнорироваться.</span>';
+                        <h1>Персональные нормы часов <!--<a href="fl_percent_cats_personal_4print.php" class="b3" style="font-weight: normal; font-size: 55%;">Версия для печати <i class="fa fa-print" aria-hidden="true"></i></a>--></h1>
+                        <!--<span style= "color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> При расчётах, если указана "Cпец. цена", проценты будут игнорироваться.</span>-->';
             echo '			
                     </header>';
 

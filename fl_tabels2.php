@@ -521,19 +521,19 @@
                                     <td style="width: 90px; border-top: 1px solid #BFBCB5; border-left: 1px solid #BFBCB5; padding: 5px; text-align: right;">';
                         //Выручка
                         echo '
-                                        <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">                                                            
+                                        <div class="filialMoney" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'" title="выручка">                                                            
                                         </div>';
                         //Солярий
                         echo '
-                                        <div class="filialSolar" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        <div class="filialSolar" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'" title="солярий">
                                         </div>';
                         //Реализация
                         echo '
-                                        <div class="filialRealiz" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        <div class="filialRealiz" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'" title="реализация">
                                         </div>';
                         //Абонементы солярия
                         echo '
-                                        <div class="filialAbon" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'">
+                                        <div class="filialAbon" w_id="'.$worker_data['id'].'" filial_id="'.$worker_filial_id.'" title="абонементы">
                                         </div>';
                         echo '
                                     </td>
@@ -543,7 +543,7 @@
                         if ($haveCategory && $haveFilial){
                             echo '
                                     <div>
-                                        <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        <div id="w_revenue_summ_'.$worker_data['id'].'" style="display: inline;" title="выручка">
                                         </div>';
 
 
@@ -560,7 +560,7 @@
                                 //Солярий
                                 echo '
                                     <div>
-                                        <div id="w_revenue_solar_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        <div id="w_revenue_solar_summ_'.$worker_data['id'].'" style="display: inline;" title="солярий">
                                         </div>';
 
 
@@ -574,7 +574,7 @@
                                 //Реализация
                                 echo '
                                     <div>
-                                        <div id="w_revenue_realiz_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        <div id="w_revenue_realiz_summ_'.$worker_data['id'].'" style="display: inline;" title="реализация">
                                         </div>';
 
 
@@ -588,7 +588,7 @@
                                 //Абонемент
                                 echo '
                                     <div>
-                                        <div id="w_revenue_abon_summ_'.$worker_data['id'].'" style="display: inline;">
+                                        <div id="w_revenue_abon_summ_'.$worker_data['id'].'" style="display: inline;" title="абонементы">
                                         </div>';
 
 
