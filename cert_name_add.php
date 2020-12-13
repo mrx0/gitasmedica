@@ -1,7 +1,7 @@
 <?php
 
-//cert_add.php
-//Добавить сертификат
+//cert_name_add.php
+//Добавить сертификат именной
 
 require_once 'header.php';
 
@@ -14,9 +14,9 @@ if ($enter_ok){
 			<div id="status">
 				<header>
 					<div class="nav">
-						<a href="certificates.php" class="b">Сертификаты</a>
+						<a href="certificates_name.php" class="b">Сертификаты именные</a>
 					</div>
-					<h2>Добавить Сертификат</h2>
+					<h2>Добавить Сертификат именной</h2>
 					Заполните поля
 				</header>';
 
@@ -36,9 +36,9 @@ if ($enter_ok){
 						</div>
 						
 						<div class="cellsBlock2">
-							<div class="cellLeft">Номинал</div>
+							<div class="cellLeft">Сумма на счёт</div>
 							<div class="cellRight">
-								<input type="text" name="nominal" id="nominal" value="">
+								<input type="text" name="nominal" id="nominal" value="500">
 								<label id="nominal_error" class="error"></label>
 							</div>
 						</div>
@@ -55,7 +55,7 @@ if ($enter_ok){
 						</div>-->
 						
 						<div id="errror"></div>                        
-						<input type="button" class="b" value="Добавить" onclick="showCertAdd(0, \'add\')">
+						<input type="button" class="b" value="Добавить" onclick="showCertNameAdd(0, \'add\')">
 					</form>';
 
     echo '

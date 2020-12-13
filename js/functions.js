@@ -1949,6 +1949,43 @@
         });
     }
 
+    //Добавляем/редактируем в базу сертификат именной
+    function Ajax_cert_name_add(id, mode, certData){
+
+        var link = "cert_name_add_f.php";
+
+        if (mode == 'edit'){
+            link = "cert_name_edit_f.php";
+        }
+
+        certData['cert_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:certData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+                if(data.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(data.data);
+                }else{
+                    //console.log('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
     //Добавляем/редактируем в базу абонемент
     function Ajax_abon_add(id, mode, reqData){
     	//console.log(mode);
@@ -2172,6 +2209,57 @@
                 if(data.result == 'success'){
 
                     Ajax_cert_add(id, mode, certData);
+
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+	//!!! тут очередная "правильная" ф-ция
+    //Промежуточная функция добавления/редактирования сертификата именного
+    function showCertNameAdd(id, mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var num = $('#num').val();
+        var nominal = $('#nominal').val();
+
+        var certData = {
+            num:num,
+            nominal:nominal
+        };
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:certData,
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+
+                    Ajax_cert_name_add(id, mode, certData);
 
                 // в случае ошибок в форме
                 }else{
@@ -12833,6 +12921,40 @@
 
         //!!! переход window.location.href - это правильное использование
         window.location.href = "payment_from_alien_add.php?client_id="+$("#new_payer_id").val() + get_data_str;
+    }
+
+    //Изменение пациента, кому выдаем сертификат именной
+    function changeCertificateNameMaster(){
+        //!!!Получение данных из GET тест
+        //console.log(params["data"]);
+        //выведет в консоль значение  GET-параметра data
+        //console.log(params);
+
+        let get_data_str = "";
+
+        let params = window
+            .location
+            .search
+            .replace("?","")
+            .split("&")
+            .reduce(
+                function(p,e){
+                    let a = e.split('=');
+                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    return p;
+                },
+                {}
+            );
+
+        for (let key in params) {
+            if (key.indexOf("client_id") == -1){
+                get_data_str = get_data_str + "&" + key + "=" + params[key];
+            }
+        }
+        // console.log(get_data_str);
+
+        //!!! переход window.location.href - это правильное использование
+        window.location.href = "cert_name_cell.php?client_id="+$("#new_payer_id").val() + get_data_str;
     }
 
     //Загрузка элементов склада
