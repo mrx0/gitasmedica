@@ -126,7 +126,7 @@ ORDER BY `name`;
 					<!--<script src="js/init2.js" type="text/javascript"></script>-->
 					<div id="status">
 						<header>
-							<h2>
+							<h2 style="padding-bottom: 5px;">
 								Карточка пациента #'.$client_j['id'].'';
 
 				if (($clients['edit'] == 1) || $god_mode){
@@ -148,11 +148,50 @@ ORDER BY `name`;
 					}
 
 				}
+                if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode) {
+                    if ($client_j['status'] != 9) {
+
+                        //Нет отметки о рассрочке
+                        //if ($client_j['installment_status'] == 0) {
+                        if (!$have_installment && !$was_installment) {
+                            echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/" onclick="/*changeInstallmentStatus(' . $client_j['id'] . ', 0, true);*/" <i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
+                        }
+                        //Включена рассрочка
+                        //if ($client_j['installment_status'] == 1) {
+                        if ($have_installment) {
+                            echo '
+                                            <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/" onclick="/*changeInstallmentStatus(' . $client_j['id'] . ', 1, true);*/">
+                                                <i class="fa fa-database" aria-hidden="true" title="Есть незакрытая рассрочка"></i>
+        
+                                                    <a href="stat_installments2.php" class="b4" style="font-size: 60%">Открытые рассрочки (новое)</a>
+                                                    <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки (старое)</a>
+        
+                                            </span>';
+                        }
+                        //Рассрочка закрыта
+                        //if ($client_j['installment_status'] == 7) {
+                        if (!$have_installment && $was_installment) {
+                            echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/" onclick="/*changeInstallmentStatus(' . $client_j['id'] . ', 7, true);*/"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
+                        }
+                    }
+                }
+
+                echo '
+							</h2>';
+
+                if ($client_j['status'] == 9){
+                    echo '<i style="color:red;">Пациент удалён (заблокирован).</i><br>';
+                }
+
+                echo '
+							Номер карты: '.$client_j['card'].'';
 
                 if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode) {
                     if ($client_j['status'] != 9) {
-                        echo '<a href="finance_account.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 20px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
+                        echo '<div style="font-size: 130%; margin-top: 5px;">';
+                        echo '<a href="finance_account.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
                         echo '<a href="zapis.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
+                        echo '<a href="cert_name_cell.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Именной сертификат</a>';
                         if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
                             //var_dump($client_j['installment_status']);
 
@@ -160,53 +199,26 @@ ORDER BY `name`;
                             echo '
                                         <a href="create_installment.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Создать рассрочку</a>';
 
-                            //Нет отметки о рассрочке
-                            //if ($client_j['installment_status'] == 0) {
-                            if (!$have_installment && !$was_installment) {
-                                echo '<span class="info"  style="display: inline; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/"/* onclick="changeInstallmentStatus('.$client_j['id'].', 0, true);"*/><i class="fa fa-database" aria-hidden="true" title="Нет рассрочек"></i></span>';
-                            }
-                            //Включена рассрочка
-                            //if ($client_j['installment_status'] == 1) {
-                            if ($have_installment) {
-                                echo '
-                                    <span class="info"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/">
-                                        <i class="fa fa-database" aria-hidden="true" onclick="changeInstallmentStatus('.$client_j['id'].', 1, true);" title="Есть незакрытая рассрочка"></i>
 
-                                            <a href="stat_installments2.php" class="b4" style="font-size: 60%">Открытые рассрочки (новое)</a>
-                                            <a href="stat_installments.php" class="b4" style="font-size: 60%">Открытые рассрочки (старое)</a>
-
-                                    </span>';
-                            }
-                            //Рассрочка закрыта
-                            //if ($client_j['installment_status'] == 7) {
-                            if (!$have_installment && $was_installment) {
-                                echo '<span class="info"  style="display: inline; color: green; margin-left: 0px; font-size: 100%; padding: 2px 5px; /*cursor: pointer;*/" onclick="changeInstallmentStatus('.$client_j['id'].', 7, true);"><i class="fa fa-database" aria-hidden="true" title="Рассрочка закрыта"></i></span>';
-                            }
                         }
+                        echo '</div>';
                     }
                 }
-
-				echo '
-							</h2>';
-
-				if ($client_j['status'] == 9){
-					echo '<i style="color:red;">Пациент удалён (заблокирован).</i><br>';
-				}
-
-				echo '
-							Номер карты: '.$client_j['card'].'';
 
 
                 echo '
                         </header>';
 
-                echo '<div style="margin-top: 7px; font-size: 70%; color: #777;">
-                <a href="test_print2.php?client_id=' . $client_j['id'] . '" class="ahref b2 no_print" target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>
-                </div>';
+                echo '
+                    <div style="margin-top: 7px; font-size: 70%; color: #777;">
+                        <a href="test_print2.php?client_id=' . $client_j['id'] . '" class="ahref b2 no_print" target="_blank" rel="nofollow noopener">Мед.карта стом.(тест) </a>';
+
+                echo '
+                    </div>';
 
 				echo '
                     <div style="margin-top: 7px; font-size: 70%; color: #777;">
-                        * В карточке обязательно должны быть заполнены поля: номер карты, дата рождения, пол, адрес
+                        *В карточке обязательно должны быть заполнены поля: номер карты, дата рождения, пол, адрес
                     </div>
 					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 101;">';
 

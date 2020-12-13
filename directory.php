@@ -45,6 +45,8 @@
 
             echo '<a href="certificates.php" class="b3" style="width: 230px;" title="Сертификаты">Сертификаты</a>';
 
+            echo '<a href="certificates_name.php" class="b3" style="width: 230px;" title="Сертификаты именные">Сертификаты именные</a>';
+
             echo '<a href="contacts.php" class="b3" style="width: 230px;" title="Сотрудники">Сотрудники</a>';
 
             echo '<a href="specializations.php" class="b3" style="width: 230px;" title="Специализация">Специализация</a>';

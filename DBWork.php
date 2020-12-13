@@ -1197,13 +1197,13 @@
 	}
 
 	//Вставка и обновление Сертификата из-под Web
-	function WriteCertToDB_Edit ($session_id, $num, $nominal){
+	function WriteCertToDB_Edit ($session_id, $num, $nominal, $dtable='journal_cert'){
 
         $msql_cnnct = ConnectToDB ();
 
         $time = date('Y-m-d H:i:s', time());
 
-		$query = "INSERT INTO `journal_cert` (
+		$query = "INSERT INTO `{$dtable}` (
 			`num`, `nominal`, `create_time`, `create_person`)
 			VALUES (
 			'{$num}', '{$nominal}', '{$time}', '{$session_id}') ";
@@ -1216,7 +1216,7 @@
         $mysql_insert_id = mysqli_insert_id($msql_cnnct);
 
 		//логирование
-		AddLog (GetRealIp(), $session_id, '', 'Добавлен сертификат. Номер: ['.$num.']. Номинал: ['.$nominal.'] руб.');
+		AddLog (GetRealIp(), $session_id, '', 'Добавлен сертификат в '.$dtable.'. Номер: ['.$num.']. Номинал: ['.$nominal.'] руб.');
 
 		return ($mysql_insert_id);
 	}
