@@ -17,4 +17,4 @@
 /xls/*
 /zub_photo/*
 *.orig
-web.config
+/web.config
