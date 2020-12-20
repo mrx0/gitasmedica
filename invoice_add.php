@@ -736,6 +736,7 @@
                                                                 <div style="margin-bottom: 2px;">                                                                    
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                          <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
+                                                                         <div class="b4" style="margin: 5px 0 0 -1px;" onclick="showCertNamePayAdd()">Добавить именной сертификат</div>
                                                                     </div><!-- / -->';
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
@@ -768,6 +769,12 @@
                                             <div>	
                                                 <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
                                             </div>
+                                        </div>
+                                        
+                                        <div id="search_cert_name_input" style="display: none;">
+                                            <input type="text" size="30" name="searchdata" id="search_cert_name" placeholder="Наберите номер сертификата для поиска" value="" class="who_fcert_name"  autocomplete="off" style="width: 90%;">
+                                            <br><span class="lit_grey_text" style="font-size: 75%">Нажмите на галочку, чтобы добавить</span>
+                                            <div id="search_result_cert_name" class="search_result_cert_name" style="text-align: left;"></div>
                                         </div>
                     
                                         <!-- Подложка только одна -->

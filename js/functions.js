@@ -377,45 +377,45 @@
         }
     });
 
-    //Для поиска сертификата именного из модального окна (2020-12-15 не использую пока)
-    // $('#search_cert').bind("change keyup input click", function() {
-    //
-    //     //var $this = $(this);
-    //     var val = $(this).val();
-    //     //console.log(val);
-    //
-    //     if (val.length > 1){
-    //         $.ajax({
-    //             url:"FastSearchCertName.php",
-    //             global: false,
-    //             type: "POST",
-    //             dataType: "JSON",
-    //             data:{
-    //                 num:val,
-    //             },
-    //             cache: false,
-    //             beforeSend: function() {
-    //                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-    //             },
-    //             success:function(res){
-    //                 //console.log(res);
-    //
-    //                 if(res.result == 'success') {
-    //                     //console.log(res.data);
-    //
-    //                     $(".search_result_cert_name").html(res.data).fadeIn(); //Выводим полученые данные в списке
-    //                 }else{
-    //                     //console.log(res.data);
-    //                 }
-    //             },
-    //             error:function(){
-    //                 //console.log(12);
-    //             }
-    //         });
-    //     }else{
-    //         $("#search_result_cert_name").hide();
-    //     }
-    // });
+    //Для поиска сертификата именного из модального окна
+    $('#search_cert_name').bind("change keyup input click", function() {
+
+        //var $this = $(this);
+        var val = $(this).val();
+        //console.log(val);
+
+        if (val.length > 1){
+            $.ajax({
+                url:"FastSearchCertName.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:{
+                    num:val,
+                },
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+
+                    if(res.result == 'success') {
+                        //console.log(res.data);
+
+                        $(".search_result_cert_name").html(res.data).fadeIn(); //Выводим полученые данные в списке
+                    }else{
+                        //console.log(res.data);
+                    }
+                },
+                error:function(){
+                    //console.log(12);
+                }
+            });
+        }else{
+            $("#search_result_cert_name").hide();
+        }
+    });
 
     //Для поиска абонемента из модального окна
     $('#search_abon').bind("change keyup input click", function() {
@@ -8683,6 +8683,68 @@
             );
 
         $('#search_cert_input_target').append($('#search_cert_input').children());
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
+    //Показываем блок для поиска и добавления именного сертификата
+    function showCertNamePayAdd(){
+
+        $('#overlay').show();
+
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "height": "250px"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative",
+                    })
+                    .append('<span style="margin: 0;"><i></i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-90px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%",
+                            })
+                            .append(
+								'<div id="search_cert_name_input_target">'+
+								'</div>'
+							).css({
+                            "position": "absolute",
+                            "width": "405px",
+                            "z-index": "1"
+                        })
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%",
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'#search_cert_name_input\').append($(\'#search_cert_name_input_target\').children()); $(\'.center_block\').remove(); $(\'#search_result_cert_name\').html(\'\'); $(\'#search_cert_name\').val(\'\');">'
+                            )
+                    )
+            );
+
+        $('#search_cert_name_input_target').append($('#search_cert_name_input').children());
 
         menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
 
