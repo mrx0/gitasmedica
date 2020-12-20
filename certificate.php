@@ -115,7 +115,13 @@
 								</div>
            					    <div class="cellsBlock2">
 									<div class="cellLeft">Потрачено</div>
-									<div class="cellRight">'.$cert_j[0]['debited'].' руб.</div>
+									<div class="cellRight">'.$cert_j[0]['debited'].' руб.  ';
+					if ($cert_j[0]['nominal']-$cert_j[0]['debited'] != 0) {
+                        echo '
+					                    <span style="font-weight: bold; font-size: 80%;">(осталось ' . ($cert_j[0]['nominal'] - $cert_j[0]['debited']) . ' руб.)</span>';
+                    }
+                    echo '
+                                    </div>
 								</div>';
 					if ($cert_j[0]['status'] == 5) {
                         echo '
@@ -125,58 +131,59 @@
 								</div>';
                     }
 
-                    $expired_color = '';
+                    if ($cert_j[0]['status'] != 5) {
+                        $expired_color = '';
 
-                    if ($cert_j[0]['expires_time'] != '0000-00-00') {
-                        //время истечения срока годности
-                        $sd = $cert_j[0]['expires_time'];
-                        //текущее
-                        $cd = date('Y-m-d', time());
-                        //сравнение не прошла ли гарантия
-                        /*var_dump(strtotime($sd));
-                        var_dump(strtotime($cd)); */
-                        //var_dump($cert_j[0]['status']);
-                        if (strtotime($sd) > strtotime($cd)) {
-                            echo '
-                            <div class="cellsBlock2">
-                                <div class="cellLeft">Срок истечёт</div>
-                                <div class="cellRight">
-                                    ' . date('d.m.Y', strtotime($cert_j[0]['expires_time'])) . '
-                                ';
-                        } else {
-                            echo '
-                            <div class="cellsBlock2">
-                                <div class="cellLeft">Истёк срок</div>
-                                <div class="cellRight" style="background-color: rgba(239,47,55, .7);">' . date('d.m.y', strtotime($cert_j[0]['expires_time']));
-//                            if ((($finances['see_all'] == 1) || $god_mode) && ($cert_j[0]['status'] != 5) && ($cert_j[0]['status'] != 9)) {
-//                                echo '
-//                                    <div style="float: right;">
-//                                        <span style="font-size: 80%;">Изменить срок <i class="fa fa-calendar" aria-hidden="true"></i></span><br>
-//                                        <input type="text" id="dataCertEnd" name="dataCertEnd" class="dateс" value="'.date('d.m.Y', strtotime($cert_j[0]['expires_time'])).'" onfocus="this.select();_Calendar.lcs(this)"
-//                                        onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-//                                        <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime(\'cert\','.$_GET['id'].');"></i>
-//                                    </div>';
-//                            }
-//                            echo '
-//                                </div>
-//                            </div>';
-                        }
+                        if ($cert_j[0]['expires_time'] != '0000-00-00') {
+                            //время истечения срока годности
+                            $sd = $cert_j[0]['expires_time'];
+                            //текущее
+                            $cd = date('Y-m-d', time());
+                            //сравнение не прошла ли гарантия
+                            /*var_dump(strtotime($sd));
+                            var_dump(strtotime($cd)); */
+                            //var_dump($cert_j[0]['status']);
+                            if (strtotime($sd) > strtotime($cd)) {
+                                echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Срок истечёт</div>
+                                    <div class="cellRight">
+                                        ' . date('d.m.Y', strtotime($cert_j[0]['expires_time'])) . '
+                                    ';
+                            } else {
+                                echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Истёк срок</div>
+                                    <div class="cellRight" style="background-color: rgba(239,47,55, .7);">' . date('d.m.y', strtotime($cert_j[0]['expires_time']));
+                                //                            if ((($finances['see_all'] == 1) || $god_mode) && ($cert_j[0]['status'] != 5) && ($cert_j[0]['status'] != 9)) {
+                                //                                echo '
+                                //                                    <div style="float: right;">
+                                //                                        <span style="font-size: 80%;">Изменить срок <i class="fa fa-calendar" aria-hidden="true"></i></span><br>
+                                //                                        <input type="text" id="dataCertEnd" name="dataCertEnd" class="dateс" value="'.date('d.m.Y', strtotime($cert_j[0]['expires_time'])).'" onfocus="this.select();_Calendar.lcs(this)"
+                                //                                        onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+                                //                                        <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime(\'cert\','.$_GET['id'].');"></i>
+                                //                                    </div>';
+                                //                            }
+                                //                            echo '
+                                //                                </div>
+                                //                            </div>';
+                            }
 
-                        if ((($finances['see_all'] == 1) || $god_mode) && ($cert_j[0]['status'] != 5) && ($cert_j[0]['status'] != 9)) {
+                            if ((($finances['see_all'] == 1) || $god_mode) && ($cert_j[0]['status'] != 5) && ($cert_j[0]['status'] != 9)) {
+                                echo '
+                                    <div style="float: right;">
+                                        <span style="font-size: 80%;">Изменить срок <i class="fa fa-calendar" aria-hidden="true"></i></span><br>
+                                        <input type="text" id="dataCertEnd" name="dataCertEnd" class="dateс" value="' . date('d.m.Y', strtotime($cert_j[0]['expires_time'])) . '" onfocus="this.select();_Calendar.lcs(this)"
+                                        onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
+                                        <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime(\'cert\',' . $_GET['id'] . ');"></i>
+                                    </div>';
+                            }
+
                             echo '
-                                <div style="float: right;">
-                                    <span style="font-size: 80%;">Изменить срок <i class="fa fa-calendar" aria-hidden="true"></i></span><br>
-                                    <input type="text" id="dataCertEnd" name="dataCertEnd" class="dateс" value="'.date('d.m.Y', strtotime($cert_j[0]['expires_time'])).'" onfocus="this.select();_Calendar.lcs(this)"
-                                    onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)">
-                                    <i class="fa fa-check" aria-hidden="true" style="color: green; cursor: pointer;" title="Применить" onclick="Ajax_change_expiresTime(\'cert\','.$_GET['id'].');"></i>
+                                    </div>
                                 </div>';
                         }
-
-                        echo '
-                                </div>
-                            </div>';
                     }
-
 
 					//Если не удалён
                     if ($cert_j[0]['status'] != 9){

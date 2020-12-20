@@ -140,7 +140,7 @@
 								<div class="cellOffice" style="text-align: center">Должность</div>
 								<div class="cellName" style="text-align: center">Категория</div>
 								<div class="cellName" style="text-align: center">Филиал</div>
-								<div class="cellFullName" style="text-align: center">Специализация</div>
+								<div class="cellOffice" style="text-align: center">Специализация</div>
 								
 								<div class="cellText" style="text-align: center">Контакты</div>
 								<div class="cellName" style="text-align: center">Логин</div>
@@ -188,7 +188,7 @@
                             echo '
                                     </div>
 									   
-									<div class="cellFullName"  style="text-align: right; '.$bgColor.'">';
+									<div class="cellOffice"  style="text-align: right; '.$bgColor.'">';
 
                             if (!empty($specializations)){
                                 //var_dump($specializations_j);
@@ -275,7 +275,7 @@
                             }
 
                             $fired_all .= '
-                                    <div class="cellFullName" style="text-align: right;">
+                                    <div class="cellOffice" style="text-align: right;">
                                         '.$specializations_str_rez.'
                                     </div>
                                     

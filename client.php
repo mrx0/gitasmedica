@@ -191,7 +191,7 @@ ORDER BY `name`;
                         echo '<div style="font-size: 130%; margin-top: 5px;">';
                         echo '<a href="finance_account.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Управление счётом</a>';
                         echo '<a href="zapis.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Записать пациента</a>';
-                        echo '<a href="cert_name_cell.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Именной сертификат</a>';
+                        echo '<a href="cert_name_cell.php?client_id='.$client_j['id'].'" class="b" style="display: inline; margin-left: 0px; font-size: 70%; padding: 2px 5px;">Выдать именной серт-т</a>';
                         if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
                             //var_dump($client_j['installment_status']);
 
@@ -235,7 +235,7 @@ ORDER BY `name`;
 
 								<div class="cellsBlock2">
 									<div class="cellLeft">ФИО</div>
-									<div class="cellRight">'.$client_j['full_name'].'</div>
+									<div class="cellRight" style="font-weight: bolder; font-size: 105%;">'.$client_j['full_name'].'</div>
 								</div>
 								
 								<div class="cellsBlock2">
@@ -412,34 +412,35 @@ ORDER BY `name`;
 				if (($client_j['fo'] != '') || ($client_j['io'] != '')){
 					echo '
 							<div class="cellsBlock2" style="margin-top: 2px; margin-bottom: 0; display: block;">
-								<div class="cellLeft" style="font-weight: bold; width: 500px;">
+								<div class="cellLeft" style="font-weight: bold; width: 500px; border-left: 1px ridge rgb(138 142 162); border-top: 1px ridge rgb(138 142 162); border-right: 1px ridge rgb(138 142 162);">
 									Опекун
 								</div>
 							</div>
+							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Фамилия</div>
-								<div class="cellRight">
+								<div class="cellLeft" style=" border-left: 1px ridge rgb(138 142 162); ">Фамилия</div>
+								<div class="cellRight" style=" border-right: 1px ridge rgb(138 142 162);">
 									'.$client_j['fo'].'
 								</div>
 							</div>
 							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Имя</div>
-								<div class="cellRight">
+								<div class="cellLeft" style=" border-left: 1px ridge rgb(138 142 162); ">Имя</div>
+								<div class="cellRight" style=" border-right: 1px ridge rgb(138 142 162);">
 									'.$client_j['io'].'
 								</div>
 							</div>
 							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Отчество</div>
-								<div class="cellRight">
+								<div class="cellLeft" style=" border-left: 1px ridge rgb(138 142 162); ">Отчество</div>
+								<div class="cellRight" style=" border-right: 1px ridge rgb(138 142 162);">
 									'.$client_j['oo'].'
 								</div>
 							</div>
 							
 							<div class="cellsBlock2">
-								<div class="cellLeft">Телефон</div>
-								<div class="cellRight">
+								<div class="cellLeft" style="border-bottom: 1px ridge rgb(138 142 162);  border-left: 1px ridge rgb(138 142 162);">Телефон</div>
+								<div class="cellRight" style="border-bottom: 1px ridge rgb(138 142 162); border-right: 1px ridge rgb(138 142 162);">
 									<div>
 										<span style="font-size: 80%; color: #AAA">мобильный</span><br>
 										'.$client_j['telephoneo'].'
@@ -453,7 +454,8 @@ ORDER BY `name`;
 					}
 					echo '
 								</div>
-							</div>';
+							</div>
+							';
 				}
 				echo '					
 								<div class="cellsBlock2">
@@ -548,6 +550,9 @@ ORDER BY `name`;
 						echo '
 								<li><a href="#tabs-4">Косметология</a></li>';
 					}
+
+                    echo '
+								<li><a href="#tabs-5">Прочее</a></li>';
 					echo '
 							</ul>';
 
@@ -1850,6 +1855,116 @@ ORDER BY `name`;
 					}
 
 					//--> Косметология
+
+                    //Прочее (например именные сертификаты) -->
+                    echo '
+							<div id="tabs-5">';
+
+                    //именные сертификаты, выданные пациенту
+                    $cert_name_j = array();
+
+                    $args = [
+                        'client_id' => $client_j['id']
+                    ];
+
+                    $query = "SELECT j_cn.* FROM `journal_cert_name` j_cn
+                            WHERE j_cn.client_id = :client_id";
+
+                    //Выбрать все
+                    $cert_name_j = $db::getRows($query, $args);
+                    //var_dump($cert_name_j);
+
+                    //Вывод всего
+                    if (!empty($cert_name_j)){
+                        echo 'Выданные сертификаты<br><br>';
+                        for ($i = 0; $i < count($cert_name_j); $i++) {
+
+                            $status = '';
+
+                            if ($cert_name_j[$i]['status'] == 9) {
+                                $back_color = 'background-color: rgba(161,161,161,1);';
+                                $status = 'Удалён';
+                            }elseif ($cert_name_j[$i]['status'] == 7){
+                                $back_color = 'background-color: rgba(47, 186, 239, 0.7);';
+                                $status = '<div style="font-size: 90%;">Выдан '.date('d.m.y H:i', strtotime($cert_name_j[$i]['cell_time'])).'</div>';
+
+                                $expires_time_color = '';
+
+                                $expirestime1weekminus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($cert_name_j[$i]['expires_time'])).' -2 weeks'));
+                                //var_dump($expirestime1weekminus);
+
+//                                if (date('Y-m-d', time()) > $expirestime1weekminus) {
+//                                    $expires_time_color = 'color: rgb(236 62 62);';
+//                                }
+
+//                                $status .= '
+//                                    <div style="font-size: 85%; '.$expires_time_color.'"><b>Срок истекает: '.date('d.m.Y', strtotime($cert_name_j[$i]['expires_time'])).'</b></div>';
+                            }elseif ($cert_name_j[$i]['status'] == 5){
+                                //Закрыт
+                                $back_color = 'background-color: rgba(119, 255, 135, 1);';
+                                $status = 'Закрыт '.date('d.m.y H:i', strtotime($cert_name_j[$i]['closed_time']));
+                            }else{
+                                $back_color = '';
+                            }
+
+                            $expired_color = '';
+                            $expired_txt = '';
+
+                            if (($cert_name_j[$i]['expires_time'] != '0000-00-00') && ($cert_name_j[$i]['status'] != 5)) {
+                                //время истечения срока годности
+                                $sd = $cert_name_j[$i]['expires_time'];
+                                //текущее
+                                $cd = date('Y-m-d', time());
+                                /*var_dump(strtotime($sd));
+                                var_dump(strtotime($cd));*/
+                                //сравнение не прошла ли гарантия
+                                if (strtotime($sd) > strtotime($cd)) {
+                                    $expired_txt .= '';
+                                } else {
+                                    $expired_color = 'background-color: rgba(239,47,55, .7)';
+                                    $back_color = 'background-color: rgba(255, 50, 25, 0.5)';
+                                    $status = 'Истёк срок '.date('d.m.Y', strtotime($cert_name_j[$i]['expires_time']));
+                                }
+
+                            }
+
+
+                            echo '
+							<li class="cellsBlock3" style="'.$back_color.'">
+								<div class="cellPriority" style=" margin-bottom: -1px;"></div>
+								<a href="certificate_name.php?id='.$cert_name_j[$i]['id'].'" class="cellOffice ahref 4filter" style="text-align: left; font-weight: bold; width: 180px; min-width: 180px;" id="4filter">'.$cert_name_j[$i]['num'].'</a>
+								<!--<div class="cellOffice" style="text-align: right">'.$cert_name_j[$i]['nominal'].' руб.</div>-->
+								<!--<div class="cellOffice" style="text-align: right">';
+                            //Очень странное условие, не помню, что тут должно было быть
+                            //if (($cert_name_j[$i]['status'] == 7) && ($cert_name_j[$i]['status'] != '0000-00-00 00:00:00')) {
+                            //Поменял его на это
+                            if ($cert_name_j[$i]['status'] == 7) {
+                                echo ($cert_name_j[$i]['nominal'] - $cert_name_j[$i]['debited']).' руб.';
+                            }
+                            echo '
+                                 </div>-->';
+                            echo '
+								<div class="cellText" style="text-align: center;">'.$status.'';
+//                    if ($cert_name_j[$i]['office_id'] != 0) {
+//                        $offices_j = SelDataFromDB('spr_filials', $cert_name_j[$i]['office_id'], 'offices');
+//                        if ($offices_j != 0) {
+//                            echo '<div style="font-size: 90%;"><i>'.$offices_j[0]['name'].'</i></div>';
+//                        }else {
+//                            echo '-';
+//                        }
+//                    }
+                            echo '
+                                </div>';
+                            echo '
+							</li>';
+                        }
+                    }
+
+
+                    echo '
+							</div>';
+
+                    //--> Прочее (например именные сертификаты)
 
 					echo '
 						</div>

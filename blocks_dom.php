@@ -27,6 +27,14 @@
                                     <div id="search_result_fcert2"></div>
                                 </div>';
 
+    $block_fast_search_certificate_name = '
+                                <div class="cellRight" style="box-shadow: -1px 1px 8px #333;">
+                                    <span style="font-size: 70%;">Быстрый поиск именного сертификата</span><br />
+                                    <input type="text" size="50" name="searchdata_fcert_name" id="search_cert_name" placeholder="Введите для поиска" value="" class="who_fcert_name"  autocomplete="off">
+                                    <!--<ul id="search_result_fc" class="search_result_fc"></ul><br />-->
+                                    <div id="search_result_fcertname2"></div>
+                                </div>';
+
     $block_fast_search_abonement = '
                                 <div class="cellRight" style="box-shadow: -1px 1px 8px #333;">
                                     <span style="font-size: 70%;">Быстрый поиск абонемента</span><br />
