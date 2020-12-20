@@ -8,6 +8,9 @@
 /etaps/*
 /kd/*
 /sxd/*
+/sxd
+/phpmyadmin
+/sessions
 /uploads/*
 /uploads_etap/*
 /uploads_zub/*
