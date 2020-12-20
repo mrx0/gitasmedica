@@ -377,6 +377,46 @@
         }
     });
 
+    //Для поиска сертификата именного из модального окна (2020-12-15 не использую пока)
+    // $('#search_cert').bind("change keyup input click", function() {
+    //
+    //     //var $this = $(this);
+    //     var val = $(this).val();
+    //     //console.log(val);
+    //
+    //     if (val.length > 1){
+    //         $.ajax({
+    //             url:"FastSearchCertName.php",
+    //             global: false,
+    //             type: "POST",
+    //             dataType: "JSON",
+    //             data:{
+    //                 num:val,
+    //             },
+    //             cache: false,
+    //             beforeSend: function() {
+    //                 //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+    //             },
+    //             success:function(res){
+    //                 //console.log(res);
+    //
+    //                 if(res.result == 'success') {
+    //                     //console.log(res.data);
+    //
+    //                     $(".search_result_cert_name").html(res.data).fadeIn(); //Выводим полученые данные в списке
+    //                 }else{
+    //                     //console.log(res.data);
+    //                 }
+    //             },
+    //             error:function(){
+    //                 //console.log(12);
+    //             }
+    //         });
+    //     }else{
+    //         $("#search_result_cert_name").hide();
+    //     }
+    // });
+
     //Для поиска абонемента из модального окна
     $('#search_abon').bind("change keyup input click", function() {
 
@@ -9333,6 +9373,52 @@
         }
 	}
 
+	//Удалим выдачу именного сертификата
+	function Ajax_cert_name_celling_del(id){
+
+        let rys = false;
+
+        rys = confirm("Вы собираетесь отменить выдачу сертификата.\nВы уверены?");
+
+        if (rys) {
+
+            let link = "cert_name_cell_dell_f.php";
+
+            let Data = {
+                cert_id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: Data,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res.data);
+
+					 if(res.result == "success"){
+					    //$('#data').hide();
+					    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+					    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Выдача отменена</li>'+
+					    '</ul>');
+					    setTimeout(function () {
+                            location.reload();
+					    }, 100);
+					 }
+					 if(res.result == "error"){
+					    $('#errror').html(res.data);
+					 }
+                }
+            });
+        }
+	}
+
 	//Удалим продажу абонемента
 	function Ajax_abonement_celling_del(id){
 
@@ -9421,6 +9507,51 @@
 				}
 			}
 		});
+	}
+
+	//Добавим сертификат именной к выдаче
+	function Ajax_cert_name_add_cell(id){
+
+        //$('#overlay').hide();
+        //$('#search_cert_input').append($('#search_cert_input_target').children());
+        //$('.center_block').remove();
+        $('#search_result_fcertname2').html('');
+        //$('#search_cert').val('');
+
+        //$('.have_money_or_not').show();
+        //$('#certs_result').show();
+        //$('#showCertPayAdd_button').hide();
+
+		// $.ajax({
+		// 	url: "FastSearchCertOne.php",
+		// 	global: false,
+		// 	type: "POST",
+		// 	dataType: "JSON",
+		// 	data:
+		// 	{
+        //         id: id,
+        //     },
+		// 	cache: false,
+		// 	beforeSend: function() {
+		// 		//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+		// 	},
+		// 	// действие, при ответе с сервера
+		// 	success: function(res){
+		// 		//console.log(res);
+		// 		$('.center_block').remove();
+		// 		$('#overlay').hide();
+        //
+		// 		if(res.result == "success"){
+		// 			//$('#data').hide();
+        //             $('#certs_result').append(res.data);
+        //
+        //             calculatePaymentCert ();
+        //
+		// 		}else{
+		// 			//$('#errror').html(res.data);
+		// 		}
+		// 	}
+		// });
 	}
 
 	//Добавим абонемент в оплату
@@ -12955,6 +13086,40 @@
 
         //!!! переход window.location.href - это правильное использование
         window.location.href = "cert_name_cell.php?client_id="+$("#new_payer_id").val() + get_data_str;
+    }
+
+    //Изменение сертификата именного, который выдаем
+    function changeCertificateNameId(cert_id){
+        //!!!Получение данных из GET тест
+        //console.log(params["data"]);
+        //выведет в консоль значение  GET-параметра data
+        //console.log(params);
+
+        let get_data_str = "";
+
+        let params = window
+            .location
+            .search
+            .replace("?","")
+            .split("&")
+            .reduce(
+                function(p,e){
+                    let a = e.split('=');
+                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    return p;
+                },
+                {}
+            );
+
+        for (let key in params) {
+            if (key.indexOf("cert_id") == -1){
+                get_data_str = get_data_str + "&" + key + "=" + params[key];
+            }
+        }
+        // console.log(get_data_str);
+
+        //!!! переход window.location.href - это правильное использование
+        window.location.href = "cert_name_cell.php?cert_id="+cert_id+ get_data_str;
     }
 
     //Загрузка элементов склада

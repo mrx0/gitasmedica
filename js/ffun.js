@@ -364,6 +364,59 @@
         });
     }
 
+    //Добавляем/редактируем в базу выдачу именного сертификата
+    function certificateNameCell(mode){
+
+        let link = "cert_name_cell_f.php";
+
+        let cert_id = $("#cert_id").val();
+        let client_id = $("#client_id").val();
+
+        if((client_id != 0) && (cert_id != 0)) {
+
+            let reqData = {
+                cert_id: cert_id,
+                client_id: client_id
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    console.log(res);   //!!! не убирай это, или сделай отображение ошибок
+
+
+                    // $('.center_block').remove();
+                    // $('#overlay').hide();
+
+                    if (res.result == "success") {
+                        //$('#data').hide();
+                        $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Сертификат выдан</li>' +
+                            '</ul>');
+                        setTimeout(function () {
+                            window.location.replace('certificate_name.php?id=' + cert_id + '');
+                            //console.log('client.php?id='+id);
+                        }, 100);
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+
+
     //Выборка касса
     function Ajax_show_result_stat_cashbox(){
 

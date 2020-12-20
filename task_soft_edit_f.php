@@ -11,7 +11,7 @@
 		//var_dump ($_POST);
 		if ($_POST){
 			if ($_POST['description'] == ''){
-				echo 'Не заполнено описание. Давайте еще разок =)<br /><br />
+				echo 'Не заполнено описание. Попробуйте еще раз.<br /><br />
 				<a href="task_soft_edit.php?id='.$_POST['id'].'" class="b">Вернуться</a>';
 			}else{
 				include_once 'DBWork.php';

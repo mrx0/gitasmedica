@@ -88,24 +88,30 @@
 								</div>
   								<div class="cellsBlock2">
 									<div class="cellLeft">Выдан</div>';
-					if (($cert_j[0]['cell_time'] == '0000-00-00 00:00:00') && ($cert_j[0]['status'] != 7)){
+					if (($cert_j[0]['cell_time'] == '0000-00-00 00:00:00') && ($cert_j[0]['client_id'] == 0) && ($cert_j[0]['status'] != 7)){
 					    echo '
                                     <div class="cellRight">нет</div>';
                     }else {
 					    echo '
 					        <div class="cellRight" style="background-color: rgba(47, 186, 239, 0.7);">'
-                                . date('d.m.y H:i', strtotime($cert_j[0]['cell_time'])) . ' за ' . $cert_j[0]['cell_price'] . ' руб.<br>';
-                        if ($cert_j[0]['office_id'] != 0){
-                            $offices_j = SelDataFromDB('spr_filials', $cert_j[0]['office_id'], 'offices');
+                                . date('d.m.y H:i', strtotime($cert_j[0]['cell_time'])) . '<br>';
+
+					    if ($cert_j[0]['client_id'] != 0){
+                            echo 'кому: '. WriteSearchUser('spr_clients', $cert_j[0]['client_id'], 'user', true) . '<br>';
+                        }
+
+                        if ($cert_j[0]['filial_id'] != 0){
+                            $offices_j = SelDataFromDB('spr_filials', $cert_j[0]['filial_id'], 'offices');
                             if ($offices_j != 0) {
                                 echo '<span style="font-size: 70%;">'.$offices_j[0]['name'].'</span>';
                             }
                         }else{
-                            echo '-';
+                            //echo '-';
                         }
+
                         //Удалить продажу
                         if (($finances['see_all'] == 1) || $god_mode) {
-                            echo '<div style="float: right; cursor: pointer;" onclick="Ajax_cert_celling_del('.$_GET['id'].');" title="Отменить продажу"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 130%;"></i></div>';
+                            echo '<div style="float: right; cursor: pointer;" onclick="Ajax_cert_name_celling_del('.$_GET['id'].');" title="Отменить выдачу"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 130%;"></i></div>';
                         }
 
 					    echo '

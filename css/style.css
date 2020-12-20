@@ -2672,7 +2672,7 @@ input[type="submit"].msg_send:hover{
 	border-top: none;
 }
 
-#waiting {
+#Что-то не заполнено. Попробуйте еще раз. {
 	width: 400px;
 	/*height: 250px; /* Размеры должны быть фиксированы */
 	max-height: 350px;

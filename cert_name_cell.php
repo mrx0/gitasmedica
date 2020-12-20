@@ -98,7 +98,7 @@
 							<div id="status">
 								<header>
 
-									<h2>Выдать пациенту <a href="client.php?id='.$client_id.'" class="ahref">'.$client_name.'</a> именной сертификат </h2>';
+									<h2>Выдать пациенту <a href="client.php?id='.$client_id.'" class="ahref">'.$client_name.'</a> именной сертификат '.$cert_name.'</h2>';
 
 							echo '
                                 </header>';
@@ -131,25 +131,30 @@
                                                 </li>
                                                 <input type="hidden" id="new_payer_id" value="'.$client_id.'">';
 
-//                                echo '
-//                                                <li style="margin-top: 5px; margin-bottom: 5px; font-size: 90%;">
-//                                                   <b>Сертификат: </b><br>
-//                                                   <input type="text" size="40" name="searchdata" id="search_client" placeholder="Введите первые три буквы для поиска" value="' . $client_name . '" class="who"  autocomplete="off" style="margin-top: 5px; font-size: 120%;">
-//                                                   <!--!!!Изменить-->
-//                                                   <span id="changeNewPayer_id" class="button_tiny" style="font-size: 110%; cursor: pointer" onclick="changeCertificateNameMaster();"><i class="fa fa-check-square" style=" color: green;"></i> Изменить</span>
-//                                                   <ul id="search_result" class="search_result"></ul><br>
-//                                                </li>
-//                                                <input type="hidden" id="new_payer_id" value="'.$client_id.'">';
-
-
                                 echo '
+                                                <li style="margin-top: 5px; margin-bottom: 5px; font-size: 90%;">
+                                                   <b>Сертификат: </b><br>
+                                                   <input type="text" size="40" name="searchdata" id="search_cert_name" placeholder="Наберите номер сертификата для поиска" value="' . $cert_name . '" class="who_fcert_name"  autocomplete="off" style="margin-top: 5px; font-size: 120%;">
+                                                   <!--!!!Изменить-->
+                                                   <!--<span id="changeCertificateName_id" class="button_tiny" style="font-size: 110%; cursor: pointer" onclick="changeCertificateNameId();"><i class="fa fa-check-square" style=" color: green;"></i> Изменить</span>-->
+                                                   <ul id="search_result_fcertname2" class="search_result_fcertname2"></ul><br>
+                                                </li>
+                                                <input type="hidden" id="cert_id" value="'.$cert_id.'">';
+
+                                if (isset($_SESSION['filial'])){
+
+                                    echo '
                                                         <div>
                                                             <div id="errror"></div>
                                                             <input type="hidden" id="client_id" name="client_id" value="' . $client_id . '">
                                                             <input type="hidden" id="cert_id" name="cert_id" value="' . $cert_id . '">
-                                                            <input type="button" class="b" value="Сохранить" onclick="showPaymentAdd(\'add\', true)">
+                                                            <input type="button" id="certificateNameCell" class="b" value="Сохранить" onclick="certificateNameCell(\'add\')">
                                                         </div>';
 
+                                }else{
+                                    echo '
+								            <span style="font-size: 85%; color: #FF0202; margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%;"></i> У вас не определён филиал <i class="ahref change_filial">определить</i></span><br>';
+                                }
 
                                 echo '
                                                 </ul>
@@ -188,6 +193,10 @@
                                         "border": "1px dashed red",
                                         "color": "red",
                                     })
+                                    
+                                    //Блокируем кнопку
+                                    //$("#certificateNameCell").disabled = true;
+                                    $("#certificateNameCell").attr("disabled", true);
                                     
                                 });
                             </script>';

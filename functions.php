@@ -52,7 +52,8 @@
 			"Ы"=>"y","ы"=>"y",
 			"Э"=>"e","э"=>"e",
 			"Ю"=>"u","ю"=>"u",
-			"Я"=>"y","я"=>"y"
+			"Я"=>"y","я"=>"y",
+			"*"=>"_"
 		);
 		$login = iconv("UTF-8","UTF-8//IGNORE",strtr(mb_substr($i, 0, 1, "UTF-8"),$replace)).iconv("UTF-8","UTF-8//IGNORE",strtr(mb_substr($o, 0, 1, "UTF-8"),$replace)).iconv("UTF-8","UTF-8//IGNORE",strtr(mb_substr($f, 0, 1, "UTF-8"),$replace));
 		

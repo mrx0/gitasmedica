@@ -274,7 +274,7 @@
 	echo '
 		<div class="no_print"> 
 		<header class="h">
-			<nav>
+			<nav style="/*background-color: rgba(255,231,251,0.37);*/">
 				<ul class="vert-nav">';
 	//Если в системе
 	if ($enter_ok){
@@ -290,7 +290,7 @@
             //var_dump($offices_j['name']);
             $selected_fil = $offices_j[0]['name'];
         }else{
-            $selected_fil = '-';
+            $selected_fil = '<span style="color: rgb(181 170 170); font-style: italic; font-size: 95%;">филиал не выбран</span>';
             $filial_id_default = 15;
         }
 
@@ -311,9 +311,9 @@
 			echo '<li><a href="tickets.php">Заявки<div class="have_new-ticket notes_count" style="display: none; top: 0; right: 0; background: red;" title="">4545</div></a></li>';
 		}
 
-		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
-			echo '<li><a href="it.php">IT</a></li>';
-		}
+//		if (($it['see_all'] == 1) || ($it['see_own'] == 1) || $god_mode){
+//			echo '<li><a href="it.php">IT</a></li>';
+//		}
 
 		/*if (($soft['see_all'] == 1) || ($soft['see_own'] == 1) || $god_mode){
 			echo '<li><a href="soft.php">Программа</a></li>';
@@ -384,7 +384,7 @@
             echo '<li><a href="clients.php">Пациенты</a></li>';
         }
 		if (($report['see_all'] == 1) || ($report['see_own'] == 1) || $god_mode){
-			echo '<li><a href="reports.php">Отчёты</a></li>';
+			echo '<li><a href="reports.php"><span>Отчёты</span></a></li>';
 		}
 		if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
 			echo '<li><a href="directory.php">Справочники</a></li>';
@@ -489,8 +489,8 @@
 							</div>
 						</div>
 						
-						<a href="exit.php" class="href_exit" title="Выход">
-							<i class="fa fa-power-off"></i>
+						<a href="exit.php" class="href_exit" style="font-size: 105%;" title="Выход">
+							<i class="fa fa-power-off" style="vertical-align: bottom;"></i>
 						</a>
 					</li>';
 		

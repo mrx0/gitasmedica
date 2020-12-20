@@ -49,7 +49,7 @@
             echo '
 					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px;">';
 
-            echo $block_fast_search_certificate;
+            echo $block_fast_search_certificate_name;
 
             echo '
 					</div>';
@@ -94,16 +94,16 @@
 
             echo '
 						<div id="data">';
-            echo '
-                            <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите опцию просмотра</span><br>
-							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-								<a href="?" class="b" style="' . $option1_color . '">Все</a>
-								<a href="?&option=2" class="b" style="' . $option2_color . '">Проданные, не потраченные</a>
-								<a href="?&option=3" class="b" style="' . $option3_color . '">Проданные, истёк срок</a>
-								<a href="?&option=5" class="b" style="' . $option5_color . '">Проданные, истёк срок, потраченные частично</a>
-								<a href="?&option=4" class="b" style="' . $option4_color . '">Закрытые</a>
-								<!--<a href="?&option=5" class="b" style="' . $option5_color . '"></a>-->
-							</li>';
+//            echo '
+//                            <span style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Выберите опцию просмотра</span><br>
+//							<li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
+//								<a href="?" class="b" style="' . $option1_color . '">Все</a>
+//								<a href="?&option=2" class="b" style="' . $option2_color . '">Проданные, не потраченные</a>
+//								<a href="?&option=3" class="b" style="' . $option3_color . '">Проданные, истёк срок</a>
+//								<a href="?&option=5" class="b" style="' . $option5_color . '">Проданные, истёк срок, потраченные частично</a>
+//								<a href="?&option=4" class="b" style="' . $option4_color . '">Закрытые</a>
+//								<!--<a href="?&option=5" class="b" style="' . $option5_color . '"></a>-->
+//							</li>';
 
             //Пагинатор
             echo paginationCreate($limit_pos[1], $_GET['page'], 'journal_cert_name', 'certificates_name.php', $msql_cnnct, $dop, $dop_link_str);
@@ -117,8 +117,8 @@
             echo $block_fast_filter;
             echo '
                             </div>
-							<div class="cellOffice" style="text-align: center;">Номинал</div>
-							<div class="cellOffice" style="text-align: center;">Остаток</div>
+							<!--<div class="cellOffice" style="text-align: center;">Номинал</div>
+							<div class="cellOffice" style="text-align: center;">Остаток</div>-->
 							<div class="cellText" style="text-align: center;">Статус</div>
 						</li>';
 
@@ -170,20 +170,21 @@
                         $status = 'Удалён';
                     }elseif ($cert_j[$i]['status'] == 7){
                         $back_color = 'background-color: rgba(47, 186, 239, 0.7);';
-                        $status = '<div style="font-size: 90%;">Продан '.date('d.m.y H:i', strtotime($cert_j[$i]['cell_time'])).'</div>';
+                        $status = '<div style="font-size: 90%;">Выдан '.date('d.m.y H:i', strtotime($cert_j[$i]['cell_time'])).'</div>';
 
                         $expires_time_color = '';
 
                         $expirestime1weekminus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($cert_j[$i]['expires_time'])).' -2 weeks'));
                         //var_dump($expirestime1weekminus);
 
-                        if (date('Y-m-d', time()) > $expirestime1weekminus) {
-                            $expires_time_color = 'color: rgb(236 62 62);';
-                        }
+//                        if (date('Y-m-d', time()) > $expirestime1weekminus) {
+//                            $expires_time_color = 'color: rgb(236 62 62);';
+//                        }
 
-                        $status .= '
-                                    <div style="font-size: 85%; '.$expires_time_color.'"><b>Срок истекает: '.date('d.m.Y', strtotime($cert_j[$i]['expires_time'])).'</b></div>';
+//                        $status .= '
+//                                    <div style="font-size: 85%; '.$expires_time_color.'"><b>Срок истекает: '.date('d.m.Y', strtotime($cert_j[$i]['expires_time'])).'</b></div>';
                     }elseif ($cert_j[$i]['status'] == 5){
+					    //Закрыт
                         $back_color = 'background-color: rgba(119, 255, 135, 1);';
                         $status = 'Закрыт '.date('d.m.y H:i', strtotime($cert_j[$i]['closed_time']));
 					}else{
@@ -216,8 +217,8 @@
 							<li class="cellsBlock3" style="'.$back_color.'">
 								<div class="cellPriority" style=" margin-bottom: -1px;"></div>
 								<a href="certificate_name.php?id='.$cert_j[$i]['id'].'" class="cellOffice ahref 4filter" style="text-align: left; font-weight: bold; width: 180px; min-width: 180px;" id="4filter">'.$cert_j[$i]['num'].'</a>
-								<div class="cellOffice" style="text-align: right">'.$cert_j[$i]['nominal'].' руб.</div>
-								<div class="cellOffice" style="text-align: right">';
+								<!--<div class="cellOffice" style="text-align: right">'.$cert_j[$i]['nominal'].' руб.</div>-->
+								<!--<div class="cellOffice" style="text-align: right">';
                     //Очень странное условие, не помню, что тут должно было быть
                     //if (($cert_j[$i]['status'] == 7) && ($cert_j[$i]['status'] != '0000-00-00 00:00:00')) {
                     //Поменял его на это
@@ -225,7 +226,7 @@
                         echo ($cert_j[$i]['nominal'] - $cert_j[$i]['debited']).' руб.';
                     }
                     echo '
-                                 </div>';
+                                 </div>-->';
                     echo '
 								<div class="cellText" style="text-align: center;">'.$status.'';
 //                    if ($cert_j[$i]['office_id'] != 0) {

@@ -101,7 +101,7 @@
 
                         <div class="cellsBlock2">
                             <div class="cellLeft">ФИО</div>
-                            <div class="cellRight">'.$user[0]['full_name'].'</div>
+                            <div class="cellRight" style="font-weight: bold; font-size: 105%;">'.$user[0]['full_name'].'</div>
                         </div>
                         
                         <div class="cellsBlock2">
