@@ -39,16 +39,16 @@
         <script>
             $( "#tabs_w" ).tabs();
 
-            $(".vert-nav li").hover(
-                function() {
-                    $("ul", this).slideDown(110);
-                    //$(".have_new-zapis_main").hide();
-                },
-                function() {
-                    $("ul", this).slideUp(110);
-                    //$(".have_new-zapis_main").show();
-                }
-            );
+//            $(".vert-nav li").hover(
+//                function() {
+//                    $("ul", this).slideDown(110);
+//                    //$(".have_new-zapis_main").hide();
+//                },
+//                function() {
+//                    $("ul", this).slideUp(110);
+//                    //$(".have_new-zapis_main").show();
+//                }
+//            );
 
             $(document).ready(function(){
             	 $(document).attr("title", $("#doc_title").html());

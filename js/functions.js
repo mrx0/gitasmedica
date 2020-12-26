@@ -10003,6 +10003,51 @@
         }
 	}
 
+	//Добавляем/редактируем в базу новое замечание сотруднику
+	function Ajax_remarkToEmployee_add(mode){
+		//console.log(mode);
+
+        let remark_to_employee_id = 0;
+
+		let link = "remark_to_employee_add_f.php";
+
+		if (mode == 'edit'){
+			link = "remark_to_employee_edit_f.php";
+            remark_to_employee_id = $("#remark_to_employee_id").val();
+		}
+
+        let reqData = {
+            date_in: $("#date_in").val(),
+            worker: $("#search_client4").val(),
+            comment: $("#comment").val()
+        };
+		//console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    $('#errror').html(res.data);
+                    setTimeout(function () {
+                        window.location.href = "remarks_to_employees.php";
+                    }, 1000);
+                } else {
+                    $('#errror').html(res.data);
+                }
+            }
+        })
+	}
+
 	function selectThisTabelForSalaryDeduction(worker_id){
 		//console.log(worker_id);
 

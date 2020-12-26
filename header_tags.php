@@ -274,7 +274,7 @@
 	echo '
 		<div class="no_print"> 
 		<header class="h">
-			<nav style="/*background-color: rgba(255,231,251,0.37);*/">
+			<nav style="/*background-color: rgba(255,231,251,0.37);*/;">
 				<ul class="vert-nav">';
 	//Если в системе
 	if ($enter_ok){
@@ -326,10 +326,11 @@
                 <li>
                     <a href="cosmet.php" style="width: 85px;">Косметология</a>';
             echo '
-                    <ul style="background: #FFF; width: 108px;">
-                        <li><a href="zapis_solar.php" style="height: 20px; border: 1px dotted #CCC;">
-                            Солярий
-                        </a>
+                    <ul style="/*background: #FFF; width: 108px;*/">
+                        <li>
+                            <a href="zapis_solar.php" style="/*height: 20px; border: 1px dotted #CCC;*/">
+                                Солярий
+                            </a>
                         </li>
                     </ul>';
             echo '
@@ -352,26 +353,31 @@
 
             if ((($_SESSION['permissions'] == 5) || ($_SESSION['permissions'] == 6) || ($_SESSION['permissions'] == 10))) {
                 echo '
-                    <ul style="background: #FFF; width: 108px;">
-                        <li><a href="zapis_own.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&worker=' . $_SESSION['id'] . '" style="height: 20px; border: 1px dotted #CCC;">
-                            Моя запись
-                        </a></li>
+                    <ul style="/*background: #FFF; width: 108px;*/">
+                        <li>
+                            <a href="zapis_own.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&worker=' . $_SESSION['id'] . '" style="/*height: 20px; border: 1px dotted #CCC;*/">
+                                Моя запись
+                            </a>
+                        </li>
                     </ul>';
             }else{
                 echo '
-                    <ul style="background: #FFF; width: 108px;">
-                        <li><a href="zapis.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
-                            Запись
-                        </a>
+                    <ul style="/*background: #FFF; width: 108px;*/">
+                        <li>
+                            <a href="zapis.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="/*height: 20px; border: 1px dotted #CCC;*/">
+                                Запись
+                            </a>
                         </li>
-                        <li><a href="zapis_full.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="height: 20px; border: 1px dotted #CCC;">
-                            Подробно
-                        </a>
+                        <li>
+                            <a href="zapis_full.php?y=' . $yearT . '&m=' . $monthT . '&d=' . $dayT . '&filial=' . $filial_id_default . '" style="/*height: 20px; border: 1px dotted #CCC;*/">
+                                Подробно
+                            </a>
                         </li>
-                        <li><a href="zapis_online.php" style="height: 20px; border: 1px dotted #CCC;">
-                            Запись онлайн
-                        <div class="have_new-zapis notes_count" style="display: none; top: -5px; right: -20px; background: red;" title="Есть необработанные онлайн заявки"></div>
-                        </a>
+                        <li>
+                            <a href="zapis_online.php" style="/*height: 20px; border: 1px dotted #CCC;*/">
+                                Запись онлайн
+                                <div class="have_new-zapis notes_count" style="display: none; top: 2px; right: 3px; background: red;" title="Есть необработанные онлайн заявки"></div>
+                            </a>
                         </li>
                     </ul>';
             }
@@ -392,7 +398,7 @@
 
 		//echo '<li><a href="search.php"><i class="fa fa-search"></i></a></li>';
 
-        echo '<li><a href="spr_proizvcalendar.php"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
+        echo '<li><a href="spr_proizvcalendar.php" style="font-size: 115%;"><i class="fa fa-calendar" aria-hidden="true"></i></a></li>';
         
 		if ($god_mode || ($_SESSION['permissions'] == 3)){
 			echo '<li><a href="admin.php" style="font-size: 110%;"><i class="fa fa-cogs"></i></a></li>';
@@ -407,10 +413,14 @@
 	
 	echo
 				'</ul>
-				<ul style="position: absolute; right: 0; top: 0; z-index: 99; background: #FFF;">';
+				<ul style="position: absolute; right: 0; top: 0; z-index: 99; /*background: #FFF;*/">';
 	if (!$enter_ok){
 		echo '
-					<li><a href="enter.php" title="Вход"><i class="fa fa-power-off"></i></a></li>';
+					<li>
+					    <a href="enter.php" title="Вход">
+					        <i class="fa fa-power-off"></i>
+                        </a>
+                    </li>';
 	}else{
 		
 		$alarm = 0;
@@ -443,16 +453,16 @@
 			}
 
 			
-			$if_notes .= '
-				<a href="user.php?id='.$_SESSION['id'].'">';
+//			$if_notes .= '
+//				<a href="user.php?id='.$_SESSION['id'].'">';
 			if ($pre_warning!=0)
-				$if_notes .= '<div style="color: #F9FF00;" class="notes" title="Напоминания менее 2 дней"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$pre_warning.'</div></div>';
+				$if_notes .= '<div style="color: #F9FF00; margin-right: 10px; font-size: 115%;" class="notes" title="Напоминания менее 2 дней"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count" style="top: 0; right: -15px;">'.$pre_warning.'</div></div>';
 			if ($warning !=0)
-				$if_notes .= '<div style="color: #FFC874;" class="notes" title="Напоминания осталось 3 дня"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$warning.'</div></div>';
+				$if_notes .= '<div style="color: #FFC874; margin-right: 10px; font-size: 115%;" class="notes" title="Напоминания осталось 3 дня"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count" style="top: 0; right: -15px;">'.$warning.'</div></div>';
 			if ($alarm !=0)
-				$if_notes .= '<div style="color: #FF1F0F;" class="notes" title="Просроченные напоминания"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count">'.$alarm.'</div></div>';
+				$if_notes .= '<div style="color: #FF1F0F; margin-right: 10px; font-size: 115%;" class="notes" title="Просроченные напоминания"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><div class="notes_count" style="top: 0; right: -15px;">'.$alarm.'</div></div>';
 			
-			$if_notes .= '</a>';
+			//$if_notes .= '</a>';
 		}else{
 			$if_notes = '';
 		}
@@ -463,34 +473,57 @@
 		$removesMy = SelDataFromDB ('removes_open', $_SESSION['id'], 'create_person');
 		//... Ко мне
 		$removesMe = SelDataFromDB ('removes_open', $_SESSION['id'], 'whom');
+
 		if (($removesMy != 0) || ($removesMe != 0)){
-			$if_removes .= '<a href="user.php?id='.$_SESSION['id'].'">';
+			//if_removes .= '<a href="user.php?id='.$_SESSION['id'].'">';
 			if($removesMe != 0){
-				$if_removes .= '<div class="removes" style="color: #2727D7;" title="Направлено ко мне"><i class="fa fa-sign-in" aria-hidden="true"></i><div class="notes_count">'.count($removesMe).'</div></div>';
+				$if_removes .= '<div class="removes" style="color: #2727D7; margin-right: 10px; font-size: 115%;" title="Направлено ко мне"><i class="fa fa-sign-in" aria-hidden="true"></i><div class="notes_count" style="top: 0; right: -15px;">'.count($removesMe).'</div></div>';
 			}
 			if($removesMy != 0){
-				$if_removes .= '<div class="removes" style="color: #01E78E;" title="Мои направления"><i class="fa fa-sign-out" aria-hidden="true"></i><div class="notes_count">'.count($removesMy).'</div></div>';
+				$if_removes .= '<div class="removes" style="color: #01E78E; margin-right: 10px; font-size: 115%;" title="Мои направления"><i class="fa fa-sign-out" aria-hidden="true"></i><div class="notes_count" style="top: 0; right: -15px;">'.count($removesMy).'</div></div>';
 			}
-			$if_removes .= '</a>';
+			//$if_removes .= '</a>';
 		}else{
 			$if_removes = '';
 		}
 
-		echo '
+//		var_dump(mb_strlen($if_notes));
+//		var_dump(mb_strlen($if_removes));
 
+        if (mb_strlen($if_removes) > 0){
+            echo '
 					<li>
-						'.$if_removes.$if_notes.'
+					    <a href="user.php?id='.$_SESSION['id'].'">
+						    '.$if_removes.'
+                        </a>
+                    </li>            
+            ';
+        }
+
+        if (mb_strlen($if_notes) > 0){
+            echo '
+                    <li>
+                        <a href="user.php?id='.$_SESSION['id'].'">
+						    '.$if_notes.'
+                        </a>
+                    </li>       
+            ';
+        }
+
+        echo '
+                    <li>
 						<div class="user_link" style="font-size: 80%; position: relative;">
-							<a href="user.php?id='.$_SESSION['id'].'" class="href_profile" style="min-width: 110px;">
-								['.$_SESSION['name'].']
+							<a href="user.php?id='.$_SESSION['id'].'" class="href_profile" style="line-height: 26px; min-width: 110px;">
+								'.$_SESSION['name'].'
 							</a>
 							<div id="change_filial" class="href_profile change_filial" style="">
 								'.$selected_fil.'
 							</div>
 						</div>
-						
+                    </li>
+					<li>	
 						<a href="exit.php" class="href_exit" style="font-size: 105%;" title="Выход">
-							<i class="fa fa-power-off" style="vertical-align: bottom;"></i>
+							<i class="fa fa-power-off" style=""></i>
 						</a>
 					</li>';
 		

@@ -11,6 +11,7 @@
         if ($_GET){
             if (isset($_GET['id'])){
 
+                include_once('DBWorkPDO.php');
                 include_once 'DBWork.php';
                 include_once 'functions.php';
 
@@ -68,6 +69,23 @@
 						//$client_j = SelDataFromDB('spr_clients', $calculate_j[0]['client_id'], 'user');
 						//var_dump($client_j);
 
+                        $db = new DB();
+
+                        //Замечания в этом месяце
+                        $query = "
+                            SELECT j_rte.*
+                            FROM `journal_remark_to_employee` j_rte
+                            WHERE j_rte.worker_id = :worker_id AND MONTH(j_rte.date_in) = :month AND YEAR(j_rte.date_in) = :year
+                            ORDER BY j_rte.date_in";
+
+                        $args = [
+                            'month' => $tabel_j[0]['month'],
+                            'year' => $tabel_j[0]['year'],
+                            'worker_id' => $tabel_j[0]['worker_id']
+                        ];
+
+                        $remarks_j = $db::getRows($query, $args);
+                        //var_dump($remarks_j);
 
                         echo '
                                 <div id="status">
@@ -170,6 +188,35 @@
                         }
                         echo '
 		        						</div>';
+
+
+                        //Выведем замечания, если они есть
+                        if (!empty($remarks_j)){
+                            echo '
+                                <div>
+                                    <span style="font-size:80%;  color: #555; background-color: rgb(255 255 164);">
+                                        У сотрудника есть в этом месяце замечания:
+                                    </span>
+                                </div>
+                                <div style="height: 20px;">';
+
+                            foreach ($remarks_j as $remarks_data){
+                                //var_dump($remarks_data);
+
+                                $descr = $remarks_data['descr'];
+
+                                //$descr = mb_strimwidth($remarks_data['descr'], 0, 25, "...", 'utf-8');
+
+                                echo '
+                                    <div id="hoverShowText" class="cellsBlockHover" style="/*background-color: rgba(151,255,255,0);*//* width: 170px;*/ margin: 1px 0; padding: 1px 5px; border: 1px solid rgba(179,210,210,0.4); display: inline-block; vertical-align: top;">
+                                        <span style="font-size: 70%; margin: 1px 0; padding: 1px 5px; ">
+                                            ' . $descr . '
+                                        </span>
+                                    </div>';
+                            }
+                            echo '
+                                </div>';
+                        }
 
 
                         //Получение данных
@@ -339,7 +386,7 @@
                                 && ($tabel_j[0]['month'] ==  date('m', strtotime($invoice_create_time3)))){
                             }else{
                                 $rezult .= '
-                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);"></i>';
+                                                        <i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="Дата наряда отличается от даты табеля"></i>';
                             }
 
 
@@ -844,7 +891,7 @@
 //                                var_dump($rezData);
 
                                     echo '
-                                    <div style="width: 130px; margin: 1px 0; padding: 1px 5px; border: 1px dashed red; display: inline-block;">
+                                    <div class="cellsBlockHover" style="width: 130px; margin: 1px 0; padding: 1px 5px; border: 1px dashed red; display: inline-block;">
                                         <div style="font-size: 70%; font-weight: bold;">
                                             налог
                                         </div>
@@ -860,7 +907,7 @@
 //                                var_dump($rezData);
 
                                     echo '
-                                    <div style="width: 130px; margin: 1px 0; padding: 1px 5px; border: 1px dashed green;  display: inline-block;">
+                                    <div class="cellsBlockHover" style="width: 130px; margin: 1px 0; padding: 1px 5px; border: 1px dashed green;  display: inline-block;">
                                         <div style="font-size: 70%; font-weight: bold;">';
                                     if ($rezData['type'] == 2) {
                                         echo ' отпускной ';

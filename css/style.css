@@ -145,29 +145,31 @@ section#main {
 
 /* меню навигации */
 nav {
+	list-style-type: none;
 	background:#fff;
-	border:1px solid #BFBCB5;
-	list-style-type:none;
+	/*border:1px solid #BFBCB5;*/
+	border: 1px solid rgb(197 197 197 / 33%);
 	margin:0;
 	padding:0;
+	text-align: center;
 	/*overflow:hidden;*/
-	height: 40px;
+	/*height: 40px;*/
 }
 
-nav a{
+/*nav a{
 	float:left;
 	font-weight: normal;
 	display: block;
-	/*color: #BFBCB5;*/
+	!*color: #BFBCB5;*!
 	color: #007BB6;
 	text-decoration: none;
 	text-align:center;
 	padding: 6px 10px 5px;
 	border-right: 1px dotted #CCC;
-	/*border-bottom: 1px dotted #CCC;*/
+	!*border-bottom: 1px dotted #CCC;*!
 	height: 28px;
 	font-size: 11px;
-}
+}*/
 
 nav div.user_link{
 	float:left;
@@ -177,10 +179,10 @@ nav div.user_link{
 	height: 25px;
 }
 
-nav a:hover {
+/*nav a:hover {
 	color: rgba(255,255,100, 1);
 	background: #97D7FF;
-}
+}*/
 
 .href_exit {
 	color: #E72717;
@@ -193,9 +195,9 @@ nav a:hover {
 }
 
 .notes, .removes {
-	margin: 5px; 
-	padding: 0 5px 5px 5px; 
-	vertical-align: middle; 
+	/*margin: 5px; */
+	/*padding: 0 5px 5px 5px;
+	vertical-align: middle; */
 	/*color:#FFF;*/ 
 	text-shadow: 1px 1px 1px #999;
 	/*border:1px solid #333;*/
@@ -218,6 +220,7 @@ nav a:hover {
 	padding: 1px 5px;
 	text-shadow: 2px 1px 1px #AAA;
 	box-shadow: 0 0 5px #999;
+	line-height: normal;
 }
 
 .notes_count2, .notes_count3{
@@ -255,7 +258,8 @@ nav a:hover {
 	font-weight: normal; 
 	bottom: -14px;
 	cursor: pointer;
-	border-top: 1px dashed #e0e0e0;
+	/*border-top: 1px dashed #e0e0e0;*/
+	border-bottom: 1px solid rgb(197 197 197);
 }
 
 /*.removes {
@@ -2449,36 +2453,91 @@ ul.ul-drop div.drop {
 
 /*Для выпадающих блоков в главном меню сверху*/
 /* Делаем LI инлайновым: */
-.vert-nav li {
-	float:left;
-	position:relative;
-	display:block;
-	/*margin:0 1px;*/
-	z-index: 98;
-	/*width: 150px;*/
-}
+/*.vert-nav li {*/
+/*	float:left;*/
+/*	position:relative;*/
+/*	display:block;*/
+/*	!*margin:0 1px;*!*/
+/*	z-index: 98;*/
+/*	!*width: 150px;*!*/
+/*}*/
 
 /* Меню: */
-.vert-nav li a {
-	display:block;
-	/*padding:8px 5px 0 5px;*/
-	/*height:23px;*/
-	width: inherit;
-	/*border: 1px dotted #CCC;*/
+/*.vert-nav li a {*/
+/*	display:block;*/
+/*	!*padding:8px 5px 0 5px;*!*/
+/*	!*height:23px;*!*/
+/*	width: inherit;*/
+/*	!*border: 1px dotted #CCC;*!*/
+/*}*/
+
+/*!* Подменю, скрываемое по умолчанию: *!*/
+/*.vert-nav ul {*/
+/*	position:absolute;*/
+/*	display:none;*/
+/*	left: -1px;*/
+/*	overflow: visible;*/
+/*	top: 29px;*/
+/*}*/
+/*.vert-nav ul li {*/
+/*	float:left;*/
+/*	width: 85px;*/
+/*}*/
+
+nav ul {
+	list-style: none; /*убираем маркеры списка*/
+	margin: 0; /*убираем отступы*/
+	padding-left: 0; /*убираем отступы*/
+	/*margin-top:25px;*/ /*делаем отступ сверху*/
+	background: #f8f8f8; /*добавляем фон всему меню*/
+	height: 40px; /*задаем высоту*/
 }
 
-/* Подменю, скрываемое по умолчанию: */
-.vert-nav ul {
+nav ul li a {
+	font-size: 11px;
+	font-weight: normal;
+	text-decoration: none; /*убираем подчеркивание текста ссылок*/
+	background: #f8f8f8; /*добавляем фон к пункту меню*/
+	color: rgb(0 123 182); /*меняем цвет ссылок*/
+	padding: 0px 15px; /*добавляем отступ*/
+	/*font-family: arial;*/ /*меняем шрифт*/
+	line-height: 38px; /*ровняем меню по вертикали*/
+	display: block;
+	border: 1px solid rgb(197 197 197); /*добавляем бордюр */
+	-moz-transition: all 0.3s 0.01s ease; /*делаем плавный переход*/
+	-o-transition: all 0.3s 0.01s ease;
+	-webkit-transition: all 0.3s 0.01s ease;
+	margin-right: 2px;
+}
+
+nav ul li a:hover {
+	background: rgb(151 215 255);/*добавляем эффект при наведении*/
+	color: rgba(255,255,100, 1);
+}
+
+nav ul li {
+	float:left; /*Размещаем список горизонтально для реализации меню*/
+	position:relative; /*задаем позицию для позиционирования*/
+}
+
+/*Стили для скрытого выпадающего меню*/
+nav ul li > ul {
 	position:absolute;
+	z-index: 5;
+	top: 40px;
 	display:none;
-	left: -1px;
-	overflow: visible;
-	top: 29px;
+
 }
-.vert-nav ul li {
-	float:left;
-	width: 85px;
+
+/*Делаем скрытую часть видимой*/
+nav ul li:hover > ul {
+	display: block;
+	width: 120px;  /*Задаем ширину выпадающего меню*/
 }
+nav ul li:hover > ul > li {
+	float:none; /*Убираем горизонтальное позиционирование*/
+}
+
 
 /*Для нарядов, увеличение уменьшение цены на 1*/
 .invPriceUpOne, .invPriceDownOne{
@@ -2922,5 +2981,23 @@ input[type="submit"] {
 	min-width: 80px;
 	text-align: right;
 	color: red;
+}
+
+/*Скрываем текст, а при наведении показываем*/
+#hoverShowText {
+	border: 1px solid black;
+	width: 200px;
+	height: 20px;
+	overflow: hidden;
+	padding: 5px 10px;
+}
+
+#hoverShowText:hover {
+	/*width: auto;*/
+	/*width: min-content;*/
+	height: auto;
+	cursor: pointer;
+	position: absolute;
+	background-color: rgb(189 249 249);
 }
 
