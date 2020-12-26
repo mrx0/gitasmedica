@@ -8876,10 +8876,10 @@
     //Добавляем/редактируем в базу наряд из сессии (сама функция)
     function Ajax_invoice_add_f(invoice_type, mode, zapis_id, adv){
 
-        var invoice_id = 0;
-        var comment = "";
+        let invoice_id = 0;
+        let comment = "";
 
-        var link = "invoice_add_f.php";
+        let link = "invoice_add_f.php";
 
         if (mode == 'edit'){
             link = "invoice_edit_f.php";
@@ -8890,10 +8890,10 @@
             comment = $("#comment").val();
         }
 
-        var Summ = $("#calculateInvoice").html();
-        var SummIns = 0;
+        let Summ = $("#calculateInvoice").html();
+        let SummIns = 0;
 
-        var SummInsStr = '';
+        let SummInsStr = '';
 
         if (invoice_type == 5){
             SummIns = $("#calculateInsInvoice").html();
@@ -8903,9 +8903,9 @@
                 '</div>';
         }
 
-        var client = $("#client").val();
+        let client = $("#client").val();
 
-        var reqData = {
+        let reqData = {
             client: $("#client").val(),
             filial: $("#filial").val(),
             worker: $("#worker").val(),
@@ -8919,7 +8919,10 @@
             invoice_id: invoice_id,
 
             adv: adv,
-            comment: comment
+            comment: comment,
+
+            cert_name_id: $("#cert_name_id").val(),
+            cert_name_old_id: $("#cert_name_old_id").val()
 		};
 
         if (zapis_id != 0) {
@@ -8939,7 +8942,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
 
                 $('.center_block').remove();
                 $('#overlay').hide();
@@ -8999,16 +9002,16 @@
 	function Ajax_invoice_add(mode, adv){
 		//console.log(mode);
 
-        var invoice_type = $("#invoice_type").val();
+        let invoice_type = $("#invoice_type").val();
 
         if ((invoice_type == 7) && (mode != 'edit')){
         	//console.log("Добавляем запись");
             //console.log($("#scheduler_json").val());
             //console.log(JSON.parse($("#scheduler_json").val()));
 
-			var link = "zapis_free_add_f.php";
+            let link = "zapis_free_add_f.php";
 
-			var reqData = JSON.parse($("#scheduler_json").val());
+            let reqData = JSON.parse($("#scheduler_json").val());
             //console.log(reqData);
 
 			//Добавим запись для пациента "с улицы"
@@ -9570,6 +9573,66 @@
 			}
 		});
 	}
+
+	//Добавим сертификат именной в наряд
+	function Ajax_cert_name_add_pay(id){
+
+        $('#overlay').hide();
+        $('#search_cert_name_input').append($('#search_cert_name_input_target').children());
+        $('.center_block').remove();
+        $('#search_result_cert_name').html('');
+        $('#search_cert_name').val('');
+
+        //$('.have_money_or_not').show();
+        $('#certNameBlockButton').hide();
+        $('#certNameBlockChosen').show();
+
+        $('#cert_name_id').val(id);
+
+        $('#certNameBlockChosen').append('Использован <a href="certificate_name.php?id='+id+'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'+id+'</b></a> ' +
+            '<span style="cursor: pointer; color: red; font-size: 110%; margin-left: 10px; background-color: #CCC; padding: 0px 7px; border: 1px solid red;" onclick="certNameBlockChosen_delete('+id+')"><i class="fa fa-times" aria-hidden="true" style=""></i></span>');
+
+		/*$.ajax({
+			url: "FastSearchCertOne.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                id: id,
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+                    $('#certs_result').append(res.data);
+
+                    calculatePaymentCert ();
+
+				}else{
+					//$('#errror').html(res.data);
+				}
+			}
+		});*/
+	}
+
+	//Удалить именной сертификат из наряда
+    function certNameBlockChosen_delete(id){
+
+        $('#certNameBlockButton').show();
+        $('#certNameBlockChosen').html('');
+        $('#certNameBlockChosen').hide();
+
+        $('#cert_name_id').val(0);
+    }
 
 	//Добавим сертификат именной к выдаче
 	function Ajax_cert_name_add_cell(id){

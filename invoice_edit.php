@@ -11,6 +11,8 @@
 	
 		if (($finances['edit'] == 1) || $god_mode){
 			if ($_GET){
+
+                include_once('DBWorkPDO.php');
 				include_once 'DBWork.php';
 				include_once 'functions.php';
 			
@@ -20,11 +22,14 @@
 				//unset($_SESSION['invoice_data']);
 
 				if (isset($_GET['id'])){
+
+                    $db = new DB();
 					
 					$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
 					//var_dump($invoice_j);
 					
 					if ($invoice_j != 0){
+
 
                         $msql_cnnct = ConnectToDB();
 
@@ -39,6 +44,12 @@
                         if ($number != 0){
                             $refund_exist = true;
                         }
+
+                        //Посмотрим, использовался ли в этом наряде именной сертификат
+                        $query = "SELECT `id` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
+
+                        $cert_name_id = $db::getValue($query, []);
+                        //var_dump($cert_name_id);
 
                         //Если были возвраты, то редактировать никак нельзя
                         if ($refund_exist){
@@ -421,7 +432,9 @@
                                                 <input type="hidden" id="filial" name="filial" value="' . $invoice_j[0]['office_id'] . '">
                                                 <input type="hidden" id="worker" name="worker" value="' . $invoice_j[0]['worker_id'] . '">
                                                 <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] . '">
-                                                <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">';
+                                                <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">
+                                                <input type="hidden" id="cert_name_id" name="cert_name_id" value="'.$cert_name_id.'">
+                                                <input type="hidden" id="cert_name_old_id" name="cert_name_old_id" value="'.$cert_name_id.'">';
 
                                         if ($sheduler_zapis[0]['type'] == 5) {
                                             //Зубки
@@ -746,7 +759,7 @@
                                                     <div id="errror" class="invoceHeader" style="position: relative;">
                                                         <div style="position: absolute; bottom: 0; right: 2px; vertical-align: middle; font-size: 11px;">
                                                             <div>	
-                                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
+                                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
                                                             </div>
                                                         </div>
                                                         <div>
@@ -781,6 +794,24 @@
                                                                     <div style="margin-bottom: 2px;">                                                                    
                                                                         <div style="display: inline-block; vertical-align: top;">
                                                                              <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
+                                                                             <div id="certNameBlock">';
+
+                                        //Если был именной сертификат
+                                        if ($cert_name_id > 0) {
+                                            echo '
+                                                                                <div id="certNameBlockButton" class="b4" style="display: none; margin: 5px 0 0 -1px;" onclick="showCertNamePayAdd()">Добавить именной сертификат</div>
+                                                                                <div id="certNameBlockChosen" style=" margin: 5px 0 0 -1px; padding: 1px 0px 1px 5px; border: 1px dotted #4506ff; background-color: #f5f9a6; font-style: italic;">
+                                                                                    Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'.$cert_name_id.'</b></a>
+                                                                                    <span style="cursor: pointer; color: red; font-size: 110%; margin-left: 10px; background-color: #CCC; padding: 0px 7px; border: 1px solid red;" onclick="certNameBlockChosen_delete('.$cert_name_id.')"><i class="fa fa-times" aria-hidden="true" style=""></i></span>
+                                                                                </div>';
+                                        }else{
+                                            echo '
+                                                                                <div id="certNameBlockButton" class="b4" style="margin: 5px 0 0 -1px;" onclick="showCertNamePayAdd()">Добавить именной сертификат</div>
+                                                                                <div id="certNameBlockChosen" style="display: none; margin: 5px 0 0 -1px; padding: 1px 0px 1px 5px; border: 1px dotted #4506ff; background-color: #f5f9a6; font-style: italic;"></div>';
+                                        }
+
+                                        echo '
+                                                                             </div>
                                                                         </div><!-- / -->';
                                         if ($sheduler_zapis[0]['type'] == 5) {
                                             echo '
@@ -811,8 +842,14 @@
 
                                         echo '
                                             <div>	
-                                                <input type="button" class="b" value="Сохранить" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
+                                                <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'edit\', false)">
                                             </div>
+                                        </div>
+                                        
+                                        <div id="search_cert_name_input" style="display: none;">
+                                            <input type="text" size="30" name="searchdata" id="search_cert_name" placeholder="Наберите номер сертификата для поиска" value="" class="who_fcert_name"  autocomplete="off" style="width: 90%;">
+                                            <br><span class="lit_grey_text" style="font-size: 75%">Нажмите на галочку, чтобы добавить</span>
+                                            <div id="search_result_cert_name" class="search_result_cert_name" style="text-align: left;"></div>
                                         </div>
                     
                                         <!-- Подложка только одна -->
