@@ -281,6 +281,12 @@
 //								<a href="stat_invoice2.php" class="b3" style="width: 270px;">Отчёт по оплатам (выручка)</a>
 //							</li>';
 
+                echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="remarks_to_employees.php" class="b3" style="width: 270px;">Замечания сотрудникам</a>
+							</li>';
+
+
                 //if (($finances['see_all'] == 1) || $god_mode) {
 
 

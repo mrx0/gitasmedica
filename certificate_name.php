@@ -119,20 +119,26 @@
                     }
                     echo '
 								</div>
-           					    <div class="cellsBlock2">
+           					    <!--<div class="cellsBlock2">
 									<div class="cellLeft">Потрачено</div>
 									<div class="cellRight">'.$cert_j[0]['debited'].' руб.</div>
-								</div>';
+								</div>-->';
 					if ($cert_j[0]['status'] == 5) {
+
                         echo '
            					    <div class="cellsBlock2">
-									<div class="cellLeft">Закрыт (полностью потрачен)</div>
-									<div class="cellRight" style="background-color: rgba(119, 255, 135, 1);">' . date('d.m.y H:i', strtotime($cert_j[0]['closed_time'])) . '</div>
+									<div class="cellLeft">Использован</div>
+									<div class="cellRight" style="background-color: rgba(119, 255, 135, 1);">
+									    ' . date('d.m.y H:i', strtotime($cert_j[0]['closed_time'])) . '<br>
+									    <i>В наряде: <a href="invoice.php?id=' . $cert_j[0]['invoice_id'] . '" class="ahref" target="_blank" rel="nofollow noopener"><b>#' . $cert_j[0]['invoice_id'] . '</b></a></i>
+									</div>
 								</div>';
                     }
 
                     $expired_color = '';
 
+					//!!! 2020-12-22 в именных сертификатах не используем срок годности, поэтому это условие никогда не выполнится,
+                    //но оставил на всякий случай, кто его знает там
                     if ($cert_j[0]['expires_time'] != '0000-00-00') {
                         //время истечения срока годности
                         $sd = $cert_j[0]['expires_time'];

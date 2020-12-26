@@ -170,7 +170,7 @@
                         $status = 'Удалён';
                     }elseif ($cert_j[$i]['status'] == 7){
                         $back_color = 'background-color: rgba(47, 186, 239, 0.7);';
-                        $status = '<div style="font-size: 90%;">Выдан '.date('d.m.y H:i', strtotime($cert_j[$i]['cell_time'])).'</div>';
+                        $status = '<div style="/*font-size: 90%;*/">Выдан '.date('d.m.y H:i', strtotime($cert_j[$i]['cell_time'])).'</div>';
 
                         $expires_time_color = '';
 
@@ -186,7 +186,7 @@
                     }elseif ($cert_j[$i]['status'] == 5){
 					    //Закрыт
                         $back_color = 'background-color: rgba(119, 255, 135, 1);';
-                        $status = 'Закрыт '.date('d.m.y H:i', strtotime($cert_j[$i]['closed_time']));
+                        $status = 'Использован '.date('d.m.y H:i', strtotime($cert_j[$i]['closed_time'])).'<br><i>В наряде: <a href="invoice.php?id=' . $cert_j[$i]['invoice_id'] . '" class="ahref" target="_blank" rel="nofollow noopener"><b>#' . $cert_j[$i]['invoice_id'] . '</b></a></i>';
 					}else{
                             $back_color = '';
 					}
@@ -228,7 +228,7 @@
                     echo '
                                  </div>-->';
                     echo '
-								<div class="cellText" style="text-align: center;">'.$status.'';
+								<div class="cellText" style="text-align: center; font-size: 90%;">'.$status.'';
 //                    if ($cert_j[$i]['office_id'] != 0) {
 //                        $offices_j = SelDataFromDB('spr_filials', $cert_j[$i]['office_id'], 'offices');
 //                        if ($offices_j != 0) {

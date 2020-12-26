@@ -80,16 +80,15 @@
 
                         $rez .= "    </td>";
 
-                        //в этом файле чисто поиск, поэтому этот кусок не нужен
-//                        if (!$expired && !$debited) {
-//                            if ($fast_search[$i]['client_id'] != 0) {
-//                                $rez .= "<td style = 'background-color:rgb(204 204 204); text-align: center;'></td >";
-//                            }else{
-//                                $rez .= "<td style = 'background-color: rgb(207 255 207); text-align: center; cursor: pointer;' onclick = 'changeCertificateNameId(" . $fast_search[$i]['id'] . ")' ><i class='fa fa-check' aria - hidden = 'true' ></i ></td >";
-//                            }
-//                        }else{
-//                            $rez .= "<td style = 'background-color:rgb(204 204 204); text-align: center;'></td >";
-//                        }
+                        if (!$expired && !$debited) {
+                            if ($fast_search[$i]['client_id'] != 0) {
+                                $rez .= "<td style = 'background-color:rgb(204 204 204); text-align: center;'></td >";
+                            }else{
+                                $rez .= "<td style = 'background-color: rgb(207 255 207); text-align: center; cursor: pointer;' onclick = 'changeCertificateNameId(" . $fast_search[$i]['id'] . ")' ><i class='fa fa-check' aria - hidden = 'true' ></i ></td >";
+                            }
+                        }else{
+                            $rez .= "<td style = 'background-color:rgb(204 204 204); text-align: center;'></td >";
+                        }
                         $rez .= "    
                                 </tr>";
 

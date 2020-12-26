@@ -9,7 +9,8 @@
 		require_once 'header_tags.php';
 
 		if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
-	
+
+            include_once('DBWorkPDO.php');
 			include_once 'DBWork.php';
 			include_once 'functions.php';
 
@@ -29,6 +30,8 @@
 			
 			if ($_GET){
 				if (isset($_GET['id'])){
+
+                    $db = new DB();
 					
 					$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
 					
@@ -76,6 +79,13 @@
                             }
                         }
                         //var_dump($percent_cat_j);
+
+                        //Посмотрим, использовался ли в этом наряде именной сертификат
+                        $query = "SELECT `id` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
+
+                        $cert_name_id = $db::getValue($query, []);
+                        //var_dump($cert_name_id);
+
 
 						//if ($client !=0){
 						//if (!empty($sheduler_zapis) || ){
@@ -396,7 +406,18 @@
                             echo '
                                                     <div>
                                                         <div style="">Исполнитель: <div id="calculateInsInvoice" style="">' . WriteSearchUser('spr_workers', $invoice_j[0]['worker_id'], 'user', true) . '</div></div>
-                                                    </div>
+                                                    </div>';
+
+							if ($cert_name_id > 0){
+                                echo '
+                                                    <div>
+                                                        <div style="font-size: 85%; margin: 5px 0 0 -1px; padding: 1px 5px; border: 1px dotted #4506ff; background-color: rgb(253 255 207); font-style: italic; width: fit-content;">
+                                                            Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'.$cert_name_id.'</b></a>
+                                                        </div>
+                                                    </div>';
+                            }
+
+                            echo '
                                                 </div>';
 
                             echo '
@@ -855,7 +876,7 @@
                                         if ($item['percent_cats'] > 0) {
                                             $percent_cat = $percent_cat_j[$item['percent_cats']];
                                         }else{
-                                            $percent_cat = '<i style="color: red;">Ошибка #15</i>';
+                                            $percent_cat = '<i style="color: red;">Ошибка #69</i>';
                                         }
 
 

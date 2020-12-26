@@ -95,7 +95,7 @@
                             echo json_encode(array('result' => 'success'));
                         }else{
 
-                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #22. РЛ #'.$CalcIsInAnotherTabelID.' уже в другом табеле.</div>'));
+                            echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка #74. РЛ #'.$CalcIsInAnotherTabelID.' уже в другом табеле.</div>'));
                         }
                     } else {
                         echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
