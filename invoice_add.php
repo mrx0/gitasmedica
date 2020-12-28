@@ -330,7 +330,9 @@
                                         <input type='hidden' id='worker' name='worker' value='" . $_GET['worker'] . "'>
                                         <input type='hidden' id='t_number_active' name='t_number_active' value='" . $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['t_number_active'] . "'>
                                         <input type='hidden' id='invoice_type' name='invoice_type' value='" . $_GET['type'] . "'>
-                                        <input type='hidden' id='scheduler_json' name='scheduler_json' value='".$scheduler_json_str."'>";
+                                        <input type='hidden' id='scheduler_json' name='scheduler_json' value='".$scheduler_json_str."'>
+                                        <input type='hidden' id='cert_name_id' name='cert_name_id' value='0'>
+                                        <input type='hidden' id='cert_name_old_id' name='cert_name_old_id' value='0'>";
 
                                 //Если заднее число записи
 
@@ -725,17 +727,17 @@
                                                                 Настройки: 
                                                             </div>-->
                                                             <div style="display: inline-block; vertical-align: top;">
-                                                                <div style="margin-bottom: 2px;">
-                                                                    <div style="display: inline-block; vertical-align: top;">
-                                                                         
-                                                                    </div><!-- / -->
-                                                                    <div style="display: inline-block; vertical-align: top;">
-                                                                         
-                                                                    </div>
-                                                                </div>
-                                                                <div style="margin-bottom: 2px;">                                                                    
+                                                                <!--<div style="/*margin-bottom: 2px;*/">
+                                                                    <div style="display: inline-block; vertical-align: top;"></div>
+                                                                    <div style="display: inline-block; vertical-align: top;"></div>
+                                                                </div>-->
+                                                                <div style="margin-top: 4px;">                                                                    
                                                                     <div style="display: inline-block; vertical-align: top;">
                                                                          <div class="settings_text" onclick="clearInvoice();">Очистить всё</div>
+                                                                         <div id="certNameBlock">
+                                                                            <div id="certNameBlockButton" class="b4" style="margin: 5px 0 0 -1px;" onclick="showCertNamePayAdd()">Добавить именной сертификат</div>
+                                                                            <div id="certNameBlockChosen" style="display: none; margin: 5px 0 0 -1px; padding: 1px 0px 1px 5px; border: 1px dotted #4506ff; background-color: #f5f9a6; font-style: italic;"></div>
+                                                                         </div>
                                                                     </div><!-- / -->';
                                     if ($sheduler_zapis[0]['type'] == 5) {
                                         echo '
@@ -768,6 +770,12 @@
                                             <div>	
                                                 <input type="button" class="b" value="Сохранить наряд" onclick="showInvoiceAdd(' . $sheduler_zapis[0]['type'] . ', \'add\', false)">
                                             </div>
+                                        </div>
+                                        
+                                        <div id="search_cert_name_input" style="display: none;">
+                                            <input type="text" size="30" name="searchdata" id="search_cert_name" placeholder="Наберите номер сертификата для поиска" value="" class="who_fcert_name"  autocomplete="off" style="width: 90%;">
+                                            <br><span class="lit_grey_text" style="font-size: 75%">Нажмите на галочку, чтобы добавить</span>
+                                            <div id="search_result_cert_name" class="search_result_cert_name" style="text-align: left;"></div>
                                         </div>
                     
                                         <!-- Подложка только одна -->
@@ -809,7 +817,7 @@
                                         </script>';
                                 }
                             }else{
-                                echo '<h1>Что-то пошло не так. Ошибка #29</h1><a href="index.php">Вернуться на главную</a>';
+                                echo '<h1>Что-то пошло не так. Ошибка #28</h1><a href="index.php">Вернуться на главную</a>';
                             }
                         }
 					/*}else{
@@ -825,8 +833,13 @@
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}
 
-        echo '
+        if (!empty($sheduler_zapis)) {
+            echo '
 		    <div id="doc_title">Новый наряд /' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', false) . ' - Асмедика</div>';
+        }else{
+            echo '
+		    <div id="doc_title">Новый наряд / ...  - Асмедика</div>';
+        }
 
 	}else{
 		header("location: enter.php");

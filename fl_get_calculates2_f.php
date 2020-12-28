@@ -286,7 +286,7 @@
                                         if ($percent_cat > 0) {
                                             $resultFilialStr .= '<i style="color: rgb(15, 6, 142); font-size: 110%;'.$bgColor.'">' . $percent_cats_j[$percent_cat] . '</i><br>';
                                         } else {
-                                            $resultFilialStr .= '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                            $resultFilialStr .= '<i style="color: red; font-size: 100%;">Ошибка #71</i><br>';
                                         }
                                     }
 

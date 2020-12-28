@@ -620,7 +620,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                     echo '
                         <tr>
                             <td>
-                                <span style="font-size: 85%; color: red;">Ошибка #55. Невозможно рассчитать.</span>
+                                <span style="font-size: 85%; color: red;">Ошибка #76. Невозможно рассчитать.</span>
                             </td>
                         </tr>';
                 }

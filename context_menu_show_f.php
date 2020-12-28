@@ -187,8 +187,9 @@
 
 				//Изменить прикреплённый филиал в текущей сессии
 				if ($_POST['mark'] == 'change_filial'){
-					
-					if (($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || $god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
+
+				    //!!! 2020-12-26 надо бы проверить, где врачи используют смену филиала. Выключил им пока что это
+					if (/*($stom['add_own'] == 1) || ($cosm['add_own'] == 1) || */$god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 9)){
 						$data .= '
 							<li><div onclick="changeUserFilial(0)">открепиться</div></li>';
 

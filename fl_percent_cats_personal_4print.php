@@ -1,6 +1,6 @@
 <?php
 
-//fl_percent_cats_personal.php
+//fl_percent_cats_personal_4print.php
 //
 
 	require_once 'header.php';

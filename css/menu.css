@@ -145,12 +145,17 @@ a {
   .menu {
     height: auto;
   }
+
   .menu-inner {
     display: block;
   }
+
   .menu-link {
     padding: 10px 0;
     font-size: 1.2em;
   }
+
   .menu.active {
     width: -webkit-calc(100% - 0.5rem);
+  }
+}

@@ -13,7 +13,7 @@
 		//var_dump ($_POST);
 		if ($_POST){
 			if ($_POST['description'] == ''){
-				echo 'Не заполнено описание. Давайте еще разок =)<br /><br />
+				echo 'Не заполнено описание. Давайте еще раз.<br /><br />
 				<a href="add_task.php" class="b">Добавить</a>
 				<a href="it.php" class="b">В журнал</a>';
 			}else{

@@ -235,6 +235,83 @@
         });
     }
 
+    //!!! 2020-12-20 неверное описание. ф-цию пока не использую. Показавает блок для выбора именного сертификата, который мы потом добавим
+    // function Ajax_payment_add_cert_name(mode){
+    //     //console.log(mode);
+    //
+    //     let payment_id = 0;
+    //
+    //     let link = "payment_cert_add_f.php";
+    //
+    //     if (mode == 'edit'){
+    //         link = "payment_cert_edit_f.php";
+    //         payment_id = document.getElementById("payment_id").value;
+    //     }
+    //
+    //     let Summ = $("#summ").html();
+    //     //console.log(Summ);
+    //     let invoice_id = $("#invoice_id").val();
+    //     //console.log(invoice_id);
+    //
+    //     let filial_id = $("#filial_id").val();
+    //
+    //     let client_id = $("#client_id").val();
+    //     //console.log(client_id);
+    //     let date_in = $("#date_in").val();
+    //     //console.log(date_in);
+    //
+    //     //!!!тут сделано только для одного сертификата, если надо переделать, то тут
+    //     let cert_id = $(".cert_pay").attr('cert_id');
+    //     //console.log(cert_id);
+    //
+    //     let comment = $("#comment").val();
+    //     //console.log(comment);
+    //
+    //     $.ajax({
+    //         url: link,
+    //         global: false,
+    //         type: "POST",
+    //         dataType: "JSON",
+    //         data:
+    //             {
+    //                 client_id: client_id,
+    //                 invoice_id: invoice_id,
+    //                 filial_id: filial_id,
+    //                 cert_id: cert_id,
+    //                 summ: Summ,
+    //                 date_in: date_in,
+    //                 comment: comment
+    //             },
+    //         cache: false,
+    //         beforeSend: function() {
+    //             //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+    //         },
+    //         // действие, при ответе с сервера
+    //         success: function(res){
+    //             //!!! перенести вывод ошибки нормально, а то
+    //             //$('#errror').html(res.data); не работает, которое ниже
+    //             //Приходится смотреть через консоль
+    //             console.log(res);
+    //
+    //             $('.center_block').remove();
+    //             $('#overlay').hide();
+    //
+    //             if(res.result == "success"){
+    //                 //$('#data').hide();
+    //                 $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+    //                     /*'<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Оплата наряда прошла успешно</li>'+*/
+    //                     '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">'+res.data+'</li>'+
+    //                     '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
+    //                     '<a href="finance_account.php?client_id='+client_id+'" class="b">Управление счётом</a>'+
+    //                     '</li>'+
+    //                     '</ul>');
+    //             }else{
+    //                 $('#errror').html(res.data);
+    //             }
+    //         }
+    //     });
+    // }
+
     //Показываем блок с суммами и кнопками Для оплаты наряда сертификатом
     function showPaymentAddCert (mode){
         //console.log(mode);
@@ -289,6 +366,61 @@
             }
         })
     }
+
+    //!!! 2020-12-20 неверное описание. ф-цию пока не использую. Показываем блок с суммами и кнопками Для добавления именного сертификата
+    // function showPaymentAddCertName (mode){
+    //     //console.log(mode);
+    //
+    //     var Summ = $("#summ").html();
+    //
+    //     //проверка данных на валидность
+    //     $.ajax({
+    //         url:"ajax_test.php",
+    //         global: false,
+    //         type: "POST",
+    //         dataType: "JSON",
+    //         data:
+    //             {
+    //                 summ:Summ
+    //             },
+    //         cache: false,
+    //         beforeSend: function() {
+    //             //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+    //         },
+    //         success:function(data){
+    //             if(data.result == 'success'){
+    //                 //$('#overlay').show();
+    //
+    //                 //var buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'add\')">';
+    //
+    //                 /*if (mode == 'edit'){
+    //                     buttonsStr = '<input type="button" class="b" value="Сохранить" onclick="Ajax_payment_add(\'edit\')">';
+    //                 }*/
+    //
+    //                 if (mode == 'add'){
+    //                     Ajax_payment_add_cert_name('add');
+    //                 }
+    //
+    //                 if (mode == 'edit'){
+    //                     Ajax_payment_add_cert_name('edit');
+    //                 }
+    //
+    //                 // в случае ошибок в форме
+    //             }else{
+    //                 // перебираем массив с ошибками
+    //                 for(var errorField in data.text_error){
+    //                     // выводим текст ошибок
+    //                     $('#'+errorField+'_error').html(data.text_error[errorField]);
+    //                     // показываем текст ошибок
+    //                     $('#'+errorField+'_error').show();
+    //                     // обводим инпуты красным цветом
+    //                     // $('#'+errorField).addClass('error_input');
+    //                 }
+    //                 document.getElementById("errror").innerHTML='<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>'
+    //             }
+    //         }
+    //     })
+    // }
 
     //Добавляем/редактируем в базу оплату
     function Ajax_payment_add(mode, another_payer = false){
@@ -363,6 +495,59 @@
             }
         });
     }
+
+    //Добавляем/редактируем в базу выдачу именного сертификата
+    function certificateNameCell(mode){
+
+        let link = "cert_name_cell_f.php";
+
+        let cert_id = $("#cert_id").val();
+        let client_id = $("#client_id").val();
+
+        if((client_id != 0) && (cert_id != 0)) {
+
+            let reqData = {
+                cert_id: cert_id,
+                client_id: client_id
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    console.log(res);   //!!! не убирай это, или сделай отображение ошибок
+
+
+                    // $('.center_block').remove();
+                    // $('#overlay').hide();
+
+                    if (res.result == "success") {
+                        //$('#data').hide();
+                        $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">' +
+                            '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Сертификат выдан</li>' +
+                            '</ul>');
+                        setTimeout(function () {
+                            window.location.replace('certificate_name.php?id=' + cert_id + '');
+                            //console.log('client.php?id='+id);
+                        }, 100);
+                    } else {
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }
+    }
+
+
 
     //Выборка касса
     function Ajax_show_result_stat_cashbox(){

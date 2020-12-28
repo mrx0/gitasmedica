@@ -509,7 +509,7 @@
 //                            }
 
                         }else{
-                            $result_temp .= '<span style="color: red;">Ошибка #58!</span>';
+                            $result_temp .= '<span style="color: red;">Ошибка #77!</span>';
                         }
 
                         $result_temp .= '                              

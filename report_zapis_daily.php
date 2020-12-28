@@ -390,7 +390,7 @@
                                                 if ($percent_cat > 0) {
                                                     echo '<i style="color: rgb(15, 6, 142); font-size: 110%;">' . $percent_cats_j[$percent_cat] . '</i><br>';
                                                 } else {
-                                                    echo '<i style="color: red; font-size: 100%;">Ошибка #17</i><br>';
+                                                    echo '<i style="color: red; font-size: 100%;">Ошибка #73</i><br>';
                                                 }
                                             }
 

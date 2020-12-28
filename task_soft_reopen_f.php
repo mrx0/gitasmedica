@@ -6,7 +6,7 @@
 	//var_dump ($_POST);
 	if ($_POST){
 		if ($_POST['task_id'] == ''){
-			echo 'Что-то не заполнено. Давайте еще разок =)<br /><br />
+			echo 'Что-то не заполнено. Попробуйте еще раз.<br /><br />
 				<a href="task_soft.php?id='.$_POST['task_id'].'" class="b">Вернуться в заявку</a>';
 		}else{
 			include_once 'DBWork.php';

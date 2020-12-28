@@ -69,6 +69,49 @@ $(function(){
 	// })
 })
 
+//Для сертификатов именных (поиск через input не в модальном окне)
+$(function(){
+
+	//Живой поиск
+	$('.who_fcert_name').bind("change keyup input click", function() {
+		//console.log(this.value);
+		//console.log($(this).attr('name'));
+
+		let link = "FastSearchNameFCertName.php"; //Путь к обработчику
+
+		//Костыль, чтобы разделить поиски в разных местах и привязать им разные обработчики
+		if ($(this).attr('name') == 'searchdata'){
+			link = "FastSearchNameFCertName2.php";
+		}
+
+		if(this.value.length > 1){
+			$.ajax({
+				url: link,
+				//statbox:"status",
+				type:"POST",
+				data:
+					{
+						'searchdata':this.value
+					},
+				response: 'text',
+				success: function(data){
+					//$(".search_result_fc").html(data).fadeIn(); //Выводим полученые данные в списке
+					$("#search_result_fcertname2").html(data); //Выводим полученые данные в списке
+				}
+			})
+		}else{
+			$("#search_result_fcertname2").html('');
+			//var elemFC2 = $("#search_result_fc2");
+			//elemFC2.hide();
+		}
+	})
+
+	// $(".search_result_fc").hover(function(){
+	// 	$(".who_fc").blur(); //Убираем фокус с input
+	// })
+})
+
+
 $(function(){
 
 	//Живой поиск абонемента

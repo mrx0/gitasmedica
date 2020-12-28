@@ -19,23 +19,25 @@
 			}else{
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
 
-                include_once 'DBWork.php';
+                include_once('DBWorkPDO.php');
+                //include_once 'DBWork.php';
 
-                $db = 'journal_invoice';
-                $db_ex = 'journal_invoice_ex';
-                $db_ex_mkb = 'journal_invoice_ex_mkb';
+                $dbase = 'journal_invoice';
+                $dbase_ex = 'journal_invoice_ex';
+                $dbase_ex_mkb = 'journal_invoice_ex_mkb';
 
                 if ($_POST['adv'] == 'true'){
-                    $db = 'journal_advanaced_invoice';
-                    $db_ex = 'journal_advanaced_invoice_ex';
-                    $db_ex_mkb = 'journal_advanaced_invoice_ex_mkb';
+                    $dbase = 'journal_advanaced_invoice';
+                    $dbase_ex = 'journal_advanaced_invoice_ex';
+                    $dbase_ex_mkb = 'journal_advanaced_invoice_ex_mkb';
                 }
 
 				if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 					if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 						$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
 
-                        $msql_cnnct = ConnectToDB ();
+                        //$msql_cnnct = ConnectToDB ();
+                        $db = new DB();
 
 						$time = date('Y-m-d H:i:s', time());
 
@@ -55,14 +57,28 @@
                         }
 
 						//Добавляем в базу
-						$query = "INSERT INTO `$db` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `discount`, `summins`, `comment`, `create_person`, `create_time`) 
+						$query = "INSERT INTO `$dbase` (
+                        `zapis_id`, 
+                        `office_id`, `client_id`, `worker_id`, `type`, `summ`, `discount`, `summins`, `comment`, `create_person`, `create_time`) 
 						VALUES (
-						'{$zapis_id}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$_POST['comment']}', '{$_SESSION['id']}', '{$time}')";
+						:zapis_id, 
+						'{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$discount}', '{$_POST['summins']}', '{$_POST['comment']}', '{$_SESSION['id']}', 
+						:time
+						)";
 
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $args = [
+                            'zapis_id' => $zapis_id,
+                            'time' => $time
+                        ];
+
+                        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $db::sql($query, $args);
 
 						//ID новой позиции
-                        $mysql_insert_id = mysqli_insert_id($msql_cnnct);
+                        //$mysql_insert_id = mysqli_insert_id($msql_cnnct);
+
+                        // Получаем id вставленной записи
+                        $insert_id = $db->lastInsertId();
 
 						foreach ($data as $ind => $invoice_data){
 
@@ -85,22 +101,48 @@
 										$jaw_select = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['jaw_select'];
 
 										//Добавляем в базу
-										$query = "INSERT INTO `$db_ex` (`invoice_id`, `ind`, `jaw_select`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
+										$query = "INSERT INTO `$dbase_ex` (
+                                        `invoice_id`, `ind`, `jaw_select`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
 										VALUES (
-										'{$mysql_insert_id}', '{$ind}', '{$jaw_select}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
+										:invoice_id,
+										'{$ind}', '{$jaw_select}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', 
+										:itog_price
+										)";
 
-                                        mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                        $args = [
+                                            'invoice_id' => $insert_id,
+                                            'itog_price' => $itog_price
+                                        ];
+
+                                        //mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                        $db::sql($query, $args);
 									}
 
 									if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
-										$mkb_data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
-										foreach ($mkb_data as $mkb_id){
-											//Добавляем в базу МКБ
-											$query = "INSERT INTO `$db_ex_mkb` (`invoice_id`, `ind`, `mkb_id`) 
-											VALUES (
-											'{$mysql_insert_id}', '{$ind}', '{$mkb_id}')";
 
-                                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+									    $mkb_data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
+
+									    foreach ($mkb_data as $mkb_id){
+											//Добавляем в базу МКБ
+											$query = "INSERT INTO `$dbase_ex_mkb` (
+                                            `invoice_id`, 
+                                            `ind`, 
+                                            `mkb_id`
+                                            ) 
+											VALUES (
+											:invoice_id, 
+											:ind, 
+											:mkb_id
+											)";
+
+                                            $args = [
+                                                'invoice_id' => $insert_id,
+                                                'ind' => $ind,
+                                                'mkb_id' => $mkb_id
+                                            ];
+
+                                            //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                            $db::sql($query, $args);
 										}
 									}
 
@@ -122,11 +164,24 @@
                                     $itog_price = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind]['itog_price'];
 
 									//Добавляем в базу
-									$query = "INSERT INTO `$db_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
+									$query = "INSERT INTO `$dbase_ex` (
+                                    `invoice_id`, 
+                                    `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
 									VALUES (
-									'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
+									:invoice_id, 
+									:ind, 
+									'{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', 
+									:itog_price
+									)";
 
-                                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                    $args = [
+                                        'invoice_id' => $insert_id,
+                                        'ind' => $ind,
+                                        'itog_price' => $itog_price
+                                    ];
+
+                                    //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                    $db::sql($query, $args);
 
 								}
 								//unset($_SESSION['invoice_data']);
@@ -138,7 +193,23 @@
                         include_once 'ffun.php';
                         calculateDebt ($_POST['client']);
 
-						echo json_encode(array('result' => 'success', 'data' => $mysql_insert_id, 'data2' => $itog_price));
+                        //Если использован именной сертификат
+                        if ($_POST['cert_name_id'] > 0){
+                            //
+                            $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+
+                            $args = [
+                                'invoice_id' => $insert_id,
+                                'closed_time' => $time,
+                                'status' => 5,
+                                'cert_name_id' => $_POST['cert_name_id']
+                            ];
+
+                            //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $db::sql($query, $args);
+                        }
+
+						echo json_encode(array('result' => 'success', 'data' => $insert_id, 'data2' => $itog_price));
 					}
 				}
 			}

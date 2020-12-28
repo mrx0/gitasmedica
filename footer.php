@@ -39,16 +39,16 @@
         <script>
             $( "#tabs_w" ).tabs();
 
-            $(".vert-nav li").hover(
-                function() {
-                    $("ul", this).slideDown(110);
-                    //$(".have_new-zapis_main").hide();
-                },
-                function() {
-                    $("ul", this).slideUp(110);
-                    //$(".have_new-zapis_main").show();
-                }
-            );
+//            $(".vert-nav li").hover(
+//                function() {
+//                    $("ul", this).slideDown(110);
+//                    //$(".have_new-zapis_main").hide();
+//                },
+//                function() {
+//                    $("ul", this).slideUp(110);
+//                    //$(".have_new-zapis_main").show();
+//                }
+//            );
 
             $(document).ready(function(){
             	 $(document).attr("title", $("#doc_title").html());
@@ -119,7 +119,7 @@
 	</html>';
 
     //var_dump(microtime(true) - $script_start);
-    echo '<div class="no_print" style=" margin-left: 20px; font-size: 80%;">Страница загружена за: '.(number_format((microtime(true) - $script_start), 2, '.', '')).' сек.</div>';
+    echo '<div class="no_print" style=" margin-left: 20px; font-size: 80%;">C наступающим Новым Годом! Страница загружена за: '.(number_format((microtime(true) - $script_start), 2, '.', '')).' сек.</div>';
     echo '<div class="no_print" style="float: right; margin-right: 120px; margin-bottom: 20px; font-size: 80%;">В любой непонятной ситуации жми Ctrl+F5 &#169;</div>';
 
 ?>

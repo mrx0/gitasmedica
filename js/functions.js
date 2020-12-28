@@ -377,6 +377,46 @@
         }
     });
 
+    //Для поиска сертификата именного из модального окна
+    $('#search_cert_name').bind("change keyup input click", function() {
+
+        //var $this = $(this);
+        var val = $(this).val();
+        //console.log(val);
+
+        if (val.length > 1){
+            $.ajax({
+                url:"FastSearchCertName.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:{
+                    num:val,
+                },
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+
+                    if(res.result == 'success') {
+                        //console.log(res.data);
+
+                        $(".search_result_cert_name").html(res.data).fadeIn(); //Выводим полученые данные в списке
+                    }else{
+                        //console.log(res.data);
+                    }
+                },
+                error:function(){
+                    //console.log(12);
+                }
+            });
+        }else{
+            $("#search_result_cert_name").hide();
+        }
+    });
+
     //Для поиска абонемента из модального окна
     $('#search_abon').bind("change keyup input click", function() {
 
@@ -1949,6 +1989,43 @@
         });
     }
 
+    //Добавляем/редактируем в базу сертификат именной
+    function Ajax_cert_name_add(id, mode, certData){
+
+        var link = "cert_name_add_f.php";
+
+        if (mode == 'edit'){
+            link = "cert_name_edit_f.php";
+        }
+
+        certData['cert_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:certData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+                if(data.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(data.data);
+                }else{
+                    //console.log('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
     //Добавляем/редактируем в базу абонемент
     function Ajax_abon_add(id, mode, reqData){
     	//console.log(mode);
@@ -2172,6 +2249,57 @@
                 if(data.result == 'success'){
 
                     Ajax_cert_add(id, mode, certData);
+
+                // в случае ошибок в форме
+                }else{
+                    // перебираем массив с ошибками
+                    for(var errorField in data.text_error){
+                        // выводим текст ошибок
+                        $('#'+errorField+'_error').html(data.text_error[errorField]);
+                        // показываем текст ошибок
+                        $('#'+errorField+'_error').show();
+                        // обводим инпуты красным цветом
+                        // $('#'+errorField).addClass('error_input');
+                    }
+                    $('#errror').html('<span style="color: red; font-weight: bold;">Ошибка, что-то заполнено не так.</span>');
+                }
+            }
+        })
+    }
+
+	//!!! тут очередная "правильная" ф-ция
+    //Промежуточная функция добавления/редактирования сертификата именного
+    function showCertNameAdd(id, mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        var num = $('#num').val();
+        var nominal = $('#nominal').val();
+
+        var certData = {
+            num:num,
+            nominal:nominal
+        };
+
+        //проверка данных на валидность
+        $.ajax({
+            url:"ajax_test.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:certData,
+
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                if(data.result == 'success'){
+
+                    Ajax_cert_name_add(id, mode, certData);
 
                 // в случае ошибок в форме
                 }else{
@@ -3073,6 +3201,7 @@
 
     //Выборка тех, у кого была консультация и они больше не пришли
     function Ajax_show_result_stat_lost_pervich(){
+        $('#q2result').html('');
 
         let typeW = document.querySelector('input[name="typeW"]:checked').value;
 
@@ -3221,7 +3350,7 @@
             },
             success:function(data){
                 $('#qresult').html(data);
-                $('#q2result').html('');
+                //$('#q2result').html('');
 
                 Ajax_show_result_stat_lost_pervich_analiz();
             }
@@ -3230,10 +3359,42 @@
 
     //Функция анализа записей первичек
     function Ajax_show_result_stat_lost_pervich_analiz(){
+
         $(".zapis_id").each(function(){
             //console.log($(this).val());
 
-            getInvoiceByZapis($(this).val());
+            let zapis_id = $(this).val();
+
+            let link = "lost_pervich_analiz.php";
+
+            let reqData = {
+                zapis_id: zapis_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                //dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+                    //  $('#q2result').append(zapis_id);
+                    // $('#q2result').append(res);
+
+                    //console.log(res.data);
+
+                    getInvoiceByZapis(res);
+
+                    $('#q2result').html('');
+                }
+            })
+
+
         })
 
     }
@@ -8527,6 +8688,68 @@
 
     }
 
+    //Показываем блок для поиска и добавления именного сертификата
+    function showCertNamePayAdd(){
+
+        $('#overlay').show();
+
+        var buttonsStr = '';
+
+        // Создаем меню:
+        var menu = $('<div/>', {
+            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        }).css({
+            "height": "250px"
+        })
+            .appendTo('#overlay')
+            .append(
+                $('<div/>')
+                    .css({
+                        "height": "100%",
+                        "border": "1px solid #AAA",
+                        "position": "relative",
+                    })
+                    .append('<span style="margin: 0;"><i></i></span>')
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "width": "100%",
+                                "margin": "auto",
+                                "top": "-90px",
+                                "left": "0",
+                                "bottom": "0",
+                                "right": "0",
+                                "height": "50%",
+                            })
+                            .append(
+								'<div id="search_cert_name_input_target">'+
+								'</div>'
+							).css({
+                            "position": "absolute",
+                            "width": "405px",
+                            "z-index": "1"
+                        })
+                    )
+                    .append(
+                        $('<div/>')
+                            .css({
+                                "position": "absolute",
+                                "bottom": "2px",
+                                "width": "100%",
+                            })
+                            .append(buttonsStr+
+                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'#search_cert_name_input\').append($(\'#search_cert_name_input_target\').children()); $(\'.center_block\').remove(); $(\'#search_result_cert_name\').html(\'\'); $(\'#search_cert_name\').val(\'\');">'
+                            )
+                    )
+            );
+
+        $('#search_cert_name_input_target').append($('#search_cert_name_input').children());
+
+        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+    }
+
     //Показываем блок для поиска и добавления абонемента
     function showAbonPayAdd(){
 
@@ -8653,10 +8876,10 @@
     //Добавляем/редактируем в базу наряд из сессии (сама функция)
     function Ajax_invoice_add_f(invoice_type, mode, zapis_id, adv){
 
-        var invoice_id = 0;
-        var comment = "";
+        let invoice_id = 0;
+        let comment = "";
 
-        var link = "invoice_add_f.php";
+        let link = "invoice_add_f.php";
 
         if (mode == 'edit'){
             link = "invoice_edit_f.php";
@@ -8667,10 +8890,10 @@
             comment = $("#comment").val();
         }
 
-        var Summ = $("#calculateInvoice").html();
-        var SummIns = 0;
+        let Summ = $("#calculateInvoice").html();
+        let SummIns = 0;
 
-        var SummInsStr = '';
+        let SummInsStr = '';
 
         if (invoice_type == 5){
             SummIns = $("#calculateInsInvoice").html();
@@ -8680,9 +8903,9 @@
                 '</div>';
         }
 
-        var client = $("#client").val();
+        let client = $("#client").val();
 
-        var reqData = {
+        let reqData = {
             client: $("#client").val(),
             filial: $("#filial").val(),
             worker: $("#worker").val(),
@@ -8696,7 +8919,10 @@
             invoice_id: invoice_id,
 
             adv: adv,
-            comment: comment
+            comment: comment,
+
+            cert_name_id: $("#cert_name_id").val(),
+            cert_name_old_id: $("#cert_name_old_id").val()
 		};
 
         if (zapis_id != 0) {
@@ -8716,7 +8942,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                console.log(res);
+                //console.log(res);
 
                 $('.center_block').remove();
                 $('#overlay').hide();
@@ -8776,16 +9002,16 @@
 	function Ajax_invoice_add(mode, adv){
 		//console.log(mode);
 
-        var invoice_type = $("#invoice_type").val();
+        let invoice_type = $("#invoice_type").val();
 
         if ((invoice_type == 7) && (mode != 'edit')){
         	//console.log("Добавляем запись");
             //console.log($("#scheduler_json").val());
             //console.log(JSON.parse($("#scheduler_json").val()));
 
-			var link = "zapis_free_add_f.php";
+            let link = "zapis_free_add_f.php";
 
-			var reqData = JSON.parse($("#scheduler_json").val());
+            let reqData = JSON.parse($("#scheduler_json").val());
             //console.log(reqData);
 
 			//Добавим запись для пациента "с улицы"
@@ -9212,6 +9438,52 @@
         }
 	}
 
+	//Удалим выдачу именного сертификата
+	function Ajax_cert_name_celling_del(id){
+
+        let rys = false;
+
+        rys = confirm("Вы собираетесь отменить выдачу сертификата.\nВы уверены?");
+
+        if (rys) {
+
+            let link = "cert_name_cell_dell_f.php";
+
+            let Data = {
+                cert_id: id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: Data,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res.data);
+
+					 if(res.result == "success"){
+					    //$('#data').hide();
+					    $('#data').html('<ul style="margin-left: 6px; margin-bottom: 10px; display: inline-block; vertical-align: middle;">'+
+					    '<li style="font-size: 90%; font-weight: bold; color: green; margin-bottom: 5px;">Выдача отменена</li>'+
+					    '</ul>');
+					    setTimeout(function () {
+                            location.reload();
+					    }, 100);
+					 }
+					 if(res.result == "error"){
+					    $('#errror').html(res.data);
+					 }
+                }
+            });
+        }
+	}
+
 	//Удалим продажу абонемента
 	function Ajax_abonement_celling_del(id){
 
@@ -9300,6 +9572,111 @@
 				}
 			}
 		});
+	}
+
+	//Добавим сертификат именной в наряд
+	function Ajax_cert_name_add_pay(id){
+
+        $('#overlay').hide();
+        $('#search_cert_name_input').append($('#search_cert_name_input_target').children());
+        $('.center_block').remove();
+        $('#search_result_cert_name').html('');
+        $('#search_cert_name').val('');
+
+        //$('.have_money_or_not').show();
+        $('#certNameBlockButton').hide();
+        $('#certNameBlockChosen').show();
+
+        $('#cert_name_id').val(id);
+
+        $('#certNameBlockChosen').append('Использован <a href="certificate_name.php?id='+id+'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'+id+'</b></a> ' +
+            '<span style="cursor: pointer; color: red; font-size: 110%; margin-left: 10px; background-color: #CCC; padding: 0px 7px; border: 1px solid red;" onclick="certNameBlockChosen_delete('+id+')"><i class="fa fa-times" aria-hidden="true" style=""></i></span>');
+
+		/*$.ajax({
+			url: "FastSearchCertOne.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+			data:
+			{
+                id: id,
+            },
+			cache: false,
+			beforeSend: function() {
+				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			// действие, при ответе с сервера
+			success: function(res){
+				//console.log(res);
+				$('.center_block').remove();
+				$('#overlay').hide();
+
+				if(res.result == "success"){
+					//$('#data').hide();
+                    $('#certs_result').append(res.data);
+
+                    calculatePaymentCert ();
+
+				}else{
+					//$('#errror').html(res.data);
+				}
+			}
+		});*/
+	}
+
+	//Удалить именной сертификат из наряда
+    function certNameBlockChosen_delete(id){
+
+        $('#certNameBlockButton').show();
+        $('#certNameBlockChosen').html('');
+        $('#certNameBlockChosen').hide();
+
+        $('#cert_name_id').val(0);
+    }
+
+	//Добавим сертификат именной к выдаче
+	function Ajax_cert_name_add_cell(id){
+
+        //$('#overlay').hide();
+        //$('#search_cert_input').append($('#search_cert_input_target').children());
+        //$('.center_block').remove();
+        $('#search_result_fcertname2').html('');
+        //$('#search_cert').val('');
+
+        //$('.have_money_or_not').show();
+        //$('#certs_result').show();
+        //$('#showCertPayAdd_button').hide();
+
+		// $.ajax({
+		// 	url: "FastSearchCertOne.php",
+		// 	global: false,
+		// 	type: "POST",
+		// 	dataType: "JSON",
+		// 	data:
+		// 	{
+        //         id: id,
+        //     },
+		// 	cache: false,
+		// 	beforeSend: function() {
+		// 		//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+		// 	},
+		// 	// действие, при ответе с сервера
+		// 	success: function(res){
+		// 		//console.log(res);
+		// 		$('.center_block').remove();
+		// 		$('#overlay').hide();
+        //
+		// 		if(res.result == "success"){
+		// 			//$('#data').hide();
+        //             $('#certs_result').append(res.data);
+        //
+        //             calculatePaymentCert ();
+        //
+		// 		}else{
+		// 			//$('#errror').html(res.data);
+		// 		}
+		// 	}
+		// });
 	}
 
 	//Добавим абонемент в оплату
@@ -9624,6 +10001,51 @@
                 }
             });
         }
+	}
+
+	//Добавляем/редактируем в базу новое замечание сотруднику
+	function Ajax_remarkToEmployee_add(mode){
+		//console.log(mode);
+
+        let remark_to_employee_id = 0;
+
+		let link = "remark_to_employee_add_f.php";
+
+		if (mode == 'edit'){
+			link = "remark_to_employee_edit_f.php";
+            remark_to_employee_id = $("#remark_to_employee_id").val();
+		}
+
+        let reqData = {
+            date_in: $("#date_in").val(),
+            worker: $("#search_client4").val(),
+            comment: $("#comment").val()
+        };
+		//console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == "success") {
+                    $('#errror').html(res.data);
+                    setTimeout(function () {
+                        window.location.href = "remarks_to_employees.php";
+                    }, 1000);
+                } else {
+                    $('#errror').html(res.data);
+                }
+            }
+        })
 	}
 
 	function selectThisTabelForSalaryDeduction(worker_id){
@@ -12619,23 +13041,23 @@
     //Добавление посещения стоматолога
     function Ajax_add_task_stomat() {
 
-        var link = "add_task_stomat_f.php";
+        let link = "add_task_stomat_f.php";
 
-        var arrayRemoveAct = new Array();
-        var arrayRemoveWorker = new Array();
+        let arrayRemoveAct = new Array();
+        let arrayRemoveWorker = new Array();
 
         $(".remove_add_search").each(function() {
             if (($(this).attr("id")).indexOf("td_title") != -1){
-                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                let IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
                 arrayRemoveAct[IndexArr] = document.getElementById($(this).attr("id")).value;
             }
             if (($(this).attr("id")).indexOf("td_worker") != -1){
-                var IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
+                let IndexArr = $(this).attr("id")[$(this).attr("id").length-1];
                 arrayRemoveWorker [IndexArr] = document.getElementById($(this).attr("id")).value;
             }
         });
 
-        var reqData = {
+        let reqData = {
             zapis_id: $("#zapis").val(),
 
             complaints: $("#complaints").val(),
@@ -12800,6 +13222,74 @@
 
         //!!! переход window.location.href - это правильное использование
         window.location.href = "payment_from_alien_add.php?client_id="+$("#new_payer_id").val() + get_data_str;
+    }
+
+    //Изменение пациента, кому выдаем сертификат именной
+    function changeCertificateNameMaster(){
+        //!!!Получение данных из GET тест
+        //console.log(params["data"]);
+        //выведет в консоль значение  GET-параметра data
+        //console.log(params);
+
+        let get_data_str = "";
+
+        let params = window
+            .location
+            .search
+            .replace("?","")
+            .split("&")
+            .reduce(
+                function(p,e){
+                    let a = e.split('=');
+                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    return p;
+                },
+                {}
+            );
+
+        for (let key in params) {
+            if (key.indexOf("client_id") == -1){
+                get_data_str = get_data_str + "&" + key + "=" + params[key];
+            }
+        }
+        // console.log(get_data_str);
+
+        //!!! переход window.location.href - это правильное использование
+        window.location.href = "cert_name_cell.php?client_id="+$("#new_payer_id").val() + get_data_str;
+    }
+
+    //Изменение сертификата именного, который выдаем
+    function changeCertificateNameId(cert_id){
+        //!!!Получение данных из GET тест
+        //console.log(params["data"]);
+        //выведет в консоль значение  GET-параметра data
+        //console.log(params);
+
+        let get_data_str = "";
+
+        let params = window
+            .location
+            .search
+            .replace("?","")
+            .split("&")
+            .reduce(
+                function(p,e){
+                    let a = e.split('=');
+                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    return p;
+                },
+                {}
+            );
+
+        for (let key in params) {
+            if (key.indexOf("cert_id") == -1){
+                get_data_str = get_data_str + "&" + key + "=" + params[key];
+            }
+        }
+        // console.log(get_data_str);
+
+        //!!! переход window.location.href - это правильное использование
+        window.location.href = "cert_name_cell.php?cert_id="+cert_id+ get_data_str;
     }
 
     //Загрузка элементов склада
@@ -14339,4 +14829,49 @@
         });
 
 
+    }
+
+
+    //Удаляем замечание сотруднику
+    function Ajax_RemarkToEmployeeDelete (id){
+        //console.log();
+
+        let rys = false;
+
+        rys = confirm("Вы собираетесь удалить замечание. \n\nВы уверены?");
+
+        if (rys) {
+
+            let link = "delete_remark_to_employee_f.php";
+            //console.log(link);
+
+            let reqData = {
+                remark_to_employee_id: id
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        alert(res.data);
+                        //$("#overlay").hide();
+                        $('#errrror').html('<div class="query_neok">' + res.data + '</div>');
+                    }
+                }
+            });
+        }
     }

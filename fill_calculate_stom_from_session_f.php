@@ -14,7 +14,7 @@
 
 		if ($_POST){
 			if (!isset($_POST['invoice_type']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
-				echo json_encode(array('result' => 'error', 'data' => 'Ошибка #2'));
+				echo json_encode(array('result' => 'error', 'data' => 'Ошибка #1'));
 			}else{
 				include_once 'DBWork.php';
 

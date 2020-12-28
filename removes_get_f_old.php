@@ -216,7 +216,7 @@
                 echo json_encode(array('result' => 'success', 'data' => $rezult));
             }
         }else{
-            echo json_encode(array('result' => 'error', 'data' => 'Ошибка #13'));
+            echo json_encode(array('result' => 'error', 'data' => 'Ошибка #7'));
         }
     }
 ?>

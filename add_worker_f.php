@@ -100,7 +100,7 @@
 		}
 		if ($_POST){
 			if (($_POST['f'] == '')||($_POST['i'] == '')||($_POST['o'] == '')){
-				echo 'Что-то не заполнено. Давайте еще разок =)<br /><br />
+				echo 'Что-то не заполнено. Попробуйте еще раз.<br /><br />
 					<a href="add_worker.php" class="b">Добавить</a>
 					<a href="index.php" class="b">На главную</a>';
 			}else{

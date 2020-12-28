@@ -482,7 +482,7 @@
 											echo '
 												<li>
 													<div>
-														<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">
+														<a href="add_task_stomat.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&zapis_id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">
 															Внести Осмотр/Зубную формулу
 														</a>
 													</div>
@@ -492,7 +492,7 @@
 											echo '
 												<li>
 													<div>
-														<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">
+														<a href="add_task_cosmet.php?client='.$ZapisHereQueryToday[$z]['patient'].'&filial='.$ZapisHereQueryToday[$z]['office'].'&insured='.$ZapisHereQueryToday[$z]['insured'].'&pervich='.$ZapisHereQueryToday[$z]['pervich'].'&noch='.$ZapisHereQueryToday[$z]['noch'].'&date='.strtotime ($ZapisHereQueryToday[$z]['day'].'.'.$month.'.'.$ZapisHereQueryToday[$z]['year'].' '.$start_time_h.':'.$start_time_m).'&zapis_id='.$ZapisHereQueryToday[$z]['id'].'&worker='.$ZapisHereQueryToday[$z]['worker'].'" class="ahref">
 															Внести посещение косм.
 														</a>
 													</div>

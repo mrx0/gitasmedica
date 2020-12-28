@@ -13,7 +13,7 @@
 		if ($_POST){
 			if ($_POST['worker'] == ''){
 				echo '
-					Не выбрали исполнителя. Давайте еще разок =)<br /><br />
+					Не выбрали исполнителя. Попробуйте еще раз.br /><br />
 					<a href="task_soft.php?id='.$_POST['id'].'" class="b">Вернуться в заявку</a>
 					<a href="task_soft_add_worker.php?id='.$_POST['id'].'" class="b">Назначить/Изменить</a>';
 			}else{

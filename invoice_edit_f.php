@@ -17,24 +17,28 @@
 			if (!isset($_POST['invoice_id']) || !isset($_POST['invoice_type']) || !isset($_POST['summ']) || !isset($_POST['summins']) || !isset($_POST['client']) || !isset($_POST['zapis_id']) || !isset($_POST['filial']) || !isset($_POST['worker'])){
 				//echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
+                include_once('DBWorkPDO.php');
 				include_once 'DBWork.php';
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
 
-                $db = 'journal_invoice';
-                $db_ex = 'journal_invoice_ex';
-                $db_ex_mkb = 'journal_invoice_ex_mkb';
+                $dbase = 'journal_invoice';
+                $dbase_ex = 'journal_invoice_ex';
+                $dbase_ex_mkb = 'journal_invoice_ex_mkb';
 
                 if ($_POST['adv'] == 'true'){
-                    $db = 'journal_advanaced_invoice';
-                    $db_ex = 'journal_advanaced_invoice_ex';
-                    $db_ex_mkb = 'journal_advanaced_invoice_ex_mkb';
+                    $dbase = 'journal_advanaced_invoice';
+                    $dbase_ex = 'journal_advanaced_invoice_ex';
+                    $dbase_ex_mkb = 'journal_advanaced_invoice_ex_mkb';
                 }
 
-				$invoice_j = SelDataFromDB($db, $_POST['invoice_id'], 'id');
+                $db = new DB();
+
+				$invoice_j = SelDataFromDB($dbase, $_POST['invoice_id'], 'id');
 
 				if ($invoice_j != 0){
 					if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
 						if (!empty($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'])){
+
 							$data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'];
 
                             $msql_cnnct = ConnectToDB ();
@@ -43,26 +47,109 @@
 
                             $discount = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['discount'];
 
+                            //Если использован именной сертификат
+                            //Далее проверки, другой это или нет,
+                            //Если удаляем старый, то проверить счет того, кому накидывали на счёт
+
+                            //Будем добавлять сертификат
+//                            if ($_POST['cert_name_id'] > 0){
+//                                //Оставили тот сертификат, который был
+//                                if ($_POST['cert_name_id'] == $_POST['cert_name_old_id']){
+//                                    //--Ничего не меняем
+//
+//                                //Был сертификат, теперь другой ИЛИ не было, но добавили новый
+//                                }else{
+//                                    //Был другой
+//                                    if ($_POST['cert_name_old_id'] > 0){
+//                                        //--Проверяем, можно ли удалить старый
+//                                        //--Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
+//                                        //--Добавляем новый
+//
+//                                    //Не было
+//                                    }else{
+//                                        //--Добавляем новый
+//                                    }
+//                                }
+//                            //Не будем добавлять сертификат
+//                            }else{
+//                                //Не было сертификата
+//                                if ($_POST['cert_name_id'] == $_POST['cert_name_old_id']){
+//                                    //--Ничего не меняем
+//
+//                                //Был сертификат
+//                                }else{
+//                                    //--Проверяем, можно ли удалить старый
+//                                    //--Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
+//                                }
+//                            }
+
+
+                            //Было или не было, если одинаковые, ничего делать не надо
+                            if ($_POST['cert_name_id'] == $_POST['cert_name_old_id']){
+                                //--Ничего не меняем
+                            }else{
+                                //Не будем добавлять
+                                if ($_POST['cert_name_id'] > 0){
+                                    //--Проверяем, можно ли удалить старый
+                                    //--Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
+                                    //--Добавляем новый
+                                }else{
+                                    //--Проверяем, можно ли удалить старый
+                                    //--Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
+                                }
+
+                            }
+
+
+
+                                //
+                                $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+
+                                $args = [
+                                    'invoice_id' => $_POST['invoice_id'],
+                                    'closed_time' => $time,
+                                    'status' => 5,
+                                    'cert_name_id' => $_POST['cert_name_id']
+                                ];
+
+                                //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                $db::sql($query, $args);
+
+
+
 							//Обновляем в базу
 							/*$query = "INSERT INTO `journal_invoice` (`zapis_id`, `office_id`, `client_id`, `worker_id`, `type`, `summ`, `summins`, `create_person`, `create_time`)
 							VALUES (
 							'{$_POST['zapis_id']}', '{$_POST['filial']}', '{$_POST['client']}', '{$_POST['worker']}', '{$_POST['invoice_type']}', '{$_POST['summ']}', '{$_POST['summins']}', '{$_SESSION['id']}', '{$time}')";
 							*/
-							$query = "UPDATE `$db` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `summ`='{$_POST['summ']}', `discount`='{$discount}', `summins`='{$_POST['summins']}' WHERE `id`='{$_POST['invoice_id']}'";
+							$query = "UPDATE `$dbase` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `summ`='{$_POST['summ']}', `discount`='{$discount}', `summins`='{$_POST['summins']}' WHERE `id`= :invoice_id";
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $args = [
+                                'invoice_id' => $_POST['invoice_id']
+                            ];
+
+                            //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $db::sql($query, $args);
 
 							//ID старой позиции
 							$mysql_insert_id = $_POST['invoice_id'];
 
 							//Удаляем старое
-							$query = "DELETE FROM `$db_ex` WHERE `invoice_id` = '{$mysql_insert_id}'";
+							$query = "DELETE FROM `$dbase_ex` WHERE `invoice_id` = '{$mysql_insert_id}'";
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $args = [
+                            ];
 
-							$query = "DELETE FROM `$db_ex_mkb` WHERE `invoice_id` = '{$mysql_insert_id}'";
+                            //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $db::sql($query, $args);
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+							$query = "DELETE FROM `$dbase_ex_mkb` WHERE `invoice_id` = '{$mysql_insert_id}'";
+
+                            $args = [
+                            ];
+
+                            //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                            $db::sql($query, $args);
 
                             foreach ($data as $ind => $invoice_data){
 
@@ -85,22 +172,31 @@
                                             $jaw_select = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$ind][$key]['jaw_select'];
 
                                             //Добавляем в базу
-                                            $query = "INSERT INTO `$db_ex` (`invoice_id`, `ind`, `jaw_select`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
-										VALUES (
-										'{$mysql_insert_id}', '{$ind}', '{$jaw_select}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
+                                            $query = "INSERT INTO `$dbase_ex` (`invoice_id`, `ind`, `jaw_select`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
+										    VALUES (
+										    '{$mysql_insert_id}', '{$ind}', '{$jaw_select}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
 
-                                            mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                            $args = [
+                                            ];
+
+                                            //mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                            $db::sql($query, $args);
+
                                         }
 
                                         if (isset($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind])){
                                             $mkb_data = $_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['mkb'][$ind];
                                             foreach ($mkb_data as $mkb_id){
                                                 //Добавляем в базу МКБ
-                                                $query = "INSERT INTO `$db_ex_mkb` (`invoice_id`, `ind`, `mkb_id`) 
-											VALUES (
-											'{$mysql_insert_id}', '{$ind}', '{$mkb_id}')";
+                                                $query = "INSERT INTO `$dbase_ex_mkb` (`invoice_id`, `ind`, `mkb_id`) 
+                                                VALUES (
+											    '{$mysql_insert_id}', '{$ind}', '{$mkb_id}')";
 
-                                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                                $args = [
+                                                ];
+
+                                                //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                                $db::sql($query, $args);
                                             }
                                         }
 
@@ -123,11 +219,14 @@
 
                                         //Добавляем в базу
                                         $query = "INSERT INTO `journal_invoice_ex` (`invoice_id`, `ind`, `price_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `gift`, `spec_koeff`, `discount`, `percent_cats`, `manual_price`, `itog_price`) 
-									VALUES (
-									'{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
+									    VALUES (
+									    '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$price}', '{$guarantee}', '{$gift}', '{$spec_koeff}', '{$discount}', '{$percent_cat}', '{$manual_price}', '{$itog_price}')";
 
-                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                        $args = [
+                                        ];
 
+                                        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                        $db::sql($query, $args);
                                     }
                                     //unset($_SESSION['invoice_data']);
                                 }

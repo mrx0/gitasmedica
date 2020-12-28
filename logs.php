@@ -84,9 +84,9 @@
 						<li class="cellsBlock cellsBlockHover">
 							<div class="cellCosmAct" style="background-color:'.$logs_j[$i]['id'].'"></div>
 							<div class="cellTime">'.date('d.m.y H:i', $logs_j[$i]['date']).'</div>
-							<div class="cellName 4filter"  id="4filter">'.$logs_j[$i]['creator'].'</div>
+							<div class="cellName 4filter"  id="4filter"><a href="user.php?id='.$logs_j[$i]['creator'].'" class="ahref" target="_blank" rel="nofollow noopener">'.$logs_j[$i]['creator'].'</a></div>
 							<div class="cellOffice" style="text-align: center;">'.$logs_j[$i]['ip'].'</div>
-							<div class="cellOffice" style="text-align: center;">'.$logs_j[$i]['mac'].'</div>
+							<!--<div class="cellOffice" style="text-align: center;">'.$logs_j[$i]['mac'].'</div>-->
 							<div class="cellText 4filter">'.$logs_j[$i]['description_new'].'
 							    <hr>
 								<span style="background:#f0f0f0;">'.$logs_j[$i]['description_old'].'</span>

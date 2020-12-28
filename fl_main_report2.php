@@ -856,12 +856,22 @@
                             if ($stom_summ_temp < 0) $stom_summ_temp = 0;
 
                             //                        echo number_format(array_sum($rezult_arr[5]['data']) + $child_stom_summ, 0, '.', ' ').' ';
-                            echo '<span id="summ5">'.number_format($stom_summ_temp, 0, '.', ' ').'</span>';
+                            echo '<div id="summ5">'.number_format($stom_summ_temp, 0, '.', ' ').'</div>';
+
+                            $average_check_summ = number_format($stom_summ_temp / ($pervich_summ_arr_new[5][1] + $pervich_summ_arr_new[5][2] + $pervich_summ_arr_new[5][3] + $pervich_summ_arr_new[5][4]), 0, '.', ' ');
+//                            var_dump($stom_summ_temp);
+//                            var_dump($pervich_summ_arr_new[5][1] + $pervich_summ_arr_new[5][2] + $pervich_summ_arr_new[5][3] + $pervich_summ_arr_new[5][4]);
+//                            var_dump($average_check_summ);
+
+                            //Средний чек
+                            echo '<div id="average_check_5" style="/*display: none;*/ font-style: normal; font-size: 70%;">Ср. чек: <span id="average_check_summ_5" style="">'.$average_check_summ .'</span></div>';
 
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[5], 0, '.', ' ');
                             //                        var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[5], 0, '.', ' '));
                             //                        var_dump($cashbox_nal + $beznal + $insure_summ);
+
+
 
                         } else {
                             echo 'нет данных';
@@ -1027,6 +1037,9 @@
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[7], 0, '.', ' ');
                             //                        var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[7], 0, '.', ' '));
 
+                            //Средний чек
+                            //echo '<div id="average_check_7" style="/*display: none;*/ font-style: normal; font-size: 70%;">Ср. чек: <span id="average_check_summ_7" style="">0</span></div>';
+
                         } else {
                             echo 'нет данных';
                         }
@@ -1094,7 +1107,17 @@
                         if (!empty($rezult_arr[6]['data'])) {
                             //arsort($rezult_arr[5]['data']);
 
-                            echo '<span id="summ6">'.number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ') . '</span>';
+                            echo '<div id="summ6">'.number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ') . '</div>';
+
+                            //Средний чек
+                            $average_check_summ = number_format(array_sum($rezult_arr[6]['data']) / ($pervich_summ_arr_new[6][1] + $pervich_summ_arr_new[6][2] + $pervich_summ_arr_new[6][3] + $pervich_summ_arr_new[6][4]), 0, '.', ' ');
+//                            var_dump($stom_summ_temp);
+//                            var_dump($pervich_summ_arr_new[5][1] + $pervich_summ_arr_new[5][2] + $pervich_summ_arr_new[5][3] + $pervich_summ_arr_new[5][4]);
+//                            var_dump($average_check_summ);
+
+                            echo '<div id="average_check_6" style="/*display: none;*/ font-style: normal; font-size: 70%;">Ср. чек: <span id="average_check_summ_6" style="">'.$average_check_summ .'</span></div>';
+
+
 
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[6], 0, '.', ' ');
@@ -1178,7 +1201,7 @@
                                         <tr>
                                             <td>
                                                 <!--' . ($zapis_j[6]['pervich_summ_arr'][1] + $zapis_j[6]['pervich_summ_arr'][2]) . '<br>-->
-                                                <span style="/*color: red-->;*/">' . ($pervich_summ_arr_new[6][1] + $pervich_summ_arr_new[6][2]) . '</span>
+                                                <span style="/*color: red;*/">' . ($pervich_summ_arr_new[6][1] + $pervich_summ_arr_new[6][2]) . '</span>
                                             </td>
                                             <td>
                                                 <!--' . $zapis_j[6]['pervich_summ_arr'][2] . '<br>-->
@@ -1213,11 +1236,14 @@
                             </div>
                             <div class="cellRight" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgb(199, 234, 234);">';
 
-                    echo '<span id="summSol">'.number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ') . '</span>';
+                    echo '<div id="summSol">'.number_format(($temp_solar_nal + $temp_solar_beznal), 0, '.', ' ') . '</div>';
 
                     //                //!!! Костыль для %
                     //                echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt['sol'], 0, '.', ' ');
                     //                var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt['sol'], 0, '.', ' '));
+
+                    //Средний чек
+                    //echo '<div id="average_check_Sol" style="/*display: none;*/ font-style: normal; font-size: 70%;">Ср. чек: <span id="average_check_summ_Sol" style="">0</span></div>';
 
 
                     echo '
@@ -1244,6 +1270,14 @@
                             //                        //!!! Костыль для %
                             //                        echo number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[10], 0, '.', ' ');
                             //                        var_dump(number_format(($cashbox_nal + $beznal + $insure_summ) / 100 * $rezult_arr_prcnt[10], 0, '.', ' '));
+
+                            //Средний чек
+                            $average_check_summ = number_format(array_sum($rezult_arr[10]['data']) / ($pervich_summ_arr_new[10][1] + $pervich_summ_arr_new[10][2] + $pervich_summ_arr_new[10][3] + $pervich_summ_arr_new[10][4]), 0, '.', ' ');
+//                            var_dump($stom_summ_temp);
+//                            var_dump($pervich_summ_arr_new[5][1] + $pervich_summ_arr_new[5][2] + $pervich_summ_arr_new[5][3] + $pervich_summ_arr_new[5][4]);
+//                            var_dump($average_check_summ);
+
+                            echo '<div id="average_check_10" style="/*display: none;*/ font-style: normal; font-size: 70%;">Ср. чек: <span id="average_check_summ_10" style="">'.$average_check_summ .'</span></div>';
 
                         } else {
                             echo 'нет данных';

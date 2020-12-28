@@ -28,14 +28,23 @@ $(function(){
 	    
     //При выборе результата поиска, прячем список и заносим выбранный результат в input
     $(".search_result3").on("click", "li", function(){
-        s_user = $(this).text();
+		//console.log(this.firstChild);
+
+		//Раньше было так
+        // s_user = $(this).text();
+		//Теперь так, потому что добавили должность во вложенном тэге, поэтому стараемся брать только текст без вложенных тэгов, пример !!!
+		s_user = this.firstChild.textContent;
+		console.log(s_user);
+
 		$(".who3").val(s_user);
         //$(".who").val(s_user).attr('disabled', 'disabled'); //деактивируем input, если нужно
         $(".search_result3").fadeOut();
     })
+
 	//Если click за пределами результатов поиска - убираем эти результаты
 	$(document).click(function(e){
-		var elem = $("#search_result3"); 
+		var elem = $("#search_result3");
+
 		if(e.target!=elem[0]&&!elem.has(e.target).length){
 			elem.hide(); 
 		} 
