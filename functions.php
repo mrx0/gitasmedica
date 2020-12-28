@@ -3,8 +3,9 @@
 //functions.php
 //Различные функции
 
+	include_once('DBWorkPDO.php');
 	include_once 'DBWork.php';
-	
+
 	//Создаём Полное ФИО
 	function CreateFullName($f, $i, $o){
 		$full_name =$f.' '.$i.' '.$o;
@@ -3983,7 +3984,7 @@
         	//var_dump($data);
 
             include_once 'DBWork.php';
-            include_once 'functions.php';
+            //include_once 'functions.php';
 
             require 'variables.php';
 
@@ -4373,7 +4374,8 @@
     }
 
     //функция формирует и показывает ордеры визуализация
-    function showOrderDivRezult($data, $minimal, $show_absent, $show_deleted){
+    function showOrderDivRezult($data, $dataNonClient=array(), $minimal, $show_absent, $show_deleted){
+		//var_dump($dataNonClient); -- думал использовать отдельно для системных ордеров, но передумал и пока не использую
 
         $rezult = '';
 
@@ -4399,25 +4401,54 @@
                 //var_dump($items);
 
                 $order_type_mark = '';
+                //Название ордера (Ордер или Начисление, если системное)
+                $order_name = 'Ордер';
+                //Ссылка на ордер
+                $order_link = 'order.php?id='.$items['id'];
 
-                if ($items['summ_type'] == 1){
-                    $order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал"></i>';
-                }
+				$bg_color = '';
 
-                if ($items['summ_type'] == 2){
-                    $order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал"></i>';
-                }
+                //Если системный ордер
+				if ($items['type'] == 99){
+					$order_type_mark = '<i class="fa fa-magic" aria-hidden="true" title="Системный"></i>';
+					$order_link = 'order_nonclient.php?id='.$items['id'];
+					$order_name = 'Начисление';
+					$bg_color = 'background-color: rgb(255 219 196);';
+
+				//Или если вносил клиент
+				}else {
+					if ($items['summ_type'] == 1) {
+						$order_type_mark = '<i class="fa fa-money" aria-hidden="true" title="Нал"></i>';
+					}
+
+					if ($items['summ_type'] == 2) {
+						$order_type_mark = '<i class="fa fa-credit-card" aria-hidden="true" title="Безнал"></i>';
+					}
+				}
 
                 $itemTemp_str = '';
 
                 $itemTemp_str .= '
-                                            <li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(225, 255, 67, 0.69);">';
+                                            <li class="cellsBlock" style="'.$bg_color.' width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(225, 255, 67, 0.69);">';
                 $itemTemp_str .= '
-                                                <a href="order.php?id='.$items['id'].'" class="cellOrder ahref" style="position: relative;">
-                                                    <div style="font-weight: bold;">Ордер #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></div>
+                                                <span class="cellOrder" style="position: relative;">
+                                                    <div style="font-weight: bold;">
+                                                    	<a href="'.$order_link.'" class="ahref">'.$order_name.' #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></a>
+													</div>
                                                     <div style="margin: 3px;">';
 
-                $itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
+				//Если системный ордер, у него нет филиала
+				if ($items['type'] == 99){
+					//Если начисление за именно	 сертификат
+					if ($items['cert_name_id'] > 0){
+						$itemTemp_str .= 'Получено за <a href="certificate_name.php?id='.$items['cert_name_id'].'" class="ahref" target="_blank" rel="nofollow noopener"><b>сертификат</b></a>';
+					}
+
+				//Или если не системный ордер, у него должен быть филиал, так деньги где-то же вносились
+				}else{
+					$itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
+				}
+
 
                 $itemTemp_str .= '
                                                     </div>
@@ -4438,7 +4469,7 @@
                 $itemTemp_str .= '
                                                     </div>
                                                     <span style="position: absolute; top: 2px; right: 3px;">'. $order_type_mark.'</span>
-                                                </a>
+                                                </span>
                                                 <div class="cellName">
                                                     <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
                                                         Сумма:<br>
@@ -6015,7 +6046,6 @@
 		return $data;
 	}
 
-
 	//str_split для кириллицы
 //function str_split_utf8($str) {
 //    $split = 1;
@@ -6033,6 +6063,54 @@
 //    }
 //    return $array;
 //}
+
+	//Функция добавления системного ордера
+	function orderNonClient_add($client_id, $summ, $date_in, $summ_type=0, $arrival=0, $cert_name_id=0){
+
+		$db = new DB();
+
+		$time = date('Y-m-d H:i:s', time());
+
+		//Вставить запись в БД:
+		$query = "INSERT INTO `journal_order_nonclient` (
+					`client_id`,
+					`cert_name_id`,
+					`summ`,
+					`arrival`,
+					`date_in`, 
+					`summ_type`, 
+					`create_time`, 
+					`create_person`
+					)
+					VALUES (
+					:client_id,
+					:cert_name_id,
+					:summ,
+					:arrival,
+					:date_in,
+					:summ_type,
+					:create_time,
+					:create_person
+					)";
+
+		$args = [
+			'client_id' => $client_id,
+			'cert_name_id' => $cert_name_id,
+			'summ' => $summ,
+			'arrival' => $arrival,
+			'date_in' => $date_in,
+			'summ_type' => $summ_type,
+			'create_time' => $time,
+			'create_person' => $_SESSION['id']
+		];
+
+		$db::sql($query, $args);
+
+		// Получаем id вставленной записи
+		$insert_id = $db->lastInsertId();
+
+		return $insert_id;
+	}
 
 
 ?>

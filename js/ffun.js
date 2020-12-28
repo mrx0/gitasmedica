@@ -668,16 +668,16 @@
                     //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
                 },
                 // действие, при ответе с сервера
-                success: function (data) {
-                    /*if(data.result == "success"){
-
-                     }*/
+                success: function (res) {
                     //console.log(data.data);
                     //location.reload();
-
-                    //!!! переадресация на вкладку, может когда-нибудь организую
-                    //http://localhost/gitasmedica/fl_tabels.php#tabs-5_324
-                    window.location.href = "fl_tabels.php";
+                    if(res.result == "success"){
+                        //!!! переадресация на вкладку, может когда-нибудь организую
+                        //http://localhost/gitasmedica/fl_tabels.php#tabs-5_324
+                        window.location.href = "fl_tabels.php";
+                    }else{
+                        alert(res.data)
+                    }
                 }
             });
 

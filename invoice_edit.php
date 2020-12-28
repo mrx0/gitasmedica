@@ -45,11 +45,27 @@
                             $refund_exist = true;
                         }
 
-                        //Посмотрим, использовался ли в этом наряде именной сертификат
-                        $query = "SELECT `id` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
 
-                        $cert_name_id = $db::getValue($query, []);
-                        //var_dump($cert_name_id);
+                        //Сертификат именной
+                        $cert_name_id = 0;
+                        $cert_name_num = 0;
+
+                        //Посмотрим, использовался ли в этом наряде именной сертификат
+                        $query = "SELECT `id`,`num` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
+
+                        $cert_name = $db::getRow($query, []);
+                        //var_dump($cert_name);
+
+                        if (!empty($cert_name)){
+                            $cert_name_id = $cert_name['id'];
+                            $cert_name_num = $cert_name['num'];
+                        }
+//
+//                        //Посмотрим, использовался ли в этом наряде именной сертификат
+//                        $query = "SELECT `id` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
+//
+//                        $cert_name_id = $db::getValue($query, []);
+//                        //var_dump($cert_name_id);
 
                         //Если были возвраты, то редактировать никак нельзя
                         if ($refund_exist){
@@ -801,7 +817,7 @@
                                             echo '
                                                                                 <div id="certNameBlockButton" class="b4" style="display: none; margin: 5px 0 0 -1px;" onclick="showCertNamePayAdd()">Добавить именной сертификат</div>
                                                                                 <div id="certNameBlockChosen" style=" margin: 5px 0 0 -1px; padding: 1px 0px 1px 5px; border: 1px dotted #4506ff; background-color: #f5f9a6; font-style: italic;">
-                                                                                    Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'.$cert_name_id.'</b></a>
+                                                                                    Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т '.$cert_name_num.'</b></a>
                                                                                     <span style="cursor: pointer; color: red; font-size: 110%; margin-left: 10px; background-color: #CCC; padding: 0px 7px; border: 1px solid red;" onclick="certNameBlockChosen_delete('.$cert_name_id.')"><i class="fa fa-times" aria-hidden="true" style=""></i></span>
                                                                                 </div>';
                                         }else{

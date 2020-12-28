@@ -20,6 +20,7 @@
                 include_once('DBWorkPDO.php');
 				include_once 'DBWork.php';
 				//var_dump($_SESSION['invoice_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['zub']][$_POST['key']]);
+                include_once 'functions.php';
 
                 $dbase = 'journal_invoice';
                 $dbase_ex = 'journal_invoice_ex';
@@ -88,32 +89,100 @@
                             if ($_POST['cert_name_id'] == $_POST['cert_name_old_id']){
                                 //--Ничего не меняем
                             }else{
-                                //Не будем добавлять
+                                //Будем добавлять новый, но старый надо удалить
                                 if ($_POST['cert_name_id'] > 0){
                                     //--Проверяем, можно ли удалить старый
-                                    //--Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
-                                    //--Добавляем новый
+                                    //-Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
+                                    if (TRUE) {
+                                        //Удаляем старый (точнее убираем у него привязку от наряда)
+                                        $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+
+                                        $args = [
+                                            'invoice_id' => 0,
+                                            'closed_time' => '0000-00-00 00:00:00',
+                                            'status' => 7,
+                                            'cert_name_id' => $_POST['cert_name_old_id']
+                                        ];
+
+                                        $db::sql($query, $args);
+
+                                        //Удаляем деньги со счета хозяина
+                                        $query = "DELETE FROM `journal_order_nonclient` WHERE `cert_name_id`= '{$_POST['cert_name_old_id']}'";
+                                        $db::sql($query, $args);
+
+                                        //Сначала получим данные этого сертификата
+                                        $query = "SELECT `client_id`, `nominal`, `status` FROM `journal_cert_name` WHERE `id`=:cert_name_id LIMIT 1";
+                                        //var_dump($query);
+
+                                        $args = [
+                                            'cert_name_id' => $_POST['cert_name_id']
+                                        ];
+
+                                        $cert_name = $db::getRow($query, $args);
+                                        //var_dump($cert_name);
+
+                                        //Добавляем новый
+                                        if (!empty($cert_name)) {
+                                            if (($cert_name['status'] == 7) && ($cert_name['client_id'] != 0)) {
+                                                //Обновим данные сертификата
+                                                $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+
+                                                $args = [
+                                                    'invoice_id' => $_POST['invoice_id'],
+                                                    'closed_time' => $time,
+                                                    'status' => 5,
+                                                    'cert_name_id' => $_POST['cert_name_id']
+                                                ];
+
+                                                //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                                $db::sql($query, $args);
+
+                                                //добавим системный ордер хозяину именного сертификата
+                                                orderNonClient_add($cert_name['client_id'], $cert_name['nominal'], $time, 0, 0, $_POST['cert_name_id']);
+                                            }
+                                        }
+
+
+
+                                        //Добавляем новый
+//                                        $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+//
+//                                        $args = [
+//                                            'invoice_id' => $_POST['invoice_id'],
+//                                            'closed_time' => $time,
+//                                            'status' => 5,
+//                                            'cert_name_id' => $_POST['cert_name_id']
+//                                        ];
+//
+//                                        $db::sql($query, $args);
+                                    }
                                 }else{
                                     //--Проверяем, можно ли удалить старый
-                                    //--Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
+                                    //-Если можно, удаляем старый (точнее убираем у него привязку от наряда), удаляем деньги со счета хозяина
+                                    if (TRUE) {
+                                        //Удаляем старый (точнее убираем у него привязку от наряда)
+                                        $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+
+                                        $args = [
+                                            'invoice_id' => 0,
+                                            'closed_time' => '0000-00-00 00:00:00',
+                                            'status' => 7,
+                                            'cert_name_id' => $_POST['cert_name_old_id']
+                                        ];
+
+                                        $db::sql($query, $args);
+
+                                        //Удаляем деньги со счета хозяина
+                                        $query = "DELETE FROM `journal_order_nonclient` WHERE `cert_name_id`= '{$_POST['cert_name_old_id']}'";
+                                        $db::sql($query, $args);
+                                    }
                                 }
 
                             }
 
 
 
-                                //
-                                $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
 
-                                $args = [
-                                    'invoice_id' => $_POST['invoice_id'],
-                                    'closed_time' => $time,
-                                    'status' => 5,
-                                    'cert_name_id' => $_POST['cert_name_id']
-                                ];
-
-                                //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                                $db::sql($query, $args);
 
 
 
