@@ -14830,3 +14830,48 @@
 
 
     }
+
+
+    //Удаляем замечание сотруднику
+    function Ajax_RemarkToEmployeeDelete (id){
+        //console.log();
+
+        let rys = false;
+
+        rys = confirm("Вы собираетесь удалить замечание. \n\nВы уверены?");
+
+        if (rys) {
+
+            let link = "delete_remark_to_employee_f.php";
+            //console.log(link);
+
+            let reqData = {
+                remark_to_employee_id: id
+            };
+            //console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    // console.log(res);
+
+                    if (res.result == "success") {
+                        location.reload();
+                    } else {
+                        alert(res.data);
+                        //$("#overlay").hide();
+                        $('#errrror').html('<div class="query_neok">' + res.data + '</div>');
+                    }
+                }
+            });
+        }
+    }
