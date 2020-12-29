@@ -726,7 +726,7 @@
                                                             <div style=" /*width: 350px;*/ height: 450px; overflow: scroll; border: 1px solid #CCC;">
                                                                 <ul class="ul-tree ul-drop live_filter" id="lasttree">';
 
-                                    //Показывает дерево прайса
+                                    //Показывает дерево прайса (!!! уровень указан вручную для теста)
                                     showTree2(15, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);
 
                                     echo '
@@ -892,6 +892,10 @@
 				}else{
 					echo '<h1>Что-то пошло не так. Ошибка #75</h1><a href="index.php">Вернуться на главную</a>';
 				}
+
+                echo '
+		            <div id="doc_title">Новый предварительный расчёт /' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', false) . ' - Асмедика</div>';
+
 			}else{
 				echo '<h1>Что-то пошло не так. Ошибка #31</h1><a href="index.php">Вернуться на главную</a>';
 			}
@@ -900,7 +904,7 @@
 		}
 
         echo '
-		    <div id="doc_title">Новый предварительный расчёт /' . WriteSearchUser('spr_clients', $sheduler_zapis[0]['patient'], 'user', false) . ' - Асмедика</div>';
+            <div id="doc_title">Новый предварительный расчёт - Асмедика</div>';
 
 	}else{
 		header("location: enter.php");

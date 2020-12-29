@@ -1902,7 +1902,8 @@ ORDER BY `name`;
                             }elseif ($cert_name_j[$i]['status'] == 5){
                                 //Закрыт
                                 $back_color = 'background-color: rgba(119, 255, 135, 1);';
-                                $status = 'Закрыт '.date('d.m.y H:i', strtotime($cert_name_j[$i]['closed_time']));
+                                //$status = 'Закрыт '.date('d.m.y H:i', strtotime($cert_name_j[$i]['closed_time']));
+                                $status = 'Использован '.date('d.m.y H:i', strtotime($cert_name_j[$i]['closed_time'])).'<br><i>В наряде: <a href="invoice.php?id=' . $cert_name_j[$i]['invoice_id'] . '" class="ahref" target="_blank" rel="nofollow noopener"><b>#' . $cert_name_j[$i]['invoice_id'] . '</b></a></i>';
                             }else{
                                 $back_color = '';
                             }

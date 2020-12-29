@@ -145,7 +145,10 @@
         $msql_cnnct = ConnectToDB2 ();
 
         $clientOrders = array();
-        $arr = array();
+        $nonClientOrders = array();
+
+        //Переменная для суммы
+        $Summ = 0;
 
         //Соберем все (неудаленные) ордеры
         $query = "SELECT * FROM `journal_order` WHERE `client_id`='$client_id' AND `status` <> '9'";
@@ -156,18 +159,35 @@
             while ($arr = mysqli_fetch_assoc($res)){
                 array_push($clientOrders, $arr);
             }
-        }else{
+        }/*else{
             $clientOrders = 0;
-        }
+        }*/
         //return ($clientOrders);
 
-        //Переменная для суммы
-        $Summ = 0;
-
         //Если были там какие-то ордеры
-        if ( $clientOrders != 0) {
+        //if ( $clientOrders != 0) {
+        if (!empty($clientOrders)) {
             //Посчитаем сумму
             foreach ($clientOrders as $orders) {
+                $Summ += $orders['summ'];
+            }
+        }
+
+        //Соберем все (неудаленные) системные ордеры
+        $query = "SELECT * FROM `journal_order_nonclient` WHERE `client_id`='$client_id' AND `status` <> '9'";
+
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        $number = mysqli_num_rows($res);
+        if ($number != 0){
+            while ($arr = mysqli_fetch_assoc($res)){
+                array_push($nonClientOrders, $arr);
+            }
+        }
+
+        //Если были там какие-то ордеры
+        if (!empty($nonClientOrders)) {
+            //Посчитаем сумму
+            foreach ($nonClientOrders as $orders) {
                 $Summ += $orders['summ'];
             }
         }

@@ -10,7 +10,7 @@
     }else{
         //var_dump ($_POST);
         if ($_POST){
-            include_once 'DBWork.php';
+            //include_once 'DBWork.php';
             include_once 'ffun.php';
 
             if (!isset($_POST['remark_to_employee_id'])){
