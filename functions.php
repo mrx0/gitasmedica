@@ -1757,10 +1757,11 @@
 		return $rezult_arr;
 	}
 	
-	//Ещё одно дерево
+	//Ещё одно дерево с рекурсией
 	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
 
-        $msql_cnnct = ConnectToDB ();
+        //$msql_cnnct = ConnectToDB ();
+		$db = new DB();
 						
 		$arr = array();
 		$rez = array();
@@ -1795,31 +1796,33 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
 			$first = FALSE;
 		}
 		//var_dump ($query);
 
-        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+		$rezult = $db::getRows($query, []);
 
-		$number = mysqli_num_rows($res);
-		if ($number != 0){
-			while ($arr = mysqli_fetch_assoc($res)){
-				array_push($rez, $arr);
-			}
-			$rezult = $rez;
-		}else{
-			$rezult = 0;
-		}
+//		$number = mysqli_num_rows($res);
+//		if ($number != 0){
+//			while ($arr = mysqli_fetch_assoc($res)){
+//				array_push($rez, $arr);
+//			}
+//			$rezult = $rez;
+//		}else{
+//			$rezult = 0;
+//		}
 		//var_dump($rezult);
 		
-		if ($rezult != 0){
-			
-			foreach ($rezult as $key => $value){
+		//if ($rezult != 0){
+		if (!empty($rezult)){
+
+			foreach ($rezult as /*$key => */$value){
 
 				$arr2 = array();
 				$rez2 = array();
@@ -1877,56 +1880,67 @@
 					echo '
 							<ul style="display: none;">';
 					
-					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
+					$query = "SELECT `id`, `code`, `name`, `status` FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";
 					
 					if ($insure_id != 0){
-						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";			
+						$query = "SELECT `id`, `code`, `name`, `status` FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
 					}
 					
 					//var_dump($query);
 
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-					$number = mysqli_num_rows($res);
-					if ($number != 0){
-						while ($arr2 = mysqli_fetch_assoc($res)){
-							array_push($rez2, $arr2);
-						}
-						$items_j = $rez2;
-					}else{
-						$items_j = 0;
-					}
-					
+//                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//					$number = mysqli_num_rows($res);
+//					if ($number != 0){
+//						while ($arr2 = mysqli_fetch_assoc($res)){
+//							array_push($rez2, $arr2);
+//						}
+//						$items_j = $rez2;
+//					}else{
+//						$items_j = 0;
+//					}
+					$items_j = $db::getRows($query, []);
 					//var_dump($items_j);
 					
-					if ($items_j != 0){
+//					if ($items_j != 0){
+					if (!empty($items_j)){
 
 						$anything_here = true;
 						
-						for ($i = 0; $i < count($items_j); $i++) {
-
+						//for ($i = 0; $i < count($items_j); $i++) {
+						foreach ($items_j as $item_value) {
 							$price = 0;
 							
-							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-							$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
-							
+							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$item_value['id']."' ORDER BY `create_time` DESC LIMIT 1";
+
+
+							//2020-12-30 Этот кусок ниже рабочий, но я сомневаюсь, что где-то это использую потом
+							//PS похоже сильно тормозит из-за этого куска
+							/*$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$item_value['id']."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+
 							if ($insure_id != 0){
-								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$items_j[$i]['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
+								$query = "SELECT `price` FROM `spr_priceprices_insure` WHERE `item`='".$item_value['id']."' AND `insure`='".$insure_id."' ORDER BY `date_from`, `create_time` DESC LIMIT 1";
 							}
+
+							$price = $db::getValue($query, []);
+							*/
+
+
+
 							//var_dump($query);
 
-                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//							$number = mysqli_num_rows($res);
+//							if ($number != 0){
+//								$arr3 = mysqli_fetch_assoc($res);
+//								$price = $arr3['price'];
+//							}
 
-							$number = mysqli_num_rows($res);
-							if ($number != 0){
-								$arr3 = mysqli_fetch_assoc($res);
-								$price = $arr3['price'];
-							}else{
-								$price = 0;
-							}
+
 						
 							echo '
 										<li style="cursor: pointer;">
-											<p onclick="checkPriceItem('.$items_j[$i]['id'].', '.$dtype.')"><span class="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> <i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</span></p>
+											<p onclick="checkPriceItem('.$item_value['id'].', '.$dtype.')"><span class="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$item_value['id'].']</span> <i>'.$item_value['code'].'</i> '.$item_value['name'].'</span></p>
 										</li>';
 						}
 					}else{
@@ -1939,24 +1953,24 @@
 					echo '
 						</li>';*/
 				}
+
 				
-				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT COUNT(`id`) AS total FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
 				//var_dump($query);
 
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-				$number = mysqli_num_rows($res);
-				if ($number != 0){
+				$total = $db::getValue($query, []);
+
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//				$number = mysqli_num_rows($res);
+				//if ($number != 0){
+				if ($total != 0){
+
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
 					$last_level2 = $last_level+1;
 					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
 				}else{
 					//---
-					
-					
-
-					
 				}
 				
 					echo '
@@ -6111,6 +6125,54 @@
 
 		return $insert_id;
 	}
+
+	//Функция удаления системного ордера (!!! кроме названия тут нихера нет)
+//	function orderNonClient_del($client_id, $summ, $date_in, $summ_type=0, $arrival=0, $cert_name_id=0){
+//
+//		$db = new DB();
+//
+//		$time = date('Y-m-d H:i:s', time());
+//
+//		//Вставить запись в БД:
+//		$query = "INSERT INTO `journal_order_nonclient` (
+//					`client_id`,
+//					`cert_name_id`,
+//					`summ`,
+//					`arrival`,
+//					`date_in`,
+//					`summ_type`,
+//					`create_time`,
+//					`create_person`
+//					)
+//					VALUES (
+//					:client_id,
+//					:cert_name_id,
+//					:summ,
+//					:arrival,
+//					:date_in,
+//					:summ_type,
+//					:create_time,
+//					:create_person
+//					)";
+//
+//		$args = [
+//			'client_id' => $client_id,
+//			'cert_name_id' => $cert_name_id,
+//			'summ' => $summ,
+//			'arrival' => $arrival,
+//			'date_in' => $date_in,
+//			'summ_type' => $summ_type,
+//			'create_time' => $time,
+//			'create_person' => $_SESSION['id']
+//		];
+//
+//		$db::sql($query, $args);
+//
+//		// Получаем id вставленной записи
+//		$insert_id = $db->lastInsertId();
+//
+//		return $insert_id;
+//	}
 
 
 ?>

@@ -8992,7 +8992,16 @@
                             '</ul>');
                     }
                 }else{
-                    $('#errror').html(res.data);
+                    if (mode == 'edit'){
+                        alert(res.data);
+                        setTimeout(function () {
+                            //window.location.replace('invoice_edit.php?id=' + id);
+                            location.reload();
+                        }, 100);
+                        $('#errror').html('<div class="query_neok">'+res.data+'</div>');
+                    }else{
+                        $('#errror').html(res.data);
+                    }
                 }
             }
         });
