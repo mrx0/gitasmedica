@@ -726,7 +726,7 @@
 //														$NextSmenaArr[$k]['ZapisHereQueryToday'] = $ZapisHereQueryToday[0];
 //														$NextSmenaArr[$k]['OstatokVremeni'] = ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] - 900)*2;
 //													}
-//													//добавлено 2016.12.23
+//													//добавлено 2016-12-23
 //													if ($ZapisHereQueryToday[0]['start_time'] + $ZapisHereQueryToday[0]['wt'] > 900){
 //														$cellZapisValue_Height = (900-$ZapisHereQueryToday[0]['start_time'])*2;
 //														$NextSmenaArr[$k]['NextSmenaFill'] = TRUE;

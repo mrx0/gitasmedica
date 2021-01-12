@@ -4100,7 +4100,7 @@
                 thisObj.html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...<br>загрузка табелей</span></div>");
             },
             success:function(res){
-                //console.log(res);
+                console.log(res);
                 //thisObj.html(res);
 
                 if(res.result == 'success'){
@@ -4350,6 +4350,9 @@
             data: reqData,
             cache: false,
             beforeSend: function() {
+                //прячем кнопки
+                $('#prikazButtons').hide();
+
                 $('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
             },
             // действие, при ответе с сервера
@@ -4456,22 +4459,155 @@
                 }
             }
         });
+    }
+
+    //Приказ по Ботоксу перерасчёт - этап 2 подготовка
+    function fl_prikazNomerBotoks_JustDoIt(tabel_id, /*newPercent, */controlCategories){
+        console.log (tabel_id);
+        //console.log (newPercent);
+        console.log (controlCategories);
+
+        let link = "fl_prikazNomerBotoks_JustDoIt_f.php";
+
+        let reqData = {
+            tabel_id: tabel_id,
+            /*newPercent: newPercent,*/
+            controlCategories: controlCategories
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //прячем кнопки
+                $('#prikazButtons').hide();
+
+                $('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                console.log(res);
+
+                // if (res.result == 'success') {
+                //     let calc_ids_arr = Array.from(res.data);
+                //     //console.log(calc_ids_arr);
+                //
+                //     //!!! Хороший пример паузы в цикле (пауза в цикле) через рекурсию
+                //     //Не использовать, если есть вариант, что массив изменится во время
+                //     //И если обязательно индексы цифровые и по порядку
+                //     if (calc_ids_arr.length > 0) {
+                //
+                //         let foo = function (i) {
+                //             $("#prikazNomerVosem").html("<i>Обновляем данные для РЛ</i>: #<b>" + calc_ids_arr[i] + "</b><br>");
+                //
+                //             window.setTimeout(function () {
+                //                 //console.log(calc_ids_arr[i]);
+                //
+                //                 link = "fl_reloadPercentsMarkedCalculates.php";
+                //
+                //                 reqData.tabel_id = tabel_id;
+                //                 reqData.newPercent = newPercent;
+                //                 reqData.controlCategories = controlCategories;
+                //
+                //                 //Так как функция, находящаяся в fl_reloadPercentsMarkedCalculates.php
+                //                 //Работает по-ебаному (лень просто переделывать, лепим костыли),
+                //                 //а именно: ей нужно скормить перемменную вида chkBox_5_400_16
+                //                 //В которой хранятся тип (стом, косм...)/5, ID работника/400, филиал/16)
+                //                 //Поэтому создадим такую ебаную переменную reqData.data =)
+                //
+                //                 reqData.data = 'chkBox_6_000_00';
+                //
+                //                 reqData.main_data = [];
+                //
+                //                 reqData.main_data[reqData.main_data.length] = calc_ids_arr[i];
+                //
+                //                 //По каждому из id пересчитываем РЛ
+                //                 $.ajax({
+                //                     url: link,
+                //                     global: false,
+                //                     type: "POST",
+                //                     dataType: "JSON",
+                //                     data: {
+                //                         calcArr: reqData
+                //                     },
+                //                     cache: false,
+                //                     beforeSend: function () {
+                //                     },
+                //                     // действие, при ответе с сервера
+                //                     success: function (res) {
+                //                         //console.log(res);
+                //
+                //                         if (res.result == "success") {
+                //                             //$("#prikazNomerVosem").append("<i>Новый РЛ</i>: <b>"+res.newCalcID+"</b> <i>создан<br></i>");
+                //                         }
+                //                     }
+                //                 });
+                //
+                //                 if (i < calc_ids_arr.length - 1) {
+                //                     foo(i + 1);
+                //                 } else {
+                //                     //По окончании цикла, который выше, чего-то делаем
+                //                     //console.log("Обновляем сумму табеля.");
+                //
+                //                     $("#prikazNomerVosem").html("Обновляем сумму табеля.");
+                //
+                //                     link = "fl_updateTabelBalance_f.php";
+                //
+                //                     //А тут мне пришлось создать отдельный файл с функцией, которая тупо передаёт
+                //                     //дальше ID табеля и тот пересчитывает свою сумму.
+                //                     //По каждому из id пересчитываем РЛ
+                //                     $.ajax({
+                //                         url: link,
+                //                         global: false,
+                //                         type: "POST",
+                //                         dataType: "JSON",
+                //                         data: {
+                //                             tabel_id: tabel_id
+                //                         },
+                //                         cache: false,
+                //                         beforeSend: function () {
+                //                         },
+                //                         // действие, при ответе с сервера
+                //                         success: function (res) {
+                //                             //console.log(res);
+                //
+                //                             if (res.result == "success") {
+                //                                 location.reload();
+                //                             } else {
+                //                                 //console.log(res.data);
+                //                             }
+                //                         }
+                //                     });
+                //                 }
+                //             }, 1000);
+                //         };
+                //         foo(0);
+                //     }
+                // }else{
+                //     $("#prikazNomerVosem").html("<i style='color: red;'>Нет РЛ, подходящих для перерасчёта</i>");
+                // }
+            }
+        });
 
     }
 
     //Приказ №8 перерасчёт - этап 1 подготовка
     function prikazNomerVosem(worker_id, tabel_id){
 
-        var rys = true;
+        let rys = true;
 
-        rys = confirm("Внимание\nВсе расчётные листы в табеле и общая сумма\nбудут пересчитаны в соответствии\nс приказом №8.\n\nВы уверены?");;
+        rys = confirm("Внимание\nВсе расчётные листы в табеле и общая сумма\nбудут пересчитаны в соответствии\nс приказом №8.\n\nВы уверены?");
 
         if (rys) {
             //console.log(worker_id);
 
-            var link = "fl_prikazNomerVosem.php";
+            let link = "fl_prikazNomerVosem.php";
 
-            var reqData = {
+            let reqData = {
                 worker_id: worker_id,
                 tabel_id: tabel_id
             };
@@ -4497,10 +4633,10 @@
 
                         $('#overlay').show();
 
-                        var buttonsStr = '<input type="button" class="b" value="Применить" onclick="fl_prikazNomerVosem_JustDoIt('+tabel_id+', '+res.newPaymentPercent+', '+JSON.stringify(res.controlCategories)+');">';
+                        let buttonsStr = '<input type="button" class="b" value="Применить" onclick="fl_prikazNomerVosem_JustDoIt('+tabel_id+', '+res.newPaymentPercent+', '+JSON.stringify(res.controlCategories)+');">';
 
                         // Создаем меню:
-                        var menu = $('<div/>', {
+                        let menu = $('<div/>', {
                             class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
                         }).css({"height": "200px"})
                             .appendTo('#overlay')
@@ -4532,7 +4668,7 @@
                                                 '<div id="prikazNomerVosem" style="margin: 10px;"></div>')
                                     )
                                     .append(
-                                        $('<div/>')
+                                        $('<div/ id="prikazButtons">')
                                             .css({
                                                 "position": "absolute",
                                                 "bottom": "2px",
@@ -4553,6 +4689,103 @@
                 }
             });
         }
+    }
+
+    //Приказ по Ботоксу перерасчёт - этап 1 подготовка
+    function prikazNomerBotoks(worker_id, tabel_id){
+        alert ('Я еще не готов');
+
+        // let rys = true;
+        //
+        // rys = confirm("Внимание\nВсе расчётные листы в табеле и общая сумма\nбудут пересчитаны\n\nВы уверены?");
+        //
+        // if (rys) {
+        //     //console.log(worker_id);
+        //
+        //     let link = "fl_prikazNomerBotoks.php";
+        //
+        //     let reqData = {
+        //         worker_id: worker_id,
+        //         tabel_id: tabel_id
+        //     };
+        //
+        //     $.ajax({
+        //         url: link,
+        //         global: false,
+        //         type: "POST",
+        //         dataType: "JSON",
+        //         data: reqData,
+        //         cache: false,
+        //         beforeSend: function() {
+        //             //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+        //         },
+        //         // действие, при ответе с сервера
+        //         success: function(res){
+        //             //console.log(res);
+        //
+        //             //$("#prikazNomerVosem").html(res);
+        //
+        //             if(res.result == "success"){
+        //                 //console.log(JSON.stringify(res.controlCategories));
+        //
+        //                 $('#overlay').show();
+        //
+        //                 let buttonsStr = '<input type="button" class="b" value="Применить" onclick="fl_prikazNomerBotoks_JustDoIt('+tabel_id+', '+JSON.stringify(res.controlCategories)+');">';
+        //
+        //                 // Создаем меню:
+        //                 let menu = $('<div/>', {
+        //                     class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+        //                 }).css({"height": "200px"})
+        //                     .appendTo('#overlay')
+        //                     .append(
+        //                         $('<div/>')
+        //                             .css({
+        //                                 "height": "100%",
+        //                                 "border": "1px solid #AAA",
+        //                                 "position": "relative"
+        //                             })
+        //                             .append('<span style="margin: 5px;"><i>Проверьте и нажмите применить</i></span>')
+        //                             .append(
+        //                                 $('<div/>')
+        //                                     .css({
+        //                                         "position": "absolute",
+        //                                         "width": "100%",
+        //                                         "margin": "auto",
+        //                                         "top": "40px",
+        //                                         "left": "0",
+        //                                         "bottom": "0",
+        //                                         "right": "0",
+        //                                         "height": "80%"
+        //                                     })
+        //                                     .append('<div id="waitProcess">' +
+        //                                         // '<div style="margin: 5px; font-size: 90%;">Общая сумма выручки: <span class="calculateInsInvoice">'+res.allSumm+'</span> руб.</div>' +
+        //                                         // '<div style="margin: 5px; font-size: 90%;">Сумма за эпиляции: <span class="calculateInvoice">'+res.controlCategoriesSumm+'</span> руб. (<span class="calculateInvoice">'+res.controlPercent+'%</span>)</div>' +
+        //                                         // '<div style="margin: 20px; font-size: 90%;">Новый процент за эпиляции: <span class="calculateOrder">'+res.newPaymentPercent+' %</span> </div>' +
+        //                                         '</div>' +
+        //                                         '<div id="prikazNomerVosem" style="margin: 10px;"></div>')
+        //                             )
+        //                             .append(
+        //                                 $('<div/ id="prikazButtons">')
+        //                                     .css({
+        //                                         "position": "absolute",
+        //                                         "bottom": "2px",
+        //                                         "width": "100%"
+        //                                     })
+        //                                     .append(buttonsStr+
+        //                                         '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+        //                                     )
+        //                             )
+        //                     );
+        //
+        //                 menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+        //
+        //             }else{
+        //                 console.log(res);
+        //
+        //             }
+        //         }
+        //     });
+        // }
     }
 
     //!!!!тест разбор

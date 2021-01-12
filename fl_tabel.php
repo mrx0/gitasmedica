@@ -424,7 +424,7 @@
                                     if (($percent_cat == 58) || ($percent_cat == 59) || ($percent_cat == 60) || ($percent_cat == 61)){
                                         $bgColor = "background-color: yellow;";
                                     }
-                                    $rezult .= '<i style="color: rgb(15, 6, 142); font-size: 110%; '.$bgColor.'">' . $percent_cats_j[$percent_cat] . '</i><br>';
+                                    $rezult .= '<i class="percentCatID_'.$percent_cat .'" style="color: rgb(15, 6, 142); font-size: 110%; '.$bgColor.'">' . $percent_cats_j[$percent_cat] . '</i><br>';
                                 }else{
                                     $rezult .= '<i style="color: red; font-size: 100%;">Ошибка #66</i><br>';
                                 }
@@ -1372,12 +1372,19 @@
                             echo '<span style="color: red; font-size: 90%;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%"></i> Сотруднику применяется приказ №8</span><br>';
                         }
 
+                        //Если табель не удален, не закрыт, у пользователя есть права...
                         if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9) && (($finances['see_all'] == 1) || $god_mode)) {
+                            //Если косметолог
                             if ($tabel_j[0]['type'] == 6) {
+                                //Если сотруднику применяется приказ №8
                                 if ($spec_prikaz8) {
                                     echo '
                                                 <button class="b" style="font-size: 80%;color: white; background: #ff3636;" onclick="prikazNomerVosem(' . $tabel_j[0]['worker_id'] . ', ' . $_GET['id'] . ');">Применить приказ №8</button>';
                                 }
+                                //Пересчёт ботокса
+                                echo '
+                                                <button id="botoksButton" class="b" style="display: none; font-size: 80%; background: rgb(252 255 54);" onclick="prikazNomerBotoks(' . $tabel_j[0]['worker_id'] . ', ' . $_GET['id'] . ');">Применить пересчёт ботокса</button>';
+
                             }
                             echo '
                                                 <button class="b" style="font-size: 80%;" onclick="deployTabel(' . $_GET['id'] . ');">Провести табель</button>';
@@ -1427,6 +1434,8 @@
                         echo '
                             <script type="text/javascript">
                                 $(document).ready(function(){
+                                    
+                                    //Посчитаем сумму нарядов
                                     let all_invoice_summ = 0;
                                     let all_invoice_summ_ins = 0;
                                     
@@ -1444,7 +1453,20 @@
 //                                    console.log(all_invoice_summ);
 //                                    console.log(all_invoice_summ_ins);
                                     
+                                    //Выводим сумму
                                     $("#invoiceSumm").html(number_format(all_invoice_summ + all_invoice_summ_ins, 0, \'.\', \' \'));
+                                    
+                                    
+                                    //Пересчёт по ботоксу, считаем сколько его было
+                                    //Количество элементов с одинаковым классом percentCatID_23 (Ботокс)
+                                    //$(".percentCatID_23").length
+                                    
+                                    //Если больше 10 открываем кнопку
+                                    if ($(".percentCatID_23").length > 10){                                    
+                                        $("#botoksButton").show();
+                                    }
+                                    
+                                    
                                 });
 
 

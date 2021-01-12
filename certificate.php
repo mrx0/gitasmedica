@@ -106,6 +106,20 @@
                         //Удалить продажу
                         if (($finances['see_all'] == 1) || $god_mode) {
                             echo '<div style="float: right; cursor: pointer;" onclick="Ajax_cert_celling_del('.$_GET['id'].');" title="Отменить продажу"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 130%;"></i></div>';
+                        }else{
+                            //Если не закрыт
+                            if ($cert_j[0]['status'] != 5) {
+//                                var_dump(date('Y-m-d', time()));
+//                                var_dump(date('Y-m-d', strtotime($cert_j[0]['cell_time'])));
+
+                                //Если дата текущая
+                                if (date('Y-m-d', time()) == date('Y-m-d', strtotime($cert_j[0]['cell_time']))){
+                                    //Если совпадает филиал
+                                    if ($_SESSION['filial'] == $cert_j[0]['office_id']){
+                                        echo '<div style="float: right; cursor: pointer;" onclick="Ajax_cert_celling_del('.$_GET['id'].');" title="Отменить продажу"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 130%;"></i></div>';
+                                    }
+                                }
+                            }
                         }
 
 					    echo '
