@@ -1,7 +1,7 @@
 <?php 
 
 //fill_calculate_cosm_from_session_f.php
-//на 2018.08.06 точная копия fill_calculate_stom_from_session_f.php
+//на 2018-08-06 точная копия fill_calculate_stom_from_session_f.php
 
 	session_start();
 	

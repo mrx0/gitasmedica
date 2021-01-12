@@ -72,7 +72,7 @@ if ($enter_ok){
                     //if ($client !=0){
                     //if (!empty($sheduler_zapis)){
 
-                    //!!! 2019.04.04 патч. Сброс сессии к Расчетному листу, чтобы избавится потом от кнопки сброса изменений
+                    //!!! 2019-04-04 патч. Сброс сессии к Расчетному листу, чтобы избавится потом от кнопки сброса изменений
                         unset($_SESSION['calculate_data']);
                         //if (!isset($_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']])){
                             $_SESSION['calculate_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['filial'] = $invoice_j[0]['office_id'];
