@@ -273,7 +273,7 @@
                                 if ($Work_Today_value['smena'] == 9){
                                     $Work_Today_arr[$Work_Today_value['kab']][1] = $Work_Today_value;
                                     $Work_Today_arr[$Work_Today_value['kab']][2] = $Work_Today_value;
-                                    //2018.10.17 захотел добавить сюда третью (ночную) смену, но передкмал тут же)
+                                    //2018-10-17 захотел добавить сюда третью (ночную) смену, но передкмал тут же)
                                     //$Work_Today_arr[$Work_Today_value['kab']][3] = $Work_Today_value;
                                 }else{
                                     $Work_Today_arr[$Work_Today_value['kab']][$Work_Today_value['smena']] = $Work_Today_value;

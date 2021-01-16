@@ -268,7 +268,7 @@
             $year = date('Y');
 
             $today = date('Y-m-d', time());
-            $afterMonthDate = date('Y-m-d', strtotime('+1 month', gmmktime(0, 0, 0, $month, $day, $year)));
+            $afterMonthDate = date('Y-m-d', strtotime(' +1 month', gmmktime(0, 0, 0, $month, $day, $year)));
 //            var_dump($afterMonthDate);
 
             $order_str = 'ORDER BY MONTH (`birth`), DAY (`birth`) ASC';
@@ -281,23 +281,27 @@
             WHERE 
             `status` <> '8' 
             AND 
-            ((MONTH (`birth`) = '{$month}')
-                AND 
+            (
                 (
-                    (DAY (`birth`) > '$day') 
-                    OR 
-                    (DAY (`birth`) = '$day')
-                ) 
-            )
-            OR (
-                (MONTH (`birth`) = MONTH ('$afterMonthDate'))
-                    AND 
-                    (
+                    (MONTH (`birth`) = '{$month}')
+                        AND 
+                        (
+                            (DAY (`birth`) > '$day') 
+                            OR 
+                            (DAY (`birth`) = '$day')
+                        ) 
+                )
+                OR 
+                (
+                    (MONTH (`birth`) = MONTH ('$afterMonthDate'))
+/*                     AND 
+                   (
                         (DAY (`birth`) < DAY ('$afterMonthDate')) 
                         OR 
                         (DAY (`birth`) = DAY ('$afterMonthDate'))
-                    )
+                    )*/
                 )
+            )
             ".$order_str;
 
             $args = [

@@ -80,11 +80,20 @@
                         }
                         //var_dump($percent_cat_j);
 
-                        //Посмотрим, использовался ли в этом наряде именной сертификат
-                        $query = "SELECT `id` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
+                        //Сертификат именной
+                        $cert_name_id = 0;
+                        $cert_name_num = 0;
 
-                        $cert_name_id = $db::getValue($query, []);
-                        //var_dump($cert_name_id);
+                        //Посмотрим, использовался ли в этом наряде именной сертификат
+                        $query = "SELECT `id`,`num` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
+
+                        $cert_name = $db::getRow($query, []);
+                        //var_dump($cert_name);
+
+                        if (!empty($cert_name)){
+                            $cert_name_id = $cert_name['id'];
+                            $cert_name_num = $cert_name['num'];
+                        }
 
 
 						//if ($client !=0){
@@ -412,7 +421,7 @@
                                 echo '
                                                     <div>
                                                         <div style="font-size: 85%; margin: 5px 0 0 -1px; padding: 1px 5px; border: 1px dotted #4506ff; background-color: rgb(253 255 207); font-style: italic; width: fit-content;">
-                                                            Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'.$cert_name_id.'</b></a>
+                                                            Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т '.$cert_name_num.'</b></a>
                                                         </div>
                                                     </div>';
                             }
@@ -846,7 +855,7 @@
                                             //$stoim_item = round($stoim_item/10) * 10;
                                         }
 
-                                        //2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+                                        //2018-03-13 попытка разобраться с гарантийной ценой для зарплаты
                                         /*if ($item['guarantee'] == 0) {
                                             echo $stoim_item;
                                         }else{

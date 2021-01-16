@@ -74,6 +74,7 @@
                 //Внесенные оплаты/ордеры
                 $arr = array();
                 $order_j = array();
+                $order_nonClient_j = array();
 
                 $rezult .= '
                             <ul id="orders" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
@@ -81,11 +82,42 @@
                                     Внесенные средства (ордеры)	<span style="color: red;">(последние 5)</span> <a href="add_order.php?client_id='.$_POST['client_id'].'" class="b">Добавить новый</a>
                                 </li>';
 
+//                //Соберем все (неудаленные) ордеры
+//                $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC LIMIT 5";
+//
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                $number = mysqli_num_rows($res);
+//                if ($number != 0){
+//                    while ($arr = mysqli_fetch_assoc($res)){
+//                        array_push($order_j, $arr);
+//                    }
+//                }
+//                //var_dump ($order_j);
+//
+//                //Соберем все (неудаленные) системные ордеры
+//                $query = "SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC LIMIT 5";
+//
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                $number = mysqli_num_rows($res);
+//                if ($number != 0){
+//                    while ($arr = mysqli_fetch_assoc($res)){
+//                        array_push($order_nonClient_j, $arr);
+//                    }
+//                }
+//                //var_dump ($order_nonClient_j);
 
-                $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC LIMIT 5";
+
+                //Соберем все (неудаленные) ордеры + системные
+                $query = "
+                            SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."' 
+                            UNION ALL
+                            SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$_POST['client_id']."'
+                            
+                            ORDER BY `create_time` DESC
+                            ";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
                 $number = mysqli_num_rows($res);
                 if ($number != 0){
                     while ($arr = mysqli_fetch_assoc($res)){
@@ -94,7 +126,7 @@
                 }
                 //var_dump ($order_j);
 
-                $rezultOrders = showOrderDivRezult($order_j, false, true, false);
+                $rezultOrders = showOrderDivRezult($order_j, $order_nonClient_j, false, true, false);
                 //$data, $minimal, $show_absent, $show_deleted
 
                 $rezult .= $rezultOrders['data'];

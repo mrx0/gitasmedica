@@ -25,11 +25,20 @@
 
                     $db = new DB();
 					
-					$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
+					//$invoice_j = SelDataFromDB('journal_invoice', $_GET['id'], 'id');
 					//var_dump($invoice_j);
-					
-					if ($invoice_j != 0){
 
+                    //Получаес наряд
+                    $query = "SELECT * FROM `journal_invoice` WHERE `id` = :invoice_id LIMIT 1;";
+
+                    $args = [
+                        'invoice_id' => $_GET['id']
+                    ];
+
+                    $invoice_j = $db::getRow($query, $args);
+                    //var_dump($invoice_j);
+					
+					if (!empty($invoice_j)){
 
                         $msql_cnnct = ConnectToDB();
 
@@ -45,11 +54,21 @@
                             $refund_exist = true;
                         }
 
-                        //Посмотрим, использовался ли в этом наряде именной сертификат
-                        $query = "SELECT `id` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j[0]['id']}' LIMIT 1";
 
-                        $cert_name_id = $db::getValue($query, []);
-                        //var_dump($cert_name_id);
+                        //Сертификат именной
+                        $cert_name_id = 0;
+                        $cert_name_num = 0;
+
+                        //Посмотрим, использовался ли в этом наряде именной сертификат
+                        $query = "SELECT `id`,`num` FROM `journal_cert_name` WHERE `invoice_id`='{$invoice_j['id']}' LIMIT 1";
+
+                        $cert_name = $db::getRow($query, []);
+                        //var_dump($cert_name);
+
+                        if (!empty($cert_name)){
+                            $cert_name_id = $cert_name['id'];
+                            $cert_name_num = $cert_name['num'];
+                        }
 
                         //Если были возвраты, то редактировать никак нельзя
                         if ($refund_exist){
@@ -57,7 +76,7 @@
                         }else {
 
                             //Если заднее число
-                            if ((strtotime($invoice_j[0]['create_time']) + 12 * 60 * 60 < time()) && (($finances['see_all'] != 1) && !$god_mode)) {
+                            if ((strtotime($invoice_j['create_time']) + 12 * 60 * 60 < time()) && (($finances['see_all'] != 1) && !$god_mode)) {
                                 echo '<h1>Нельзя редактировать задним числом</h1>';
                             } else {
 
@@ -67,10 +86,10 @@
                                 $temp_arr = array();
                                 $temp_arr2 = array();
 
-                                $client_j = SelDataFromDB('spr_clients', $invoice_j[0]['client_id'], 'user');
+                                $client_j = SelDataFromDB('spr_clients', $invoice_j['client_id'], 'user');
                                 //var_dump($client_j);
 
-                                $query = "SELECT * FROM `zapis` WHERE `id`='" . $invoice_j[0]['zapis_id'] . "'";
+                                $query = "SELECT * FROM `zapis` WHERE `id`='" . $invoice_j['zapis_id'] . "'";
 
                                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -87,13 +106,13 @@
                                 //if ($client !=0){
                                 if (!empty($sheduler_zapis)) {
 
-                                    if (!isset($_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']])) {
-                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['filial'] = $invoice_j[0]['office_id'];
-                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['worker'] = $invoice_j[0]['worker_id'];
-                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] = 0;
-                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = 0;
-                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = array();
-                                        $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb'] = array();
+                                    if (!isset($_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']])) {
+                                        $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['filial'] = $invoice_j['office_id'];
+                                        $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['worker'] = $invoice_j['worker_id'];
+                                        $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['t_number_active'] = 0;
+                                        $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['discount'] = 0;
+                                        $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['data'] = array();
+                                        $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['mkb'] = array();
                                     }
 
                                     //Хочу получить все данные по этому наряду и захреначить их в сессиию
@@ -161,13 +180,13 @@
                                                 if ((int)$invoice_ex_j_val['percent_cats'] > 0) {
                                                     $temp_arr2['percent_cats'] = (int)$invoice_ex_j_val['percent_cats'];
 
-                                                    //var_dump($invoice_j[0]['type']);
+                                                    //var_dump($invoice_j['type']);
 
                                                 } else {
                                                     //$temp_arr2['percent_cats'] = 1;
 
                                                     //выбрать первую из категорий указанного типа
-                                                    $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='" . $invoice_j[0]['type'] . "' LIMIT 1;";
+                                                    $query = "SELECT `id` FROM `fl_spr_percents` WHERE `type`='" . $invoice_j['type'] . "' LIMIT 1;";
                                                     //var_dump($query);
 
                                                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -180,7 +199,7 @@
                                                         $temp_arr2['work_percent'] = (int)$arr['work_percent'];
                                                         $temp_arr2['material_percent'] = (int)$arr['material_percent'];*/
 
-                                                        //$percents_j = getPercents( $invoice_j[0]['worker_id'], (int)$arr['id']);
+                                                        //$percents_j = getPercents( $invoice_j['worker_id'], (int)$arr['id']);
                                                         //var_dump($percents_j);
 
                                                         $temp_arr2['percent_cats'] = (int)$arr['id'];
@@ -208,7 +227,7 @@
                                                     $temp_arr2['manual_price'] = false;
                                                 }
 
-                                                if ($invoice_j[0]['type'] == 5) {
+                                                if ($invoice_j['type'] == 5) {
                                                     if (!isset($temp_arr[$ind])) {
                                                         $temp_arr[$ind] = array();
                                                     }
@@ -216,7 +235,7 @@
                                                     array_push($temp_arr[$ind], $temp_arr2);
                                                 }
 
-                                                if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10) || ($invoice_j[0]['type'] == 7)) {
+                                                if (($invoice_j['type'] == 6) || ($invoice_j['type'] == 10) || ($invoice_j['type'] == 7)) {
                                                     array_push($temp_arr, $temp_arr2);
                                                 }
                                             }
@@ -224,25 +243,25 @@
 
                                         //  var_dump($temp_arr);
 
-                                        if ($invoice_j[0]['type'] == 5) {
-                                            $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
+                                        if ($invoice_j['type'] == 5) {
+                                            $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['data'] = $temp_arr;
                                         }
                                         //Костыль для сессионых данных косметологов и специалистов
-                                        if (($invoice_j[0]['type'] == 6) || ($invoice_j[0]['type'] == 10) || ($invoice_j[0]['type'] == 7)) {
-                                            $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data'] = $temp_arr;
+                                        if (($invoice_j['type'] == 6) || ($invoice_j['type'] == 10) || ($invoice_j['type'] == 7)) {
+                                            $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['data'] = $temp_arr;
                                         }
                                         //скидку тут добавлю в сесиию
-                                        $discount = $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['discount'] = $invoice_j[0]['discount'];
+                                        $discount = $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['discount'] = $invoice_j['discount'];
 
                                         if ($invoice_ex_j_mkb != 0) {
-                                            $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb'] = $invoice_ex_j_mkb;
+                                            $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['mkb'] = $invoice_ex_j_mkb;
 
                                         }
                                     }
 
                                     //var_dump($_SESSION);
-                                    //var_dump($_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['data']);
-                                    //var_dump($_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['mkb']);
+                                    //var_dump($_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['data']);
+                                    //var_dump($_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['mkb']);
 
                                     if ($sheduler_zapis[0]['month'] < 10) $month = '0' . $sheduler_zapis[0]['month'];
                                     else $month = $sheduler_zapis[0]['month'];
@@ -251,7 +270,7 @@
                                     <div id="status">
                                         <header>
                                             <!--<div class="nav">
-                                                <a href="zapis_full.php?filial=' . $invoice_j[0]['office_id'] . '&who=stom&d=' . $sheduler_zapis[0]['day'] . '&m=' . $month . '&y=' . $sheduler_zapis[0]['year'] . '&kab=' . $sheduler_zapis[0]['kab'] . '" class="">Запись подробно</a>
+                                                <a href="zapis_full.php?filial=' . $invoice_j['office_id'] . '&who=stom&d=' . $sheduler_zapis[0]['day'] . '&m=' . $month . '&y=' . $sheduler_zapis[0]['year'] . '&kab=' . $sheduler_zapis[0]['kab'] . '" class="">Запись подробно</a>
                                             </div>-->
                                             
                                             <!--<span style="color: red;">Тестовый режим. Уже сохраняется и даже как-то работает</span>-->
@@ -261,17 +280,17 @@
                                             <div class="cellsBlock2" style="margin-bottom: 10px;">
                                                 <span style="font-size:80%;  color: #555;">';
 
-                                    if (($invoice_j[0]['create_time'] != 0) || ($invoice_j[0]['create_person'] != 0)) {
+                                    if (($invoice_j['create_time'] != 0) || ($invoice_j['create_person'] != 0)) {
                                         echo '
-                                                            Добавлен: ' . date('d.m.y H:i', strtotime($invoice_j[0]['create_time'])) . '<br>
-                                                            Автор: ' . WriteSearchUser('spr_workers', $invoice_j[0]['create_person'], 'user', true) . '<br>';
+                                                            Добавлен: ' . date('d.m.y H:i', strtotime($invoice_j['create_time'])) . '<br>
+                                                            Автор: ' . WriteSearchUser('spr_workers', $invoice_j['create_person'], 'user', true) . '<br>';
                                     } else {
                                         echo 'Добавлен: не указано<br>';
                                     }
-                                    if (($invoice_j[0]['last_edit_time'] != 0) || ($invoice_j[0]['last_edit_person'] != 0)) {
+                                    if (($invoice_j['last_edit_time'] != 0) || ($invoice_j['last_edit_person'] != 0)) {
                                         echo '
-                                                            Последний раз редактировался: ' . date('d.m.y H:i', strtotime($invoice_j[0]['last_edit_time'])) . '<br>
-                                                            Кем: ' . WriteSearchUser('spr_workers', $invoice_j[0]['last_edit_person'], 'user', true) . '';
+                                                            Последний раз редактировался: ' . date('d.m.y H:i', strtotime($invoice_j['last_edit_time'])) . '<br>
+                                                            Кем: ' . WriteSearchUser('spr_workers', $invoice_j['last_edit_person'], 'user', true) . '';
                                     }
                                     echo '
                                                 </span>
@@ -280,27 +299,27 @@
                                     echo '		
                                         </header>';
 
-                                    /*var_dump($invoice_j[0]['summ']);
-                                    var_dump($invoice_j[0]['paid']);
-                                    var_dump($invoice_j[0]['summ'] != $invoice_j[0]['paid']);
+                                    /*var_dump($invoice_j['summ']);
+                                    var_dump($invoice_j['paid']);
+                                    var_dump($invoice_j['summ'] != $invoice_j['paid']);
                                     var_dump('-----');
-                                    var_dump($invoice_j[0]['closed_time']);
-                                    var_dump($invoice_j[0]['closed_time'] == 0);
+                                    var_dump($invoice_j['closed_time']);
+                                    var_dump($invoice_j['closed_time'] == 0);
                                     var_dump('-----');
-                                    var_dump($invoice_j[0]['summins']);
-                                    var_dump($invoice_j[0]['summins'] != 0);*/
+                                    var_dump($invoice_j['summins']);
+                                    var_dump($invoice_j['summins'] != 0);*/
 
                                     //var_dump(date("Y-m-d H:m:s", time()));
 
 
-                                    //if (((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['summ'] != 0)) || ($invoice_j[0]['status'] == 5) || ($invoice_j[0]['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))) {
-                                    if (((($invoice_j[0]['summ'] == $invoice_j[0]['paid']) && ($invoice_j[0]['summ'] != 0)) || ($invoice_j[0]['status'] == 5)) && !($god_mode || ($finances['see_all'] == 1))) {
+                                    //if (((($invoice_j['summ'] == $invoice_j['paid']) && ($invoice_j['summ'] != 0)) || ($invoice_j['status'] == 5) || ($invoice_j['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))) {
+                                    if (((($invoice_j['summ'] == $invoice_j['paid']) && ($invoice_j['summ'] != 0)) || ($invoice_j['status'] == 5)) && !($god_mode || ($finances['see_all'] == 1))) {
                                         echo '
                                                     <div>
                                                         <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>
                                                     </div>';
                                     } else {
-                                        //if ((($invoice_j[0]['summ'] != $invoice_j[0]['paid']) && ($invoice_j[0]['closed_time'] == 0)) || ($invoice_j[0]['summins'] != 0) || (($invoice_j[0]['summins'] == 0) && ($invoice_j[0]['summ'] == 0) && ($invoice_j[0]['paid'] == 0))) {
+                                        //if ((($invoice_j['summ'] != $invoice_j['paid']) && ($invoice_j['closed_time'] == 0)) || ($invoice_j['summins'] != 0) || (($invoice_j['summins'] == 0) && ($invoice_j['summ'] == 0) && ($invoice_j['paid'] == 0))) {
                                         echo '
                                             <ul style="margin-left: 6px; margin-bottom: 10px;">	
                                                 <li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">Посещение</li>';
@@ -424,15 +443,15 @@
 
                                         echo '	
                                                 <input type="hidden" id="adv" name="adv" value="false">
-                                                <input type="hidden" id="invoice_id" name="invoice_id" value="' . $invoice_j[0]['id'] . '">
-                                                <input type="hidden" id="client" name="client" value="' . $invoice_j[0]['client_id'] . '">
+                                                <input type="hidden" id="invoice_id" name="invoice_id" value="' . $invoice_j['id'] . '">
+                                                <input type="hidden" id="client" name="client" value="' . $invoice_j['client_id'] . '">
                                                 <input type="hidden" id="client_insure" name="client_insure" value="' . $client_j[0]['insure'] . '">
-                                                <input type="hidden" id="zapis_id" name="zapis_id" value="' . $invoice_j[0]['zapis_id'] . '">
+                                                <input type="hidden" id="zapis_id" name="zapis_id" value="' . $invoice_j['zapis_id'] . '">
                                                 <input type="hidden" id="zapis_insure" name="zapis_insure" value="' . $sheduler_zapis[0]['insured'] . '">
-                                                <input type="hidden" id="filial" name="filial" value="' . $invoice_j[0]['office_id'] . '">
-                                                <input type="hidden" id="worker" name="worker" value="' . $invoice_j[0]['worker_id'] . '">
-                                                <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['invoice_data'][$invoice_j[0]['client_id']][$invoice_j[0]['zapis_id']]['t_number_active'] . '">
-                                                <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j[0]['type'] . '">
+                                                <input type="hidden" id="filial" name="filial" value="' . $invoice_j['office_id'] . '">
+                                                <input type="hidden" id="worker" name="worker" value="' . $invoice_j['worker_id'] . '">
+                                                <input type="hidden" id="t_number_active" name="t_number_active" value="' . $_SESSION['invoice_data'][$invoice_j['client_id']][$invoice_j['zapis_id']]['t_number_active'] . '">
+                                                <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j['type'] . '">
                                                 <input type="hidden" id="cert_name_id" name="cert_name_id" value="'.$cert_name_id.'">
                                                 <input type="hidden" id="cert_name_old_id" name="cert_name_old_id" value="'.$cert_name_id.'">';
 
@@ -711,7 +730,8 @@
                                                             <div style=" /*width: 350px;*/ height: 450px; overflow: scroll; border: 1px solid #CCC;">
                                                                 <ul class="ul-tree ul-drop" id="lasttree">';
 
-                                        showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $invoice_j[0]['type']);
+                                        //Список из прайса деревом (2020-12-29 долго грузится)
+                                        showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $invoice_j['type']);
 
                                         echo '
                                                                 </ul>
@@ -801,7 +821,7 @@
                                             echo '
                                                                                 <div id="certNameBlockButton" class="b4" style="display: none; margin: 5px 0 0 -1px;" onclick="showCertNamePayAdd()">Добавить именной сертификат</div>
                                                                                 <div id="certNameBlockChosen" style=" margin: 5px 0 0 -1px; padding: 1px 0px 1px 5px; border: 1px dotted #4506ff; background-color: #f5f9a6; font-style: italic;">
-                                                                                    Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'.$cert_name_id.'</b></a>
+                                                                                    Использован <a href="certificate_name.php?id='.$cert_name_id.'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т '.$cert_name_num.'</b></a>
                                                                                     <span style="cursor: pointer; color: red; font-size: 110%; margin-left: 10px; background-color: #CCC; padding: 0px 7px; border: 1px solid red;" onclick="certNameBlockChosen_delete('.$cert_name_id.')"><i class="fa fa-times" aria-hidden="true" style=""></i></span>
                                                                                 </div>';
                                         }else{

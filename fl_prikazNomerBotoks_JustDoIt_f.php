@@ -13,7 +13,7 @@
             include_once 'DBWork.php';
             include_once 'ffun.php';
 
-            if (!isset($_POST['tabel_id']) || !isset($_POST['newPercent']) || !isset($_POST['controlCategories'])){
+            if (!isset($_POST['tabel_id'])/* || !isset($_POST['newPercent'])*/ || !isset($_POST['controlCategories'])){
                 //echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
                 //var_dump ($_POST);
@@ -29,7 +29,7 @@
                     }
 
                     //Собираем кусочек запроса $dop
-                    if (count($temp_arr) > 1){
+                    if (count($temp_arr) > 0){
                         $conditionStr = implode(' OR ', $temp_arr);
                     }
 
@@ -64,9 +64,9 @@
                         $conditionStr = implode(',', array_map('intval', $calc_ex_arr));
 
                         //Обновим БД с новыми %
-                        $query = "UPDATE `fl_journal_calculate_ex` SET `work_percent` = '{$_POST['newPercent']}' WHERE `id` IN ({$conditionStr})";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//                        $query = "UPDATE `fl_journal_calculate_ex` SET `work_percent` = '{$_POST['newPercent']}' WHERE `id` IN ({$conditionStr})";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
                         //!!! 2019-07-20 хотел сюда добавить пересчет РЛ, но не стал. Там далее оно пересчитывается вроде как
                         //fl_updateCalculatesData ($invoice_id, $mat_cons_j_ex, $deleteMark)

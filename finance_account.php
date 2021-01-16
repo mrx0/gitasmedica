@@ -186,6 +186,7 @@
                         //Внесенные оплаты/ордеры
                         $arr = array();
                         $order_j = array();
+                        $order_nonClient_j = array();
 
                         $order_j_start = 0;
                         $order_j_count = 30;
@@ -196,8 +197,39 @@
 									    Внесенные средства (ордеры)	<a href="add_order.php?client_id='.$client_j[0]['id'].'" class="b">Добавить новый</a>
 									</li>';
 
-                        //$query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC LIMIT $order_j_start, $order_j_count";
-                        $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";
+                        //Соберем все (неудаленные) ордеры
+//                        //$query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC LIMIT $order_j_start, $order_j_count";
+//                        $query = "SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                        $number = mysqli_num_rows($res);
+//                        if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//                                array_push($order_j, $arr);
+//                            }
+//                        }
+//                        var_dump ($order_j);
+//
+//                        //Соберем все (неудаленные) системные ордеры
+//                        $query = "SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                        $number = mysqli_num_rows($res);
+//                        if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//                                array_push($order_nonClient_j, $arr);
+//                            }
+//                        }
+//                        var_dump ($order_nonClient_j);
+
+                        //Соберем все (неудаленные) ордеры + системные
+                        $query = "
+                            SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' 
+                            UNION ALL
+                            SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$client_j[0]['id']."'
+                            
+                            ORDER BY `create_time` DESC
+                            ";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                         $number = mysqli_num_rows($res);
@@ -208,11 +240,22 @@
                         }
                         //var_dump ($order_j);
 
+//                        //Соберем все (неудаленные) системные ордеры
+//                        $query = "SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//                        $number = mysqli_num_rows($res);
+//                        if ($number != 0){
+//                            while ($arr = mysqli_fetch_assoc($res)){
+//                                array_push($order_nonClient_j, $arr);
+//                            }
+//                        }
+
 
                         if (($finances['see_all'] != 0) || $god_mode){
-                            $rezultOrders = showOrderDivRezult($order_j, false, true, true);
+                            $rezultOrders = showOrderDivRezult($order_j, $order_nonClient_j, false, true, true);
                         }else{
-                            $rezultOrders = showOrderDivRezult($order_j, false, true, false);
+                            $rezultOrders = showOrderDivRezult($order_j, $order_nonClient_j,  false, true, false);
                         }
                         //$data, $minimal, $show_absent, $show_deleted
 

@@ -30,7 +30,7 @@
 					}
 				}*/
 
-                //2018.08.07 скопировал из delete_invoice_item_from_session_f.php
+                //2018-08-07 скопировал из delete_invoice_item_from_session_f.php
                 if ($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['t_number_active'] == $_POST['ind']){
                     if (empty($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data'][$_POST['ind']])){
                         $keys = array_keys($_SESSION['calculate_data'][$_POST['client']][$_POST['zapis_id']]['data']);

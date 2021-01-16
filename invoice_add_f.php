@@ -21,6 +21,7 @@
 
                 include_once('DBWorkPDO.php');
                 //include_once 'DBWork.php';
+                include_once 'functions.php';
 
                 $dbase = 'journal_invoice';
                 $dbase_ex = 'journal_invoice_ex';
@@ -195,19 +196,39 @@
 
                         //Если использован именной сертификат
                         if ($_POST['cert_name_id'] > 0){
-                            //
-                            $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+                            //Получим данные этого сертификата
+                            $query = "SELECT `client_id`, `nominal`, `status` FROM `journal_cert_name` WHERE `id`=:cert_name_id LIMIT 1";
+                            //var_dump($query);
 
                             $args = [
-                                'invoice_id' => $insert_id,
-                                'closed_time' => $time,
-                                'status' => 5,
                                 'cert_name_id' => $_POST['cert_name_id']
                             ];
 
-                            //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-                            $db::sql($query, $args);
+                            $cert_name = $db::getRow($query, $args);
+                            //var_dump($cert_name);
+
+                            if (!empty($cert_name)) {
+                                if (($cert_name['status'] == 7) && ($cert_name['client_id'] != 0)) {
+                                    //Обновим данные сертификата
+                                    $query = "UPDATE `journal_cert_name` SET `invoice_id`= :invoice_id, `closed_time`= :closed_time, `status` = :status WHERE `id`= :cert_name_id";
+
+                                    $args = [
+                                        'invoice_id' => $insert_id,
+                                        'closed_time' => $time,
+                                        'status' => 5,
+                                        'cert_name_id' => $_POST['cert_name_id']
+                                    ];
+
+                                    //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                                    $db::sql($query, $args);
+
+                                    //добавим системный ордер хозяину именного сертификата
+                                    orderNonClient_add($cert_name['client_id'], $cert_name['nominal'], $time, 0, 0, $_POST['cert_name_id']);
+                                }
+                            }
                         }
+
+
 
 						echo json_encode(array('result' => 'success', 'data' => $insert_id, 'data2' => $itog_price));
 					}

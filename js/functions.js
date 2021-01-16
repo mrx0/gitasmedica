@@ -6254,9 +6254,9 @@
 
                 stoim = stoim - (stoim * discount / 100);
 
-            	//Убрали округление 2017.08.09
+            	//Убрали округление 2017-08-09
            		//stoim = Math.round(stoim / 10) * 10;
-                //Изменили округление 2017.08.10
+                //Изменили округление 2017-08-10
            		stoim = Math.round(stoim);
             }
 
@@ -6285,7 +6285,7 @@
             var ishod_price = Number($(this).parent().find('.invoiceItemPriceItog').html());
 
             if (ishod_price == 0) {
-            	//2018.03.13 попытка разобраться с гарантийной ценой для зарплаты
+            	//2018-03-13 попытка разобраться с гарантийной ценой для зарплаты
                 //if (guarantee != 1) {
                     $(this).parent().find('.invoiceItemPriceItog').html(stoim);
                 //}
@@ -6342,9 +6342,9 @@
 		});
 
         //Summ = Math.round(Summ - (Summ * discount / 100));
-        //Убрали округление 2017.08.09
+        //Убрали округление 2017-08-09
         //Summ = Math.round(Summ/10) * 10;
-        //Изменили округление 2017.08.10
+        //Изменили округление 2017-08-10
         Summ = Math.round(Summ);
 
         //SummIns = Math.round(SummIns - (SummIns * discount / 100));
@@ -8992,7 +8992,16 @@
                             '</ul>');
                     }
                 }else{
-                    $('#errror').html(res.data);
+                    if (mode == 'edit'){
+                        alert(res.data);
+                        setTimeout(function () {
+                            //window.location.replace('invoice_edit.php?id=' + id);
+                            location.reload();
+                        }, 100);
+                        $('#errror').html('<div class="query_neok">'+res.data+'</div>');
+                    }else{
+                        $('#errror').html(res.data);
+                    }
                 }
             }
         });
@@ -9575,7 +9584,7 @@
 	}
 
 	//Добавим сертификат именной в наряд
-	function Ajax_cert_name_add_pay(id){
+	function Ajax_cert_name_add_pay(id, num){
 
         $('#overlay').hide();
         $('#search_cert_name_input').append($('#search_cert_name_input_target').children());
@@ -9589,7 +9598,7 @@
 
         $('#cert_name_id').val(id);
 
-        $('#certNameBlockChosen').append('Использован <a href="certificate_name.php?id='+id+'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т #'+id+'</b></a> ' +
+        $('#certNameBlockChosen').append('Использован <a href="certificate_name.php?id='+id+'" class="ahref" style="" target="_blank" rel="nofollow noopener"><b>именной серт-т '+num+'</b></a> ' +
             '<span style="cursor: pointer; color: red; font-size: 110%; margin-left: 10px; background-color: #CCC; padding: 0px 7px; border: 1px solid red;" onclick="certNameBlockChosen_delete('+id+')"><i class="fa fa-times" aria-hidden="true" style=""></i></span>');
 
 		/*$.ajax({
@@ -12206,7 +12215,7 @@
     }
 
     //Для изменения графика админов, ассистентов, ...  (scheduler3.php)
-	// !! 2019.02.13 пока не знаю, будет писаться сразу в базу или все таки собираться в массив и потом по кнопке сохранить...
+	// !! 2019-02-13 пока не знаю, будет писаться сразу в базу или все таки собираться в массив и потом по кнопке сохранить...
     function changeTempSchedulerSession(obj, worker_id, filial_id, day, month, year, holiday){
     	//!!!Тест выводим все аргументы функции
 		//console.log(arguments);
