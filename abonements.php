@@ -1,7 +1,7 @@
 <?php
 
 //abonements.php 
-//Список абонементов
+//Список абонементов 
 
 	require_once 'header.php';
 	require_once 'blocks_dom.php';
