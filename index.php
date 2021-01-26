@@ -262,13 +262,16 @@
             //Дни рождений
             $births_str = '';
             $today_birth_str = '';
+            $last_birth_str = '';
 
             $day = date('d');
             $month = date('m');
             $year = date('Y');
 
             $today = date('Y-m-d', time());
+            $lastMonthDate = date('Y-m-d', strtotime(' -3 days', gmmktime(0, 0, 0, $month, $day, $year)));
             $afterMonthDate = date('Y-m-d', strtotime(' +1 month', gmmktime(0, 0, 0, $month, $day, $year)));
+//            var_dump($lastMonthDate);
 //            var_dump($afterMonthDate);
 
             $order_str = 'ORDER BY MONTH (`birth`), DAY (`birth`) ASC';
@@ -277,29 +280,62 @@
                 $order_str = 'ORDER BY MONTH (`birth`) DESC, DAY (`birth`) ASC';
             }
 
+//            $query = "SELECT `id`, `full_name`, `birth` FROM `spr_workers`
+//            WHERE
+//            `status` <> '8'
+//            AND
+//            (
+//                (
+//                    (MONTH (`birth`) = '{$month}')
+//                        AND
+//                        (
+//                            (DAY (`birth`) > '$day')
+//                            OR
+//                            (DAY (`birth`) = '$day')
+//                        )
+//                )
+//                OR
+//                (
+//                    (MONTH (`birth`) = MONTH ('$afterMonthDate'))
+///*                     AND
+//                   (
+//                        (DAY (`birth`) < DAY ('$afterMonthDate'))
+//                        OR
+//                        (DAY (`birth`) = DAY ('$afterMonthDate'))
+//                    )*/
+//                )
+//            )
+//            ".$order_str;
+
             $query = "SELECT `id`, `full_name`, `birth` FROM `spr_workers`
-            WHERE 
-            `status` <> '8' 
-            AND 
+            WHERE
+            `status` <> '8'
+            AND
             (
                 (
-                    (MONTH (`birth`) = '{$month}')
-                        AND 
-                        (
-                            (DAY (`birth`) > '$day') 
-                            OR 
-                            (DAY (`birth`) = '$day')
-                        ) 
+                    (MONTH (`birth`) = '".explode('-', $lastMonthDate)[1]."')
+                    AND
+                    (
+                        (DAY (`birth`) > '".explode('-', $lastMonthDate)[2]."')
+                        OR
+                        (DAY (`birth`) = '".explode('-', $lastMonthDate)[2]."')
+                    )
+                )
+                OR
+                (
+                    (MONTH (`birth`) = '".explode('-', $afterMonthDate)[1]."')
+                    AND
+                    (
+                        (DAY (`birth`) < '".explode('-', $afterMonthDate)[2]."')
+                        OR
+                        (DAY (`birth`) = '".explode('-', $afterMonthDate)[2]."')
+                    )
                 )
                 OR 
                 (
-                    (MONTH (`birth`) = MONTH ('$afterMonthDate'))
-/*                     AND 
-                   (
-                        (DAY (`birth`) < DAY ('$afterMonthDate')) 
-                        OR 
-                        (DAY (`birth`) = DAY ('$afterMonthDate'))
-                    )*/
+                    (MONTH (`birth`) < MONTH ('$afterMonthDate'))
+                    AND
+                    (MONTH (`birth`) > '".explode('-', $lastMonthDate)[1]."')
                 )
             )
             ".$order_str;
@@ -315,8 +351,36 @@
                 foreach ($births_arr as $birth) {
                     //var_dump(date('m-d', strtotime($birth['birth'])));
 
+                    //Прошедшие и если это не декабрь
+                    if(
+                        (
+                            (explode('-', $birth['birth'])[1].'-'.explode('-', $birth['birth'])[2] < date('m-d', time()))
+                            &&
+                            ($month != '12')
+                        )
+                        ||
+                        (
+                            (explode('-', $birth['birth'])[1].'-'.explode('-', $birth['birth'])[2] < date('m-d', time()))
+                            &&
+                            ($month == '12')
+                            &&
+                            (explode('-', $birth['birth'])[1] == 12)
+                        )
+                    /*&&
+                        (explode('-', $afterMonthDate)[1] != '01')*/
+                    ){
+                        $last_birth_str .= '
+                            <tr>
+                                <td style="text-align: right; width: 50%; padding-right: 10px; font-size: 90%; ">
+                                    <i>'.explode('-', $birth['birth'])[2].' '.$monthsName[explode('-', $birth['birth'])[1]].'</i>
+                                </td>
+                                <td style="text-align: left; width: 50%; padding-left: 5px;">
+                                    '.$birth['full_name'].'
+                                </td>
+                            </tr>';
+
                     //if (date('m-d', strtotime($birth['birth'])) == date('m-d', time())){
-                    if (explode('-', $birth['birth'])[1].'-'.explode('-', $birth['birth'])[2] == date('m-d', time())){
+                    }elseif (explode('-', $birth['birth'])[1].'-'.explode('-', $birth['birth'])[2] == date('m-d', time())){
 
                         $today_birth_str .= '
                             <tr>
@@ -361,15 +425,26 @@
                     </table>';
             }
 
-            if (mb_strlen($births_str) > 0) {
+            if ((mb_strlen($births_str) > 0) || (mb_strlen($last_birth_str) > 0)) {
                 if (mb_strlen($today_birth_str) > 0) {
                     $absolute_pos = 'position: absolute; /*bottom: 0;*/';
                 }else{
                     $absolute_pos = '';
                 }
 
+                if (mb_strlen($last_birth_str) > 0){
+                    $last_birth_str = '
+                        <tr>
+                            <td colspan="2" style="text-align: center; font-size: 80%; background-color: rgb(206 206 206); padding: 3px;">
+                                <i>Недавно было день рождения:</i>
+                            </td>
+                        </tr>
+                        '.$last_birth_str.'';
+                }
+
                 $births_str = '
                     <table width="100%" border="0" style="text-align: center; border: 1px solid #BFBCB5; '.$absolute_pos.'">
+                        '.$last_birth_str.'
                         <tr>
                             <td colspan="2" style="text-align: center; font-size: 80%; background-color: rgb(206 206 206); padding: 3px;">
                                 <i>Скоро день рождения:</i>
