@@ -14884,3 +14884,52 @@
             });
         }
     }
+
+    //Отметка о ДР если поздравили или нет
+    function changeCongrat(dataObj, worker_id, congr_id, congr_status, year){
+        //console.log(dataObj);
+
+        let link = "changeCongrat_f.php";
+        //console.log(link);
+
+        let reqData = {
+            worker_id: worker_id,
+            congr_id: congr_id,
+            congr_status: congr_status,
+            year: year
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                // console.log(res);
+
+                if (res.result == "success") {
+                    //location.reload();
+                    let new_congr_id = res.data
+
+                    // console.log(new_congr_id);
+
+                    if (congr_status == 1){
+                        $(dataObj).parent().html('<i class="fa fa-check-square" aria-hidden="true" style="color: #00DCDC; cursor: pointer; text-shadow: 1px 1px 4px #fbff00, 0px 0px 10px #c3ffbc52;" onclick="changeCongrat(this, ' + worker_id + ', ' + new_congr_id + ',  0, ' + year + ')" title="Уже поздравили"></i>');
+                    }else{
+                        $(dataObj).parent().html('<span id="congrat_button"><i class="fa fa-check-square" aria-hidden="true" style="color: rgb(216 216 216); cursor: pointer; text-shadow: none;" onclick="changeCongrat(this, ' + worker_id + ', 0, 1, ' + year + ')" title="Еще не поздравили"></i></span>');
+                    }
+
+                } else {
+                    // alert(res.data);
+                    // //$("#overlay").hide();
+                    // $('#errrror').html('<div class="query_neok">' + res.data + '</div>');
+                }
+            }
+        });
+    }
