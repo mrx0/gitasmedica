@@ -2008,13 +2008,13 @@
 		}
 		
 		$q_dop = '';
-		$dbprices = 'spr_priceprices';
+		//$dbprices = 'spr_priceprices';
 		$link = 'pricelistitem.php?';
 		
 		//Для страховых
 		if ($insure_id != 0){
 			$q_dop = " AND `insure`='{$insure_id}'";
-			$dbprices = 'spr_priceprices_insure';
+//			$dbprices = 'spr_priceprices_insure';
 			$link = 'pricelistitem_insure.php?insure='.$insure_id;
 		}else{
 			//
@@ -2094,15 +2094,15 @@
                     if ($insure_id == 0) {
                         echo '
 							<div style="position: absolute; top: 0; right: 3px;">
-							   <a href="pricelistgroup.php?id=' . $value['id'] . '" class="ahref" style="font-weight: bold;" title="Открыть карточку группы">
+							   <a href="pricelistgroup.php?id=' . $value['id'] . '" class="ahref" style="font-weight: bold;" title="Открыть карточку группы" target="_blank" rel="nofollow noopener">
                                     <i class="fa fa-folder-open" aria-hidden="true"></i>								    
 							   </a>
 								<div style="font-style: normal; font-size: 13px; display: inline-block;">
 								    <div class="managePriceList">
-                                        <a href="pricelistgroup_edit.php?id=' . $value['id'] . '" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать карточку группы"></i></a>
-                                        <a href="add_pricelist_item.php?addinid=' . $value['id'] . '" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
-                                        <!--<a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
-                                        <a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить эту группу"></i></a>
+                                        <a href="pricelistgroup_edit.php?id=' . $value['id'] . '" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать карточку группы"></i></a>
+                                        <a href="add_pricelist_item.php?addinid=' . $value['id'] . '" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+                                        <!--<a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref" target="_blank" rel="nofollow noopener"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+                                        <a href="pricelistgroup_del.php?id=' . $value['id'] . '" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить эту группу"></i></a>
 									</div>
 								</div>
 							</div>';
@@ -2204,7 +2204,7 @@
                             }
                             echo '
 												<div class="priceitemDivname">
-													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter">
+													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter" target="_blank" rel="nofollow noopener">
 														<span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> 
 														<i>'.$items_j[$i]['code'].'</i> 
 														'.$items_j[$i]['name'].' ';

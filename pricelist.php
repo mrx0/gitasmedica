@@ -300,14 +300,14 @@
 						echo '
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-										<a href="pricelistgroup.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(223, 128, 252, 0.23);" id="4filter">'.$items_j[$i]['name'].'</a>
+										<a href="pricelistgroup.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(223, 128, 252, 0.23);" id="4filter" target="_blank" rel="nofollow noopener">'.$items_j[$i]['name'].'</a>
 										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(223, 128, 252, 0.23);">
 											<div class="managePriceList" style="font-style: normal; font-size: 13px;">';
 						/*echo '
-												<a href="pricelistgroup_edit.php?id='.$items_j[$i]['id'].'" class="ahref"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
-												<a href="add_pricelist_item.php?addinid='.$items_j[$i]['id'].'" class="ahref"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
-												<!--<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
-												<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>';*/
+												<a href="pricelistgroup_edit.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
+												<a href="add_pricelist_item.php?addinid='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+												<!--<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+												<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>';*/
 						echo '
 											</div>
 										</div>
@@ -368,7 +368,7 @@
 						echo '
 									<li class="cellsBlock" style="width: auto;">
 										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter">'.$items_j[$i]['name'].'</a>
+										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter" target="_blank" rel="nofollow noopener">'.$items_j[$i]['name'].'</a>
 										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
 									</li>';
 					}

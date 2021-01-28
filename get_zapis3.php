@@ -110,6 +110,27 @@
             $arr = mysqli_fetch_assoc($res);
 
 
+            //когда была последняя запись
+            $query = "SELECT `datetime` FROM `zapis_online` WHERE `id` IN (SELECT MAX(`id`) FROM `zapis_online`) LIMIT 1";
+//            var_dump($query);
+
+            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+            $number = mysqli_num_rows($res);
+
+            if ($number != 0) {
+                $arr1 = mysqli_fetch_assoc($res);
+
+                $datetime = $arr1['datetime'];
+            }
+
+            $today3daysplus = date('Y-m-d', strtotime(date('Y-m-d', strtotime($datetime )).' +3 days'));
+
+            if (date('Y-m-d', time()) >= $today3daysplus){
+                $arr['total']++;
+            }
+
+
 
             echo json_encode(array('result' => 'success', 'data' => $arr['total']));
         }
