@@ -145,6 +145,12 @@
                         $invoice_j_start = 0;
                         $invoice_j_count = 30;
 
+                        $limit_str = '';
+
+                        if ($_GET['client_id'] == 1){
+                            $limit_str = ' LIMIT 500';
+                        }
+
                         //var_dump("3.5 - ".(microtime(true) - $script_start));
                         $msql_cnnct = ConnectToDB ();
 
@@ -152,7 +158,7 @@
 								<ul id="invoices" style="padding: 5px; margin-left: 6px; margin: 10px 5px; display: inline-block; vertical-align: top; border: 1px outset #AAA;">
 									<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px; height: 30px; ">Выписанные наряды</li>';
 
-                        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";
+                        $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC ".$limit_str."";
                         //$query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC LIMIT $invoice_j_start, $invoice_j_count";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -227,8 +233,8 @@
                             SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' 
                             UNION ALL
                             SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$client_j[0]['id']."'
-                            
                             ORDER BY `create_time` DESC
+                            ".$limit_str."
                             ";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
