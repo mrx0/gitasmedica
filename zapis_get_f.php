@@ -25,11 +25,19 @@
 
                 $rezult = '';
 
+                $limit_str = '';
+
+                if ($_POST['client_id'] == 1){
+                    $limit_str = ' LIMIT 300';
+                }
+
                 $sheduler_zapis = array();
 
                 $msql_cnnct = ConnectToDB ();
 
-                $query = "SELECT * FROM `zapis` WHERE `patient`='".$_POST['client_id']."' ORDER BY `year`, `month`, `day`, `start_time` ASC";
+                //$query = "SELECT * FROM `zapis` WHERE `patient`='".$_POST['client_id']."' ORDER BY `year`, `month`, `day`, `start_time` ASC";
+                //$query = "SELECT * FROM `zapis` WHERE `patient`='".$_POST['client_id']."' ORDER BY `year` DESC, `month` DESC, `day` DESC, `start_time` ASC ".$limit_str."";
+                $query = "SELECT * FROM (SELECT * FROM `zapis` WHERE `patient`='".$_POST['client_id']."' ORDER BY `year` DESC, `month` DESC, `day` DESC, `start_time` DESC ".$limit_str.") t  ORDER BY `year`, `month`, `day`, `start_time` ASC";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
