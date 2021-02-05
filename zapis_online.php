@@ -265,7 +265,7 @@
 								</div>-->
 								<div class="cellOffice" style="text-align: center;">
 								    ' . $filial_name . '<br>
-								    <b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>
+								    <!--<b>' . $permissions_j[$zapis_online_j[$i]['type']]['name'] . '</b>-->
 								</div>
 								<div class="cellTime ahref" style="text-align: center" onclick="contextMenuShow('.$zapis_online_j[$i]['id'].', '.$zapis_online_j[$i]['status'].', event, \'zapisOnlineStatusChange\');">
 								    '.$status.'<br>';
