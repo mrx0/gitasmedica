@@ -87,6 +87,24 @@
                         $remarks_j = $db::getRows($query, $args);
                         //var_dump($remarks_j);
 
+
+                        //Другие табели этого сотрудника в этом месяце
+                        $query = "
+                            SELECT j_t_all.id, j_t_all.office_id
+                            FROM `fl_journal_tabels` j_t_all
+                            WHERE j_t_all.worker_id = :worker_id AND j_t_all.month = :month AND j_t_all.year = :year AND j_t_all.office_id <> :filial_id";
+
+                        $args = [
+                            'month' => $tabel_j[0]['month'],
+                            'year' => $tabel_j[0]['year'],
+                            'worker_id' => $tabel_j[0]['worker_id'],
+                            'filial_id' => $tabel_j[0]['office_id']
+                        ];
+
+                        $tabels_all_j = $db::getRows($query, $args);
+                        //var_dump($tabels_all_j);
+
+
                         echo '
                                 <div id="status">
                                     <header>
@@ -156,7 +174,16 @@
                         echo '
                                     <div id="data" style="margin: 0;">
                                     
-                                        <div style="font-size: 90%; margin-bottom: 5px;">
+                                        <div style="font-size: 90%; margin-bottom: 5px;">';
+
+                        if (!empty($tabels_all_j)){
+                            echo '<div><span style="font-size:80%;  color: rgb(255 134 0);">Табели в других филиалах за этот месяц:</span><div>';
+                            foreach ($tabels_all_j as $all_tabel_data){
+                                echo '<a href="fl_tabel.php?id='.$all_tabel_data['id']. '" class="b" style="padding: 3px 5px; font-size: 80%; border-color: rgb(0 127 237);"><b>Табель #' .$all_tabel_data['id'].'</b><br><i>' . $filials_j[$all_tabel_data['office_id']]['name'] . '</i></a>';
+                            }
+                        }
+
+                         echo '
                                             <div style="color: #252525; font-weight: bold;">'.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</div>
                                             <div>
                                                 Сотрудник <b>'.WriteSearchUser('spr_workers', $tabel_j[0]['worker_id'], 'user_full', true).'</b> ';
