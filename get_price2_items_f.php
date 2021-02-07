@@ -1,7 +1,7 @@
 <?php
 
-//get_sclad_items_f.php
-//получаем элементы склада
+//get_price2_items_f.php
+//получаем элементы нового прайса 2021
 
     session_start();
 
@@ -13,7 +13,8 @@
         if ($_POST){
             if (isset($_POST['cat_id']) && isset($_POST['start']) && isset($_POST['limit']) && isset($_POST['free'])){
 
-                include_once 'DBWork.php';
+                /*include_once 'DBWork.php';*/
+                include_once('DBWorkPDO.php');
                 include_once 'functions.php';
 
                 require 'variables.php';
@@ -22,7 +23,8 @@
                 $rezult_arr = array();
                 $number = 0;
 
-                $msql_cnnct = ConnectToDB();
+                //$msql_cnnct = ConnectToDB();
+                $db = new DB();
 
                 $arr = array();
                 $rez = array();
@@ -63,11 +65,15 @@
                 ORDER BY sit.id
                 LIMIT $start , $count";
 
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//
+//                $number = mysqli_num_rows($res);
 
-                $number = mysqli_num_rows($res);
+                $args = [];
 
-                if ($number != 0) {
+                $rezult_arr = $db::getRows($query, $args);
+
+                if (!empty($rezult_arr)) {
 
                     //Сразу выберем массив выбранных из сессии, чтобы потом поставить галочки при совпадениях
                     $items_in_set_arr = array();
@@ -92,7 +98,8 @@
 								<td style="width: 43px; max-width: 43px; min-width: 43px; border-top: 1px solid #CCC; text-align: center; ">Ед.изм.</td>
                             </tr>';
 
-                    while ($arr = mysqli_fetch_assoc($res)) {
+                    //while ($arr = mysqli_fetch_assoc($res)) {
+                    foreach ($rezult_arr as$arr) {
                         //array_push($rezult_arr, $arr);
 
                         //Переменная для выделения галочкой позиции
@@ -104,7 +111,7 @@
 
                         //!!! Тут есть градиент текста
                         $rezult .= 	'
-                            <tr id="itemSclad_'.$arr['id'].'" class="draggable sclad_item_tr">
+                            <tr id="itemPrice_'.$arr['id'].'" class="draggable sclad_item_tr">
                                 <td style="border-left: 1px solid #CCC; text-align: center;">
                                     <a href="sclad_item.php?id='.$arr['id'].'" class="ahref"  target="_blank" rel="nofollow noopener"><i class="fa fa-folder-open-o" aria-hidden="true" style="color: #000000; text-shadow: 1px 1px 1px #ffc90f;"></i></a> 
                                 </td>
