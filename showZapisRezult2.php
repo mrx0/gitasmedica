@@ -312,7 +312,7 @@
                         if ($dop['patientUnic'] != 1) {
                             $rezult .= '
                                                 <!--</div>-->
-                                                <td class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial='.$ZapisHereQueryToday[$z]['office'].'&who=' . $ZapisHereQueryToday[$z]['type'] . '&d=' . $ZapisHereQueryToday[$z]['day'] . '&m=' . $month . '&y=' . $ZapisHereQueryToday[$z]['year'] . '&kab=' . $ZapisHereQueryToday[$z]['kab'] . '\')">';
+                                                <div class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial='.$ZapisHereQueryToday[$z]['office'].'&who=' . $ZapisHereQueryToday[$z]['type'] . '&d=' . $ZapisHereQueryToday[$z]['day'] . '&m=' . $month . '&y=' . $ZapisHereQueryToday[$z]['year'] . '&kab=' . $ZapisHereQueryToday[$z]['kab'] . '\')">';
 
                             $rezult .=
                                 '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>' .
