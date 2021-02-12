@@ -3160,7 +3160,7 @@
                 $rez_str .= '	
 						<ol class="tree">
 						<li>
-							<label id="cat_0" class="droppable hover" onclick="getScladItems (0, 0, 1000, false, true, 0); return;" cat_name=""><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
+							<label id="catSclad_0" class="droppable hover" onclick="getScladItems (0, 0, 1000, false, true, 0); return;" cat_name=""><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
 						</li>';
             }
 
@@ -3179,7 +3179,7 @@
 					if ($sclad_rez_value['node_count'] > 0) {
 						$rez_str .= '	
 							<li>
-								<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+								<label id="catSclad_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
 
 						$rez_str .= showTreeSclad2($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
 
@@ -3189,7 +3189,7 @@
 					} else {
 						$rez_str .= '	
 							<li>
-								<label id="cat_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+								<label id="catSclad_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '"><b>#' . $sclad_rez_value['id'] . '</b> ' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
 						$rez_str .= '	
 							</li>';
 					}
@@ -6173,6 +6173,123 @@
 //
 //		return $insert_id;
 //	}
+
+
+//для нового Прайса 2021
+function showTreePrice2 ($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $db_con){
+	//var_dump($first);
+
+	$sclad_rez = array();
+
+	$rez_str = '';
+
+	//определяем уровень для запроса
+	if ($level == NULL){
+		$parent_str = "`parent_id` = '0'";
+	}else{
+		$parent_str = "`parent_id` = ".$level;
+	}
+
+	//берем верхний уровень
+	$query = "SELECT * FROM `$dbtable` WHERE ".$parent_str;
+	//var_dump($query);
+
+	$args = [];
+
+	$sclad_rez = $db_con::getRows($query, $args);
+	//var_dump($sclad_rez);
+
+	//$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+//	$number = mysqli_num_rows($res);
+
+//	if ($number != 0){
+//		while ($arr = mysqli_fetch_assoc($res)){
+//			array_push($sclad_rez, $arr);
+//		}
+//	}
+	//var_dump($sclad_rez);
+
+	//Если первый проход
+	if ($first){
+		//var_dump($sclad_rez);
+
+		if ($type == 'list') {
+			$rez_str .= '	
+						<ol class="tree">
+						<li>
+							<label id="catPrice_0" class="droppable hover" onclick="getScladItems (0, 0, 1000, false, true, 0); return;" cat_name="">Вне категории</label> <input type="checkbox" id="folder0" checked /> 
+						</li>';
+		}
+
+
+	}else{
+		if ($type == 'list') {
+			$rez_str .= '<ol class="tree2">';
+		}
+	}
+
+	if (!empty($sclad_rez)){
+		foreach ($sclad_rez as $sclad_rez_value){
+
+			if ($type == 'list'){
+
+				if ($sclad_rez_value['node_count'] > 0) {
+					$rez_str .= '	
+							<li>
+								<label id="catPrice_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '">' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+
+					$rez_str .= showTreePrice2($sclad_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $db_con);
+
+					$rez_str .= '	
+							</li>';
+
+				} else {
+					$rez_str .= '	
+							<li>
+								<label id="catPrice_'.$sclad_rez_value['id'].'" class="draggable droppable hover" onclick="getScladItems ('.$sclad_rez_value['id'].', 0, 1000, false, true, '.$sclad_rez_value['id'].'); return;" cat_name="' . $sclad_rez_value['name'] . '">' . $sclad_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$sclad_rez_value['id'].'" checked />';
+					$rez_str .= '	
+							</li>';
+				}
+			}
+
+			if ($type == 'select'){
+				//echo $space.$value['name'].'<br>';
+
+				$selected = '';
+				if ($sclad_rez_value['id'] == $sel_id){
+					$selected = ' selected';
+				}
+				$rez_str .= '<option value="'.$sclad_rez_value['id'].'" '.$selected.'>'.$space.$sclad_rez_value['name'].'</option>';
+
+				$space2 = $space. '...';
+				//$last_level2 = $last_level+1;
+
+				$rez_str .= showTreePrice2($sclad_rez_value['id'], $space2, 'select', $sel_id, FALSE, 0, FALSE, $dbtable, 0, 0, $db_con);
+			}
+		}
+
+		if ($type == 'list') {
+			$rez_str .= '	
+					</ol>';
+		}
+
+
+	}
+
+	if ($first){
+		if ($type == 'list') {
+			$rez_str .= '	
+					</ol>';
+		}
+	}
+
+
+
+	return $rez_str;
+}
+
+
 
 
 ?>

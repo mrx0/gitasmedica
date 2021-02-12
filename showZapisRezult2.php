@@ -28,6 +28,10 @@
             }
             //var_dump($office_j_arr);
 
+            if ($dop['patientUnic'] == 1) {
+                $rezult = '<table>';
+            }
+
 
             for ($z = 0; $z < count($ZapisHereQueryToday); $z++) {
 
@@ -99,112 +103,114 @@
                         $dop_img .= '<img src="img/night.png" title="Ночное"> ';
                     }
 
-                    //Стоматологи
-                    if ($ZapisHereQueryToday[$z]['type'] == 5) {
-                        //Формулы зубные
-                        $query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                    if ($dop['patientUnic'] != 1) {
+
+                        //Стоматологи
+                        if ($ZapisHereQueryToday[$z]['type'] == 5) {
+                            //Формулы зубные
+                            $query = "SELECT `id`, `zapis_date`  FROM `journal_tooth_status` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' ORDER BY `create_time`";
+                            //var_dump($query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                            $number = mysqli_num_rows($res);
+                            if ($number != 0) {
+                                while ($arr = mysqli_fetch_assoc($res)) {
+                                    array_push($t_f_data_db, $arr);
+                                }
+                                $stomatExist = true;
+                            } else
+                                //$t_f_data_db = 0;
+                                //var_dump($t_f_data_db);
+
+                                if ($t_f_data_db != 0) {
+                                    /*foreach ($t_f_data_db as $ids) {
+                                        //
+                                    }*/
+                                }
+                        }
+
+                        //Косметологи
+                        if ($ZapisHereQueryToday[$z]['type'] == 6) {
+                            //Посещения косметологов
+                            $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
+                            //var_dump($query);
+                            $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                            $number = mysqli_num_rows($res);
+                            if ($number != 0) {
+                                while ($arr = mysqli_fetch_assoc($res)) {
+                                    array_push($cosmet_data_db, $arr);
+                                }
+                                $cosmetExist = true;
+                            } else
+                                //$cosmet_data_db = 0;
+                                //var_dump($cosmet_data_db);
+
+                                if ($cosmet_data_db != 0) {
+                                    /*foreach ($cosmet_data_db as $ids) {
+                                        //
+                                    }*/
+                                }
+                        }
+
+                        //Наряды
+                        $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
                         //var_dump($query);
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+
                         $number = mysqli_num_rows($res);
+
                         if ($number != 0) {
                             while ($arr = mysqli_fetch_assoc($res)) {
-                                array_push($t_f_data_db, $arr);
+                                array_push($invoice_data_db, $arr);
                             }
-                            $stomatExist = true;
+                            $invoiceExist = true;
                         } else
-                            //$t_f_data_db = 0;
-                        //var_dump($t_f_data_db);
+                            //$invoice_data_db = 0;
+                            //var_dump($invoice_data_db);
 
-                        if ($t_f_data_db != 0) {
-                            /*foreach ($t_f_data_db as $ids) {
-                                //
-                            }*/
+                            if ($invoice_data_db != 0) {
+                                /*foreach ($invoice_data_db as $ids) {
+                                    //
+                                }*/
+                            }
+
+
+                        /*var_dump ($ZapisHereQueryToday[$z]['description']);
+                        var_dump ('1_');
+                        var_dump($showZapisRezult);*/
+
+                        //Ячейка с нарядами
+                        $rezultInvoice = '';
+
+                        if (!empty($invoice_data_db)) {
+                            //                        var_dump($invoice_data_db);
+
+
+                            //Пройдемся по нарядам
+                            foreach ($invoice_data_db as $invoice_data) {
+                                //Если по страховой
+                                if ($invoice_data['summins'] > 0) {
+                                    //var_dump($invoice_data_db);
+                                    $invoiceInsure = true;
+                                }
+                                //Если не оплачено
+                                if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] != $invoice_data['paid'])) {
+                                    //var_dump($invoice_data_db);
+                                    $invoiceNotPaid = true;
+                                }
+                                //Если оплачено
+                                if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] == $invoice_data['paid'])) {
+                                    //var_dump($invoice_data_db);
+                                    $invoicePaid = true;
+                                }
+                            }
+
+                            $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, true, false, false, false);
+                            //$data, $minimal, $show_categories, $show_absent, $show_deleted
+
+                            $rezultInvoice .= $rezultInvoices['data'];
+
                         }
                     }
-
-                    //Косметологи
-                    if ($ZapisHereQueryToday[$z]['type'] == 6) {
-                        //Посещения косметологов
-                        $query = "SELECT `id`, `zapis_date`  FROM `journal_cosmet1` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
-                        //var_dump($query);
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-                        $number = mysqli_num_rows($res);
-                        if ($number != 0) {
-                            while ($arr = mysqli_fetch_assoc($res)) {
-                                array_push($cosmet_data_db, $arr);
-                            }
-                            $cosmetExist = true;
-                        } else
-                            //$cosmet_data_db = 0;
-                        //var_dump($cosmet_data_db);
-
-                        if ($cosmet_data_db != 0) {
-                            /*foreach ($cosmet_data_db as $ids) {
-                                //
-                            }*/
-                        }
-                    }
-
-                    //Наряды
-                    $query = "SELECT * FROM `journal_invoice` WHERE `zapis_id` = '{$ZapisHereQueryToday[$z]['id']}' AND `status` <> '9' ORDER BY `create_time`";
-                    //var_dump($query);
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                    $number = mysqli_num_rows($res);
-
-                    if ($number != 0) {
-                        while ($arr = mysqli_fetch_assoc($res)) {
-                            array_push($invoice_data_db, $arr);
-                        }
-                        $invoiceExist = true;
-                    } else
-                        //$invoice_data_db = 0;
-                    //var_dump($invoice_data_db);
-
-                    if ($invoice_data_db != 0) {
-                        /*foreach ($invoice_data_db as $ids) {
-                            //
-                        }*/
-                    }
-
-
-                    /*var_dump ($ZapisHereQueryToday[$z]['description']);
-                    var_dump ('1_');
-                    var_dump($showZapisRezult);*/
-
-                    //Ячейка с нарядами
-                    $rezultInvoice = '';
-
-                    if (!empty($invoice_data_db)) {
-//                        var_dump($invoice_data_db);
-
-
-                        //Пройдемся по нарядам
-                        foreach ($invoice_data_db as $invoice_data){
-                            //Если по страховой
-                            if ($invoice_data['summins'] > 0){
-                                //var_dump($invoice_data_db);
-                                $invoiceInsure = true;
-                            }
-                            //Если не оплачено
-                            if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] != $invoice_data['paid'])){
-                                //var_dump($invoice_data_db);
-                                $invoiceNotPaid = true;
-                            }
-                            //Если оплачено
-                            if (($invoice_data['summ'] != 0) && ($invoice_data['summ'] == $invoice_data['paid'])){
-                                //var_dump($invoice_data_db);
-                                $invoicePaid = true;
-                            }
-                        }
-
-                        $rezultInvoices = showInvoiceDivRezult($invoice_data_db, true, false, true, false, false, false);
-                        //$data, $minimal, $show_categories, $show_absent, $show_deleted
-
-                        $rezultInvoice .= $rezultInvoices['data'];
-
-                    }
-
 
                     if (!empty($dop)){
                         if (isset($dop['zapis'])) {
@@ -295,14 +301,18 @@
                         $year = $ZapisHereQueryToday[$z]['year'];
 
 
-                        $rezult .= '
+                        if ($dop['patientUnic'] == 1) {
+                            $rezult .= '<tr>';
+                        }else {
+                            $rezult .= '
                                             <li class="cellsBlock" style="width: auto;">
                                                 <!--<div class="cellCosmAct">-->';
+                        }
 
                         if ($dop['patientUnic'] != 1) {
                             $rezult .= '
                                                 <!--</div>-->
-                                                <div class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial='.$ZapisHereQueryToday[$z]['office'].'&who=' . $ZapisHereQueryToday[$z]['type'] . '&d=' . $ZapisHereQueryToday[$z]['day'] . '&m=' . $month . '&y=' . $ZapisHereQueryToday[$z]['year'] . '&kab=' . $ZapisHereQueryToday[$z]['kab'] . '\')">';
+                                                <td class="cellName" style="position: relative; cursor: pointer; ' . $back_color . '" onclick="window.location.replace(\'zapis_full.php?filial='.$ZapisHereQueryToday[$z]['office'].'&who=' . $ZapisHereQueryToday[$z]['type'] . '&d=' . $ZapisHereQueryToday[$z]['day'] . '&m=' . $month . '&y=' . $ZapisHereQueryToday[$z]['year'] . '&kab=' . $ZapisHereQueryToday[$z]['kab'] . '\')">';
 
                             $rezult .=
                                 '<b>' . $day . ' ' . $monthsName[$month] . ' ' . $year . '</b><br>' .
@@ -321,21 +331,52 @@
                                                 <div class="cellName">';
                         }
 
-                        if ($dop['patientUnic'] == 1) {
-                            $rezult .= '
-                                                <div class="cellText">';
-                        }
+//                        if ($dop['patientUnic'] == 1) {
+//                            $rezult .= '
+//                                                <div class="cellText" style="width: 440px;">';
+//                        }
 
                         if ($dop['patientUnic'] != 1) {
-                            $rezult .=
-                                'Пациент <br><b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true) . '</b>';
+                            if (isset($ZapisHereQueryToday[$z]['name'])){
+                                $rezult .=
+                                    'Пациент <br><b><a href="client.php?id='. $ZapisHereQueryToday[$z]['patient'].'" class="ahref" target="_blank" rel="nofollow noopener">'.$ZapisHereQueryToday[$z]['name'].'</a></b>';
+                            }else {
+                                $rezult .=
+                                    'Пациент <br><b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user', true) . '</b>';
+                            }
                             $rezult .= '
                                                 </div>';
                         }
 
                         if ($dop['patientUnic'] == 1) {
-                            $rezult .=
-                                '<b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', true, true) . '</b>';
+                            if (isset($ZapisHereQueryToday[$z]['full_name'])){
+
+                                $rezult .=
+                                    '<td class="cellLeft" style="width: 300px;"><b><a href="client.php?id='. $ZapisHereQueryToday[$z]['patient'].'" class="ahref" target="_blank" rel="nofollow noopener">'.$ZapisHereQueryToday[$z]['full_name'].'</a></b></td>';
+
+                                $rezult .= '<td class="cellRight" style="width: 200px; text-align: right;">
+                                        тел.: '.$ZapisHereQueryToday[$z]['telephone'];
+//                                if ($ZapisHereQueryToday[$z]['htelephone'] != NULL) {
+//                                    $rezult .= '
+//                                        <br>д.тел: ' . $ZapisHereQueryToday[$z]['htelephone'];
+//                                }
+                                if ($ZapisHereQueryToday[$z]['telephoneo'] != NULL) {
+                                    $rezult .= '
+                                        <br>тел оп.: ' . $ZapisHereQueryToday[$z]['telephoneo'];
+                                }
+//                                if ($ZapisHereQueryToday[$z]['htelephoneo'] != NULL) {
+//                                    $rezult .= '
+//                                         <br>д.тел оп.: ' . $ZapisHereQueryToday[$z]['htelephoneo'];
+//                                }
+                                $rezult .= '</td>';
+
+                            }else {
+                                $rezult .=
+                                    '<b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', true, true) . '</b>';
+                            }
+
+//                            $rezult .=
+//                                '<b>' . WriteSearchUser('spr_clients', $ZapisHereQueryToday[$z]['patient'], 'user_full', true, true) . '</b>';
                         }
 
                         if ($dop['patientUnic'] != 1) {
@@ -528,11 +569,20 @@
                                             </div>';
                         //<-- Управление настройки
 
-                        $rezult .= '
+                        if ($dop['patientUnic'] == 1) {
+                            $rezult .= '</tr>';
+                        }else {
+                            $rezult .= '
                                         </li>';
+                        }
                     }
                 }
             }
+
+            if ($dop['patientUnic'] == 1) {
+                $rezult .= '</table>';
+            }
+
             $rezult .= '
                                 <div id="ShowSettingsAddTempZapis" style="position: absolute; left: 10px; top: 0; background: rgb(186, 195, 192) none repeat scroll 0% 0%; display:none; z-index:105; padding:10px;">
                                     <a class="close" href="#" onclick="HideSettingsAddTempZapis()" style="display:block; position:absolute; top:-10px; right:-10px; width:24px; height:24px; text-indent:-9999px; outline:none;background:url(img/close.png) no-repeat;">

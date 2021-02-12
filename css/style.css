@@ -2861,6 +2861,7 @@ li label {
 	cursor: pointer;
 	display: block;
 	padding-left: 37px;
+	white-space: pre-wrap;
 }
 
 li input:checked + ol {

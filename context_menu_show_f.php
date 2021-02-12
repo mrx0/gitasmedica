@@ -515,6 +515,36 @@
                     //}
                 }
 
+                //Для работы с категориями в новом прайсе 2021
+                if ($_POST['mark'] == 'price_cat'){
+                    $data .= '
+                            <li><div onclick="showPriceCatItemAdd('.$_POST['ind'].', \'category\');">Добавить категорию</div></li>
+                            <li><div onclick="showPriceCatItemAdd('.$_POST['ind'].', \'item\');">Добавить позицию</div></li>
+                            ';
+                    if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showPriceCatItemEdit('.$_POST['ind'].', \'category\');">Редактировать</div></li>
+                            <!--<li><div onclick="showCatDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    }
+                }
+
+                //Для работы с позициями в новом прайсе 2021
+                if ($_POST['mark'] == 'price_item'){
+//                    $data .= '
+//                            <li><div onclick="addScladItemToSet('.$_POST['ind'].');">Добавить в список</div></li>
+//                            <li><a href="sclad_prihod_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить приход</a></li>
+//                            <li><a href="sclad_move_add.php?g_id='.$_POST['ind'].'" class="ahref_context" style="">Добавить перемещение</a></li>
+//                            <li><div onclick="showScladCatItemAdd('.$_POST['ind'].', \'item\');">Добавить списание</div></li>
+//                            ';
+                    //if ($_POST['key'] == 'dop'){
+                        $data .= '
+                            <li><div onclick="showPriceCatItemEdit('.$_POST['ind'].', \'item\');">Редактировать</div></li>
+                            <!--<li><div onclick="showItemDelete('.$_POST['ind'].');">Пометить на удаление</div></li>-->
+                            ';
+                    //}
+                }
+
                 //Для отметки о звонке
                 if ($_POST['mark'] == 'phone_call'){
                     $data .= '
