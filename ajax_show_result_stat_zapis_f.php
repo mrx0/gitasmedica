@@ -106,7 +106,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         if ($creatorExist && $workerExist) {
             if ($clientExist) {
-                $query .= "SELECT * FROM `zapis` z";
+                $query .= "SELECT z.*, s_c.name, s_c.full_name, s_c.telephone, s_c.htelephone, s_c.telephoneo, s_c.htelephoneo FROM `zapis` z
+                                LEFT JOIN `spr_clients` s_c ON s_c.id = z.patient";
 
                 /*require 'config.php';
                 mysql_connect($hostname,$username,$db_pass) OR DIE("Не возможно создать соединение");
@@ -302,7 +303,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     $query = $query . " ORDER BY CONCAT_WS('-', z.year, LPAD(z.month, 2, '0'), LPAD(z.day, 2, '0')) DESC";
 
-                    //var_dump($query);
+//                    var_dump($query);
 
                     $msql_cnnct = ConnectToDB();
 
@@ -363,7 +364,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             foreach($journal as $journal_item){
                                 //Нам нужны фио пациентов чтоб потом сортировать их по фио
 
-                                $journal_temp[WriteSearchUser('spr_clients', $journal_item['patient'], 'user_full', false)] =  $journal_item;
+                                $journal_temp[$journal_item['full_name']] =  $journal_item;
                             }
 
                             ksort($journal_temp);
