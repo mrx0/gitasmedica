@@ -175,14 +175,6 @@
                                     <div id="data" style="margin: 0;">
                                     
                                         <div style="font-size: 90%; margin-bottom: 5px;">';
-
-                        if (!empty($tabels_all_j)){
-                            echo '<div><span style="font-size:80%;  color: rgb(255 134 0);">Табели в других филиалах за этот месяц:</span><div>';
-                            foreach ($tabels_all_j as $all_tabel_data){
-                                echo '<a href="fl_tabel.php?id='.$all_tabel_data['id']. '" class="b" style="padding: 3px 5px; font-size: 80%; border-color: rgb(0 127 237);"><b>Табель #' .$all_tabel_data['id'].'</b><br><i>' . $filials_j[$all_tabel_data['office_id']]['name'] . '</i></a>';
-                            }
-                        }
-
                          echo '
                                             <div style="color: #252525; font-weight: bold;">'.$monthsName[$tabel_j[0]['month']].' '.$tabel_j[0]['year'].'</div>
                                             <div>
@@ -197,6 +189,14 @@
                         if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10)) {
                             echo '
                                             <div>Филиал <b>' . $filials_j[$tabel_j[0]['office_id']]['name'] . '</b></div>';
+                        }
+
+                        //Табели в других филиалах
+                        if (!empty($tabels_all_j)){
+                            echo '<div><span style="font-size:80%;  color: rgb(255 134 0);">Табели в других филиалах за этот месяц:</span><div>';
+                            foreach ($tabels_all_j as $all_tabel_data){
+                                echo '<a href="fl_tabel.php?id='.$all_tabel_data['id']. '" class="b" style="padding: 3px 5px; font-size: 80%; border-color: rgb(0 127 237);"><b>Табель #' .$all_tabel_data['id'].'</b><br><i>' . $filials_j[$all_tabel_data['office_id']]['name'] . '</i></a>';
+                            }
                         }
 
                         //Админы, ассистенты, санитарки, уборщицы, дворники
