@@ -20,12 +20,13 @@
         $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
         //var_dump($optionsWF);
 
-        if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+        //if (!empty($optionsWF[$_SESSION['id']]) || ($god_mode)){
+        if (($finances['see_all'] == 1) || $god_mode){
 
 
             $permissions_sort_method = [5,6,10,7,4,13,14,15,9,12,11,777];
 
-            $filials_j = getAllFilials(false, false, false);
+            $filials_j = getAllFilials(true, true, true);
             //var_dump($filials_j);
 
             //Получили список прав
@@ -79,25 +80,25 @@
 //            }
 
             //Филиал
-            if (isset($_GET['filial_id'])) {
-                $filial_id = $_GET['filial_id'];
-            }else{
-                $filial_id = 15;
-            }
+//            if (isset($_GET['filial_id'])) {
+//                $filial_id = $_GET['filial_id'];
+//            }else{
+//                $filial_id = 15;
+//            }
 
-            if (!$god_mode) {
-                if (!in_array($filial_id, $optionsWF[$_SESSION['id']])) {
-                    $filial_id = $optionsWF[$_SESSION['id']][0];
-                }
-            }
+//            if (!$god_mode) {
+//                if (!in_array($filial_id, $optionsWF[$_SESSION['id']])) {
+//                    $filial_id = $optionsWF[$_SESSION['id']][0];
+//                }
+//            }
 
-            $dop = 'filial_id='.$filial_id;
+            //$dop = 'filial_id='.$filial_id;
 
             echo '
                 <div id="status">
                     <header id="header">
                         <div class="nav">
-                            <!--<a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'&m='.$month_end.'&y='.$year_end.'" class="b">Сводный отчёт по филиалу</a>-->
+                            <!--<a href="fl_consolidated_report_admin.php?filial_id=&m='.$month_end.'&y='.$year_end.'" class="b">Сводный отчёт по филиалу</a>-->
                         </div>
                         <h2 style="padding: 0;">Отчёт по категориям 3</h2>
                     </header>';
@@ -126,7 +127,7 @@
 									<div class="filtercellRight" style="width: 378px; min-width: 378px;">';
 
             echo '
-                                        Выберите даты: <br>от <select name="month_start" id="month_start" style="margin-right: 5px;">';
+                                        Выберите период: <br>от <select name="month_start" id="month_start" style="margin-right: 5px;">';
 
             foreach ($monthsName as $mNumber => $mName){
                 $selected = '';
@@ -184,19 +185,20 @@
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
             echo '	
-                                        <select name="SelectFilial" id="SelectFilial">';
+                                        <select name="SelectFilial" id="SelectFilial">
+                                            <option value="0" selected>Все</option>';
 
             foreach ($filials_j as $filial_item) {
 
-                $selected = '';
+//                $selected = '';
 
-                if (in_array($filial_item['id'], $optionsWF[$_SESSION['id']]) || $god_mode) {
-                    if ($filial_id == $filial_item['id']) {
-                        $selected = 'selected';
-                    }
+//                if (in_array($filial_item['id'], $optionsWF[$_SESSION['id']]) || $god_mode) {
+//                    if ($filial_id == $filial_item['id']) {
+//                        $selected = 'selected';
+//                    }
                     echo '
                                             <option value="' . $filial_item['id'] . '" ' . $selected . '>' . $filial_item['name'] . '</option>';
-                }
+//                }
             }
 
             echo '
@@ -208,8 +210,27 @@
 								
 								<li class="filterBlock">
 									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Сотрудник, к кому была запись<br>
+										<span style="font-size:80%; color: #999; ">Если не выбрано, то для всех</span>
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
+                if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
+                    echo '
+										<input type="text" size="30" name="searchdata4" id="search_client4" placeholder="Минимум три буквы для поиска" value="" class="who4" autocomplete="off">
+										<ul id="search_result4" class="search_result4"></ul><br />';
+                }else{
+                    echo WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'
+                                        <input type="hidden" id="search_client4" name="searchdata4" value="'.WriteSearchUser('spr_workers', $_SESSION['id'], 'user_full', false).'">';
+                }
+
+                echo '
+									</div>
+								</li>
+								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
                                         Категории<br>
-										<span style="font-size:80%; color: #999; ">Не больше 5 за 1 раз</span>
+										<span style="font-size:80%; color: #999; ">Не больше 10 за 1 раз</span>
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">';
             echo '
