@@ -4878,11 +4878,11 @@
         //убираем ошибки
         hideAllErrors ();
 
-        var link = "fl_createDailyReport_add_f.php";
+        let link = "fl_createDailyReport_add_f.php";
 
-        var filial_id = $("#SelectFilial").val();
+        let filial_id = $("#SelectFilial").val();
 
-        var reqData = {
+        let reqData = {
             date: $("#iWantThisDate2").val(),
             filial_id: filial_id,
             itogSumm: $("#itogSumm").val(),
@@ -4932,35 +4932,82 @@
         };
         //console.log(reqData);
 
-        $.ajax({
-            url: link,
-            global: false,
-            type: "POST",
-            dataType: "JSON",
-            data: reqData,
-            cache: false,
-            beforeSend: function() {
-                //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-            },
-            // действие, при ответе с сервера
-            success: function(res){
-                console.log(res);
+        // $.ajax({
+        //     url: link,
+        //     global: false,
+        //     type: "POST",
+        //     dataType: "JSON",
+        //     data: reqData,
+        //     cache: false,
+        //     beforeSend: function() {
+        //         //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+        //     },
+        //     // действие, при ответе с сервера
+        //     success: function(res){
+        //         //console.log(res);
+        //
+        //         if(res.result == 'success') {
+        //             //console.log('success');
+        //             $('#data').html(res.data);
+        //             setTimeout(function () {
+        //                 //window.location.replace('stat_cashbox.php');
+        //                 window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
+        //                 //console.log('client.php?id='+id);
+        //             }, 500);
+        //         }else{
+        //             //console.log('error');
+        //             $('#errrror').html(res.data);
+        //             //$('#errrror').html('');
+        //         }
+        //     }
+        // });
 
-                if(res.result == 'success') {
-                    //console.log('success');
-                    $('#data').html(res.data);
-                    setTimeout(function () {
-                        //window.location.replace('stat_cashbox.php');
-                        window.location.replace('fl_consolidated_report_admin.php?filial_id='+filial_id);
-                        //console.log('client.php?id='+id);
-                    }, 500);
-                }else{
-                    //console.log('error');
-                    $('#errrror').html(res.data);
-                    //$('#errrror').html('');
+        //Счётчики
+        if ($("#haveLamps").val() == 1){
+            //console.log($("#haveLamps").val());
+
+            let link4Lamp = "fl_createLampReport_add_f.php";
+
+            let dataLamp = {};
+
+            $(".lampCount").each(function(){
+                // console.log($(this).attr("id"));
+                // console.log($(this).val());
+                // console.log($(this).attr("id").split('_')[2]);
+                // console.log($(this).attr("id").split('_')[1]);
+
+                if (!($(this).attr("id").split('_')[2] in dataLamp)){
+                    dataLamp[$(this).attr("id").split('_')[2]] = {}
                 }
+                dataLamp[$(this).attr("id").split('_')[2]][$(this).attr("id").split('_')[1]] = $(this).val();
+            })
+
+            let reqData4Lamp = {
+                date: $("#iWantThisDate2").val(),
+                filial_id: filial_id,
+                dataLamp: dataLamp
             }
-        });
+            // console.log(reqData4Lamp);
+
+            $.ajax({
+                url: link4Lamp,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData4Lamp,
+                cache: false,
+                beforeSend: function() {
+                    //$('#waitProcess').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5); margin: auto;'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    // $('#errrror').html(res);
+                    console.log(res.data);
+
+
+                }
+            });
+        }
     }
 
     //Редактирование ежедневного отчёта в бд
