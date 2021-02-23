@@ -34,13 +34,13 @@
                         'y' => $y
                     ];
 
-                    $query = "SELECT * FROM `fl_journal_lamp_report` WHERE `filial_id`=:filial_id AND `day`=:d AND  `month`=:m AND  `year`=:y";
+                    $query = "SELECT `id` FROM `fl_journal_lamp_report` WHERE `filial_id`=:filial_id AND `day`=:d AND  `month`=:m AND  `year`=:y";
 
                     $dailyReports_j = $db::getRows($query, $args);
 
                     if (empty($dailyReports_j)) {
 
-                        $create_time = date('Y-m-d H:i:s', time());
+                        $create_time = $edit_time = date('Y-m-d H:i:s', time());
 
                         foreach ($_POST['dataLamp'] as $id => $data) {
                             foreach ($data as $e => $count) {

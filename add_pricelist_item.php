@@ -56,6 +56,13 @@
 								</div>
 							</div>
 							<div class="cellsBlock2" style="margin-bottom: 5px;">
+								<div class="cellLeft">Код МКБ</div>
+								<div class="cellRight">
+									<input type="text" name="pricecodemkb" id="pricecodemkb" value="">
+									<label id="pricecodemkb_error" class="error"></label>
+								</div>
+							</div>
+							<div class="cellsBlock2" style="margin-bottom: 5px;">
 								<div class="cellLeft">Название</div>
 								<div class="cellRight">
 									<textarea name="pricename" id="pricename" style="width:90%; overflow:auto; height: 50px;"></textarea>

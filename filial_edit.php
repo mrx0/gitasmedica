@@ -13,7 +13,10 @@
 				include_once 'DBWork.php';
 		
 				$filial_j = SelDataFromDB('spr_filials', $_GET['id'], 'id');
-		
+
+                $orgs = SelDataFromDB('spr_org', '', '');
+                //var_dump ($orgs);
+
 				if ($filial_j != 0){
 					echo '
 						<div id="status">
@@ -38,6 +41,13 @@
 									</div>
 						
 									<div class="cellsBlock2">
+										<div class="cellLeft">Сокр. название</div>
+										<div class="cellRight">
+											<input type="text" name="name2" id="name2" value="'.htmlspecialchars($filial_j[0]['name2']).'">
+										</div>
+									</div>
+						
+									<div class="cellsBlock2">
 										<div class="cellLeft">Адрес</div>
 										<div class="cellRight">
 											<textarea name="address" id="address" cols="35" rows="5">'.$filial_j[0]['address'].'</textarea>
@@ -48,6 +58,24 @@
 										<div class="cellLeft">Контакты</div>
 										<div class="cellRight">
 											<textarea name="contacts" id="contacts" cols="35" rows="5">'.$filial_j[0]['contacts'].'</textarea>
+										</div>
+									</div>
+
+									<div class="cellsBlock2">
+										<div class="cellLeft">Организация</div>
+										<div class="cellRight">
+										    <select name="org" id="org">
+										        <option value="0" selected>Не выбрано</option>';
+
+                    if ($orgs != 0){
+                        for ($i=0;$i<count($orgs);$i++){
+                            echo "<option value='".$orgs[$i]['id']."'", $filial_j[0]['org'] == $orgs[$i]['id'] ? "selected" : "" ,">".$orgs[$i]['name']."</option>";
+                        }
+                    }
+                    echo '
+									        </select>';
+
+                    echo '						
 										</div>
 									</div>
 

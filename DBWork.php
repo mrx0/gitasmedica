@@ -227,15 +227,15 @@
 	}
 
 	//Добавление услуги.
-	function WriteToDB_EditPriceName ($name, $pricecode, $category_id, $session_id){
+	function WriteToDB_EditPriceName ($name, $pricecode, $pricecodemkb, $category_id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		$query = "INSERT INTO `spr_pricelist_template` (
-			`name`, `category`, `code`, `create_time`, `create_person`) 
+			`name`, `category`, `code`, `code_mkb`, `create_time`, `create_person`) 
 			VALUES (
-			'{$name}', '{$category_id}', '{$pricecode}', '{$time}', '{$session_id}')";
+			'{$name}', '{$category_id}', '{$pricecode}', '{$pricecodemkb}', '{$time}', '{$session_id}')";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -250,13 +250,13 @@
 	}
 	
 	//
-	function WriteToDB_UpdatePriceItem ($name, $code, $category_id, $id, $session_id){
+	function WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $category_id, $id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		
-		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `category`='{$category_id}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `code_mkb`='{$codemkb}', `category`='{$category_id}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -1166,7 +1166,7 @@
 	}
 
 	//Редактирование карточки филиала из-под Web
-	function WriteFilialToDB_Update ($session_id, $id, $name, $address, $contacts){
+	function WriteFilialToDB_Update ($session_id, $id, $name, $name2, $address, $contacts, $org){
 		$old = '';
 
         $msql_cnnct = ConnectToDB ();
@@ -1186,7 +1186,7 @@
 		}
 		$time = time();
 
-		$query = "UPDATE `spr_filials` SET `name`='{$name}', `address`='{$address}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_filials` SET `name`='{$name}', `name2`='{$name2}', `address`='{$address}', `contacts`='{$contacts}', `org`='{$org}' WHERE `id`='{$id}'";
 
 		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

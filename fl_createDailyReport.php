@@ -62,8 +62,8 @@
                     <header>
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
-                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
-                            <a href="fl_createSchedulerReport.php?filial_id='.$filial_id.'" class="b">Добавить рабочие часы</a>
+                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'&m='.$m.'&y='.$y.'" class="b">Сводный отчёт по филиалу</a>
+                            <a href="fl_createSchedulerReport.php?filial_id='.$filial_id.'&d='.$d.'&m='.$m.'&y='.$y.'" class="b">Добавить рабочие часы</a>
                         </div>
                         <h2>Ежедневный отчёт</h2>
                     </header>';
@@ -112,7 +112,7 @@
 //                var_dump($dailyReports_j);
 
 
-                //Данные по счётчикам
+                //Данные по счётчикам (какие есть в филиале)
                 //Основные данные
                 $args = [
                     'filial_id' => $filial_id

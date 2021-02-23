@@ -2594,8 +2594,10 @@
         let reqData = {
             id: id,
             name: $("#name").val(),
+            name2: $("#name2").val(),
             address: $("#address").val(),
-            contacts: $("#contacts").val()
+            contacts: $("#contacts").val(),
+            org: $("#org").val()
         };
 
         $.ajax({
@@ -2623,6 +2625,7 @@
 		var pricename = $("#pricename").val();
 		var category_id = $("#category_id").val();
 		var pricecode = $("#pricecode").val();
+		var pricecodemkb = $("#pricecodemkb").val();
 		var price = $("#price").val();
 		var price2 = $("#price2").val();
 		var price3 = $("#price3").val();
@@ -2638,6 +2641,7 @@
 				pricename:pricename,
                 category_id:category_id,
                 pricecode:pricecode,
+                pricecodemkb:pricecodemkb,
 				price:price,
 				price2:price2,
 				price3:price3,
@@ -2715,6 +2719,7 @@
 
 		var pricelistitemname = $("#pricelistitemname").val();
 		var pricelistitemcode = $("#pricelistitemcode").val();
+		var pricelistitemcodemkb = $("#pricelistitemcodemkb").val();
 		var group = $("#group").val();
 		var category_id = $("#category_id").val();
 
@@ -2724,8 +2729,9 @@
 			type: "POST",
 			data:
 			{
-				pricelistitemname:pricelistitemname,
-                pricelistitemcode:pricelistitemcode,
+				pricelistitemname: pricelistitemname,
+                pricelistitemcode: pricelistitemcode,
+                pricelistitemcodemkb: pricelistitemcodemkb,
 				session_id:session_id,
 				group:group,
                 category_id:category_id,
