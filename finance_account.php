@@ -229,13 +229,17 @@
 //                        var_dump ($order_nonClient_j);
 
                         //Соберем все (неудаленные) ордеры + системные
-                        $query = "
-                            SELECT * FROM `journal_order` WHERE `client_id`='".$client_j[0]['id']."' 
-                            UNION ALL
-                            SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$client_j[0]['id']."'
-                            ORDER BY `create_time` DESC
-                            ".$limit_str."
-                            ";
+                        $query = "SELECT jo.*, so.name AS org_name
+                                        FROM (
+                                            SELECT * FROM `journal_order` WHERE client_id = '".$client_j[0]['id']."' 
+                                            UNION ALL
+                                            SELECT * FROM `journal_order_nonclient` WHERE client_id = '".$client_j[0]['id']."'
+                                            ) AS jo
+                                    LEFT JOIN `spr_filials` sf ON sf.id = jo.office_id
+                                    LEFT JOIN `spr_org` so ON so.id = sf.org
+                                    ORDER BY jo.create_time DESC
+                                    ".$limit_str."
+                                ";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
                         $number = mysqli_num_rows($res);
@@ -244,7 +248,8 @@
                                 array_push($order_j, $arr);
                             }
                         }
-                        //var_dump ($order_j);
+//                        echo ($query);
+//                        var_dump ($order_j);
 
 //                        //Соберем все (неудаленные) системные ордеры
 //                        $query = "SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$client_j[0]['id']."' ORDER BY `create_time` DESC";

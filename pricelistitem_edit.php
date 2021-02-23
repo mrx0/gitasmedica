@@ -43,6 +43,15 @@
 											<label id="pricelistitemcode_error" class="error"></label>
 										</div>
 									</div>
+									
+									<div class="cellsBlock2">
+										<div class="cellLeft">Код МКБ</div>
+										<div class="cellRight">
+											<input type="text" name="pricelistitemcodemkb" id="pricelistitemcodemkb" style="" value="'.$items_j[0]['code_mkb'].'">
+											<label id="pricelistitemcodemkb_error" class="error"></label>
+										</div>
+									</div>
+									
 									<div class="cellsBlock2">
 										<div class="cellLeft">Название</div>
 										<div class="cellRight">

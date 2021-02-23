@@ -4463,6 +4463,9 @@
 					$itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
 				}
 
+				if ($items['org_name'] != NULL) {
+					$itemTemp_str .= '<br>Юр.лицо: <i style="font-size: 105%;"><b>' . $items['org_name'] . '</b></i>';
+				}
 
                 $itemTemp_str .= '
                                                     </div>

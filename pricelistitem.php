@@ -99,6 +99,12 @@
 
                     echo '
                                 <div class="cellsBlock2">
+                                    <div class="cellLeft">Код МКБ</div>
+                                    <div class="cellRight">'.$rezult[0]['code_mkb'].'</div>
+                                </div>';
+
+                    echo '
+                                <div class="cellsBlock2">
                                     <div class="cellLeft">Название</div>
                                     <div class="cellRight">'.$rezult[0]['name'].'</div>
                                 </div>';

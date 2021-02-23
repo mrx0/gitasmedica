@@ -39,6 +39,8 @@
                 if (($_SESSION['permissions'] == 3) || $god_mode) {
                     echo '<a href="fl_surcharges.php" class="b3" style="width: 230px;" title="Прочие доплаты сотрудникам">Прочие доплаты сотрудникам</a>';
                 }
+
+                echo '<a href="orgs.php" class="b3" style="width: 230px;" title="Организации">Организации</a>';
             }
 
             echo '<a href="pricelist.php" class="b3" style="width: 230px;" title="Прайс">Прайс</a>';

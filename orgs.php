@@ -1,7 +1,7 @@
 <?php
 
-//filials.php
-//
+//orgs.php
+//Список организаций
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -11,7 +11,7 @@
 		
 		echo '
 			<header>
-				<h1>Филиалы</h1>
+				<h1>Организации</h1>
 			</header>';
 
 		echo '
@@ -21,32 +21,32 @@
                             <li class="cellsBlock" style="font-weight:bold;">	
                                 <div class="cellPriority" style="text-align: center"></div>
                                 <div class="cellOffice" style="text-align: center; width: 180px; min-width: 180px;">
-						            Филиал';
+						            Организация';
         echo $block_fast_filter;
         echo '
                                 </div>
-                                <div class="cellAddress" style="text-align: center">Адрес</div>
-                                <div class="cellText" style="text-align: center">Контакты</div>
+                                <div class="cellAddress" style="text-align: center">ИНН</div>
+                                <div class="cellText" style="text-align: center">Юр. адрес</div>
                                 <div class="cellCosmAct" style="text-align: center">-</div>
                             </li>';
 		
 		include_once 'DBWork.php';
-		$offices = SelDataFromDB('spr_filials', '', '');
-		//var_dump ($offices);
+		$orgs = SelDataFromDB('spr_org', '', '');
+		//var_dump ($orgs);
 		
-		if ($offices !=0){
-			for ($i = 0; $i < count($offices); $i++) {
+		if ($orgs !=0){
+			for ($i = 0; $i < count($orgs); $i++) {
                 $bgColor = '';
-			    if ($offices[$i]['status'] == 9){
+			    if ($orgs[$i]['status'] == 9){
                     $bgColor = "background-color: #8C8C8C;";
                 }
 				echo '
                             <li class="cellsBlock" style="'.$bgColor.'">
                                 <div class="cellPriority" style="background-color:"></div>
-                                <a href="filial.php?id='.$offices[$i]['id'].'" class=" ahref cellOffice 4filter" style="text-align: center; width: 180px; min-width: 180px;" id="4filter">'.$offices[$i]['name'].'</a>
-                                <div class="cellAddress" style="text-align: left">'.$offices[$i]['address'].'</div>
-                                <div class="cellText" style="text-align: left">'.$offices[$i]['contacts'].'</div>
-                                <div class="cellCosmAct" style="text-align: center; background-color: rgba('.$offices[$i]['color'].')"></div>
+                                <a href="org.php?id='.$orgs[$i]['id'].'" class=" ahref cellOffice 4filter" style="text-align: center; width: 180px; min-width: 180px;" id="4filter">'.$orgs[$i]['name'].' ['.$orgs[$i]['full_name'].']</a>
+                                <div class="cellAddress" style="text-align: left">'.$orgs[$i]['inn'].'</div>
+                                <div class="cellText" style="text-align: left">'.$orgs[$i]['ur_address'].'</div>
+                                <div class="cellCosmAct" style="text-align: center; "></div>
                             </li>';
 			}
 		}
