@@ -257,6 +257,10 @@
 							</li>';
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_mainReportCategory3.php" class="b3" style="width: 270px;">Отчёт по категориям 3</a>
+							</li>';
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
 								<a href="worker_zapis_report2.php" class="b3" style="width: 270px;">Отчёт посещений по врачу</a>
 							</li>';
                 echo '

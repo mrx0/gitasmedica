@@ -7693,7 +7693,7 @@
         })
     }
 
-    //
+    //Функция для отчета подсчета среднего за период
     function fl_mainReportAverage() {
         //console.log($("#month_count").val());
         // console.log($("#month_start").val());
@@ -8008,3 +8008,82 @@
             })
         }
     }
+
+    //Функция для отчета по категориям 3
+    function fl_mainReportCategory3() {
+        // console.log($("#SelectCats").val());
+        // console.log($("#SelectCats").val() == null);
+        // console.log($("#month_start").val());
+        // console.log($("#year_start").val());
+        // console.log($("#month_end").val());
+        // console.log($("#year_end").val());
+        // console.log($("#SelectFilial").val());
+
+        let just_do_it = false;
+
+        //убираем ошибки
+        hideAllErrors();
+
+        if (Number($("#year_start").val()) > Number($("#year_end").val())) {
+            $('#errrror').html('<span class="query_neok">Ошибка в указанном периоде.</span>');
+        } else {
+            if (Number($("#year_start").val()) == Number($("#year_end").val())) {
+                if (Number($("#month_start").val()) > Number($("#month_end").val())) {
+                    $('#errrror').html('<span class="query_neok">Ошибка в указанном периоде.</span>');
+                } else {
+                    just_do_it = true;
+                }
+            } else {
+                just_do_it = true;
+            }
+        }
+
+        if (($("#SelectCats").val() == null)){
+            $('#errrror').html('<span class="query_neok">Не выбраны категории.</span>');
+            just_do_it = false;
+        }
+
+        //Если с датами все более менее, то выполняем
+        if (just_do_it) {
+
+            let link = "fl_mainReportCategory3_getDates_f.php";
+
+            let reqData = {
+                cats: $("#SelectCats").val(),
+                month_start: $("#month_start").val(),
+                year_start: $("#year_start").val(),
+                month_end: $("#month_end").val(),
+                year_end: $("#year_end").val(),
+                filial_id: $("#SelectFilial").val(),
+                worker: $("#search_client4").val()
+            }
+            // console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function () {
+                    $('#res_table_tmpl').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    // console.log (res.query);
+
+                    if (res.result == "success") {
+                        //console.log(res.data);
+
+                        $("#res_table_tmpl").html(res.data);
+
+                    } else {
+                        //--
+                        $('#res_table_tmpl').html(res.data);
+                    }
+                }
+            })
+        }
+    }
+
+

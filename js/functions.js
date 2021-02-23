@@ -549,6 +549,46 @@
             // }
         }
 
+        if (mark == 'price_cat') {
+            //console.log(target.attr('id'));
+
+            ind = 0;
+
+            if ((target.attr('id') !== undefined) && (target.attr('id') !== 'price_cat_rezult')) {
+                ind = target.attr('id').split('_')[1];
+                //console.log(ind);
+            }
+
+            if (target.attr('id') !== 'price_cat_rezult') {
+                key = 'dop';
+            }
+        }
+
+        if (mark == 'price_item') {
+            //console.log(target.closest('tr').attr('id'));
+
+            ind = 0;
+
+            if (target.closest('tr').attr('id') !== undefined) {
+                event.preventDefault();
+
+                ind = target.closest('tr').attr('id').split('_')[1];;
+                //console.log(ind);
+
+            }else{
+                finShow = false;
+            }
+
+            // if ((target.attr('id') !== undefined) && (target.attr('id') !== 'price_cat_rezult')) {
+            //     ind = target.attr('id').split('_')[1];
+            //     //console.log(ind);
+            // }
+            //
+            // if (target.attr('id') !== 'price_cat_rezult') {
+            //     key = 'dop';
+            // }
+        }
+
         if ((mark == 'insure') || (mark == 'insureItem')){
             dopReq.client_insure = $("#client_insure").val();
         }
@@ -11505,9 +11545,15 @@
 
 
 
-    //Функция открыть скрытый див по его id спрятать блок показать блок скрыть блок
+    //Функция открыть скрытый див по его id спрятать блок показать блок скрыть блок свернуть развернуть сворачиваем разворачиваем прятать
 	function toggleSomething (divID){
         $(divID).toggle('normal');
+	}
+    //Функция открыть скрытый див по его class спрятать блок показать блок скрыть блок свернуть развернуть сворачиваем разворачиваем прятать
+	function toggleSomethingByClass (divClass){
+        $(divClass).each(function(){
+            $(this).toggle('normal');
+        });
 	}
 
 	//Открываем в новом окне url
@@ -13423,11 +13469,18 @@
 
         item.elem.style.display = 'none';
 
-        if (item.elem.id.split('_')[0] == 'cat') {
+        if (item.elem.id.split('_')[0] == 'catSclad') {
             moveScladItemInCategory(0, item.elem.id.split('_')[1], target.id.split('_')[1]);
         }
-        if (item.elem.id.split('_')[0] == 'item') {
+        if (item.elem.id.split('_')[0] == 'itemSclad') {
             moveScladItemInCategory(item.elem.id.split('_')[1], 0, target.id.split('_')[1]);
+        }
+
+        if (item.elem.id.split('_')[0] == 'catPrice') {
+            movePriceItemInCategory(0, item.elem.id.split('_')[1], target.id.split('_')[1]);
+        }
+        if (item.elem.id.split('_')[0] == 'itemPrice') {
+            movePriceItemInCategory(item.elem.id.split('_')[1], 0, target.id.split('_')[1]);
         }
 
         // $('#overlay').show();
@@ -14933,3 +14986,557 @@
             }
         });
     }
+
+
+    //Загрузка категорий нового прайса 2021
+    function getPriceCategories (){
+
+        var link = "get_price2_categories_f.php";
+
+        var reqData = {
+            type: 5
+        };
+        //console.log(reqData);
+
+        //Если надо выделить группу
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    $("#price_cat_rezult").html(res.data);
+
+
+                    //!!! Правильный пример контекстного меню (правильный? точно? ну пока работает)
+
+                    /*                    var menuArea = document.querySelector(".tree");
+
+                                        //if(menuArea){
+                                            menuArea.addEventListener( "contextmenu", event => {
+                                                event.preventDefault();
+
+                                                contextMenuShow(0, 0, event, "sclad_cat");
+
+                                            }, false);
+                                        //}*/
+
+                }
+            }
+        })
+    }
+
+
+    //Показываем блок для добавления позиции нового прайса 2021
+    function showPriceCatItemAdd(targetId, type){
+        // console.log(type);
+
+        let descr = 'Новая позиция';
+
+        if (type == 'category'){
+            descr = 'Новая категория';
+        }
+
+        //Если позиция, спросим еще, про единицы измерения
+        let unit_select = '';
+
+        if (type == 'item'){
+            // unit_select =
+            //     '<div style="margin-top: 20px;">' +
+            //     '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
+            //     '<option value="0">Выберите ед. измерения</option>' +
+            //     '<option value="pc">штуки</option>' +
+            //     '<option value="gr">граммы</option>'+
+            //     '<option value="ml">милилитры</option>'+
+            //     '<option value="sh">шприцы</option>'+
+            //     '</select>' +
+            //     '</div>';
+        }
+
+        let link = "get_price2_cat_show_f.php";
+
+        let reqData = {
+            targetId: targetId
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+
+                    $('#overlay').show();
+
+                    //var res = '12313213';
+
+                    var buttonsStr = '<input type="button" class="b" value="Ok" onclick="priceCatItemAdd('+targetId+', \''+type+'\');">';
+
+                    if (type == 'category'){
+                        buttonsStr = '<input type="button" class="b" value="Ok" onclick="priceCatItemAdd('+targetId+', \''+type+'\');">';
+                    }
+
+                    // Создаем меню:
+                    let menu = $('<div/>', {
+                        class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                    })
+                        .css({
+                            "height": "300px"
+                        })
+                        .appendTo('#overlay')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "height": "100%",
+                                    "border": "1px solid #AAA",
+                                    "position": "relative"
+                                })
+                                .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "width": "100%",
+                                            "margin": "auto",
+                                            "top": "-110px",
+                                            "left": "0",
+                                            "bottom": "0",
+                                            "right": "0",
+                                            "height": "50%"
+                                        })
+                                        .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="" style="width: 250px; font-size: 120%;">')
+                                        .append(unit_select)
+                                        .append(res.data)
+                                )
+                                .append(
+                                    $('<div/>')
+                                        .css({
+                                            "position": "absolute",
+                                            "bottom": "2px",
+                                            "width": "100%"
+                                        })
+                                        .append('<div id="existCatItem" class="error"></div>')
+                                        .append(buttonsStr+
+                                            '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                                        )
+                                )
+                        );
+
+                    menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+
+                }
+            }
+        })
+    }
+
+    //Добавляем категорию или позицию новый прайс 2021
+    function priceCatItemAdd(targetId, type){
+        //console.log();
+
+        hideAllErrors();
+
+        let newCatItemName = $("#newCatItemName").val();
+        //console.log(newCatItemName);
+
+        //Если будет позиция, то указываем еще и ед.изм.
+        let item_units = false;
+        let item_units_val = 0;
+
+        if (type == 'item'){
+            if ($("#unit_sel").val() == 0) {
+                item_units = false;
+            }else{
+                item_units = true;
+                item_units_val = $("#unit_sel").val();
+            }
+        }else{
+            item_units = true;
+        }
+
+        if (newCatItemName.trim().length > 0){
+            if (item_units) {
+
+                let link = "fl_price2_cat_item_add_f.php";
+
+                let reqData = {
+                    name: newCatItemName.trim(),
+                    type: type,
+                    targetId: targetId,
+                    item_units_val: item_units_val
+                };
+                //console.log(reqData);
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (res) {
+                        //console.log (res);
+
+                        $('.center_block').remove();
+                        $('#overlay').hide();
+
+                        if (res.result == 'success') {
+                            // console.log (res);
+
+                            //Если категория, перезагрузим их
+                            if (type == 'category') {
+                                getPriceCategories();
+                            }
+
+                            //Если позиция, загрузим позиции этой категории
+                            if (type == 'item') {
+                                getPriceItems(targetId, 0, 1000, false, true, targetId);
+                            }
+
+                        } else {
+                            $("#existCatItem").html(res.data);
+                            $("#existCatItem").show();
+                        }
+                    }
+                })
+            }else{
+                $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+                $("#existCatItem").show();
+            }
+        }else{
+            $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+            $("#existCatItem").show();
+        }
+
+    }
+
+    //Загрузка элементов нового прайса 2021
+    function getPriceItems (cat_id, start, limit, free=true, pick=false, pick_id=-1, search_data=''){
+        //Для позиции ВООБЩЕ СОВСЕМ БЕЗ категории free == 'true'
+
+        let link = "get_price2_items_f.php";
+
+        let reqData = {
+            cat_id: cat_id,
+            start: start,
+            limit: limit,
+            free: free,
+            search_data: search_data
+        };
+        // console.log(reqData);
+
+        //Если надо выделить группу c id == pick_id
+        if (pick){
+            //Сначала очищаем у всех окраску
+            $(".droppable").css({"background-color": ""});
+
+            //Теперь покрасим
+            $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+        }
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res.q);
+
+                if (res.result == 'success') {
+
+                    if (cat_id == 0){
+                        if (free){
+                            //Если поиск по фразе делаем
+                            if (search_data.length > 0){
+                                $("#cat_name_show").html("Результат поиска");
+                                $("#cat_name_show").show();
+                            }
+                        }else {
+                            $("#cat_name_show").html("Вне категории");
+                            $("#cat_name_show").show();
+                        }
+                    }else {
+                        $("#cat_name_show").html($("#cat_" + cat_id).attr("cat_name"));
+                        $("#cat_name_show").show();
+                    }
+
+                    if (res.count > 0) {
+                        $("#price_items_rezult").html(res.data);
+                    }else{
+                        $("#price_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего не найдено</span>');
+                    }
+
+                }
+            }
+        })
+    }
+
+    //Показываем блок для добавления позиции нового прайса 2021
+    function showPriceCatItemEdit(id, type){
+        // console.log(type);
+
+        $(".context-menu").remove();
+
+        //Если позиция, спросим еще, про единицы измерения
+        let unit_select = '';
+
+        //if (type == 'category') {
+            let descr = 'Редактировать категорию';
+            let oldName = $("#cat_" + id).attr("cat_name");
+        //}
+
+        if (type == 'item') {
+            descr = 'Редактировать позицию';
+            oldName = $("#item_name_"+id).attr("item_name");
+
+            //console.log(oldName);
+
+            // unit_select =
+            //     '<div style="margin-top: 20px;">' +
+            //     '<select name="unit_sel" id="unit_sel" style="width: 200px;">'+
+            //     '<option value="0">Выберите ед. измерения</option>' +
+            //     '<option value="pc">штуки</option>' +
+            //     '<option value="gк">граммы</option>'+
+            //     '<option value="ml">милилитры</option>'+
+            //     '<option value="sh">шприцы</option>'+
+            //     '</select>' +
+            //     '</div>';
+        }
+
+        if (oldName.length > 0){
+
+            $('#overlay').show();
+
+            let buttonsStr = '<input type="button" class="b" value="Ok" onclick="priceCatItemEdit('+id+', \''+type+'\');">';
+
+            // Создаем меню:
+            let menu = $('<div/>', {
+                class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+            })
+                .css({
+                    "height": "300px"
+                })
+                .appendTo('#overlay')
+                .append(
+                    $('<div/>')
+                        .css({
+                            "height": "100%",
+                            "border": "1px solid #AAA",
+                            "position": "relative"
+                        })
+                        .append('<span style="margin: 5px;"><i>'+descr+'</i></span>')
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "width": "100%",
+                                    "margin": "auto",
+                                    "top": "-110px",
+                                    "left": "0",
+                                    "bottom": "0",
+                                    "right": "0",
+                                    "height": "50%"
+                                })
+                                .append('<div style="margin-top: 3px;"><span style="font-size:90%; color: #333; ">Введите новое название</span><br><input name="newCatItemName" id="newCatItemName" type="text" value="'+oldName+'" style="width: 250px; font-size: 120%;">')
+                                .append(unit_select)
+                        )
+                        .append(
+                            $('<div/>')
+                                .css({
+                                    "position": "absolute",
+                                    "bottom": "2px",
+                                    "width": "100%"
+                                })
+                                .append('<div id="existCatItem" class="error"></div>')
+                                .append(buttonsStr+
+                                    '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove(); ">'
+                                )
+                        )
+                );
+
+            menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+            //Выделяем пункт в select единиц измерения (Если позиция)
+            if (type == 'item') {
+                //!!! Поиск по аттрибуту в DOM
+                //!!! Выбор пунтка в select
+                let item_unit = $('[item_unit_' + id + ']').attr('item_unit_' + id);
+
+                document.querySelector('#unit_sel').value = item_unit;
+            }
+
+        }
+
+    }
+
+    //Редактируем имя категории/позиции
+    function priceCatItemEdit(id, type){
+        //console.log();
+
+        hideAllErrors();
+
+        //!!! Объявим локальный объект для этой ф-ции. потом может исправим и вынесем выше в для всех
+        //Еденицы измерения
+        let units = {
+            pc: 'шт.',
+            gr: 'г.',
+            ml: 'мл.',
+        }
+
+        let newCatItemName = $("#newCatItemName").val();
+        //console.log(newCatItemName);
+
+        //Если будет позиция, то указываем еще и ед.изм.
+        let item_units = false;
+        let item_units_val = 0;
+
+        if (type == 'item'){
+            if ($("#unit_sel").val() == 0) {
+                item_units = false;
+            }else{
+                item_units = true;
+                item_units_val = $("#unit_sel").val();
+            }
+        }else{
+            item_units = true;
+        }
+        //console.log(item_units);
+
+        if (newCatItemName.trim().length > 0){
+            //console.log(newCatItemName.trim().length);
+
+            if (item_units) {
+
+                let link = "fl_price2_cat_item_edit_f.php";
+
+                let reqData = {
+                    name: newCatItemName.trim(),
+                    id: id,
+                    type: type,
+                    item_units_val: item_units_val
+                };
+                //console.log(reqData);
+
+                $.ajax({
+                    url: link,
+                    global: false,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: reqData,
+                    cache: false,
+                    beforeSend: function () {
+
+                    },
+                    success: function (res) {
+                        //console.log (res);
+
+                        $('.center_block').remove();
+                        $('#overlay').hide();
+
+                        if (res.result == 'success') {
+                            //console.log (res);
+
+                            getPriceCategories ();
+                            //getScladItems (cat, 0, 1000, true);
+
+                            if (type == 'item') {
+                                //Обновим имя, не обновляя страницу
+                                $('#item_name_'+id).html(newCatItemName);
+                                //Обновим ед.изм., не обновляя страницу
+                                $('[item_unit_'+id+']').attr('item_unit_'+id, item_units_val);
+                                $('[item_unit_'+id+']').html(units[item_units_val]);
+                            }
+
+                        } else {
+                            $("#existCatItem").html(res.data);
+                            $("#existCatItem").show();
+                        }
+                    }
+                })
+            }else {
+                $("#existCatItem").html('<span style="color: red; font-weight: bold;">Выберите единицы измерения</span>');
+                $("#existCatItem").show();
+            }
+        }else{
+            $("#existCatItem").html('<span style="color: red; font-weight: bold;">Ничего не ввели</span>');
+            $("#existCatItem").show();
+        }
+
+    }
+
+    //Перемещаем позицию в другую категорию
+    function movePriceItemInCategory (item_id, cat_id, target_cat_id){
+
+        let link = "move_price2_items_in_cat_f.php";
+
+        let reqData = {
+            item_id: item_id,
+            cat_id: cat_id,
+            target_cat_id: target_cat_id
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    // $("#sclad_items_rezult").html(res.data);
+
+                    //Если надо выделить группу
+                    // if (pick){
+                    //     //Сначала очищаем у всех окраску
+                    //     $(".droppable").css({"background-color": ""});
+                    //
+                    //     //Теперь покрасим
+                    //     $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+                    // }
+
+                    getPriceCategories ();
+
+                }
+            }
+        })
+
+    }
+
+
+
+

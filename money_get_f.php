@@ -25,12 +25,18 @@
 
                 $rezult = '';
 
+                $limit_str = '';
+
+                if ($_POST['client_id'] == 1){
+                    $limit_str = ' LIMIT 500';
+                }
+
                 //Выписанные наряды
                 $invoice_j = array();
 
                 $msql_cnnct = ConnectToDB ();
 
-                $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC";
+                $query = "SELECT * FROM `journal_invoice` WHERE `client_id`='".$_POST['client_id']."' ORDER BY `create_time` DESC ".$limit_str."";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -113,8 +119,8 @@
                             SELECT * FROM `journal_order` WHERE `client_id`='".$_POST['client_id']."' 
                             UNION ALL
                             SELECT * FROM `journal_order_nonclient` WHERE `client_id`='".$_POST['client_id']."'
-                            
                             ORDER BY `create_time` DESC
+                            LIMIT 5
                             ";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
