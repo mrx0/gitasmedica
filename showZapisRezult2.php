@@ -302,7 +302,11 @@
 
 
                         if ($dop['patientUnic'] == 1) {
-                            $rezult .= '<tr>';
+                            if ($ZapisHereQueryToday[$z]['no_sms'] == 1){
+                                $rezult .= '<tr style="display: none;">';
+                            }else {
+                                $rezult .= '<tr>';
+                            }
                         }else {
                             $rezult .= '
                                             <li class="cellsBlock" style="width: auto;">
