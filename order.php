@@ -128,6 +128,9 @@
                                         <li style="font-size: 90%; margin-bottom: 5px;">
                                             ', $order_j[0]['summ_type'] == 1 ? 'Наличный' : 'Безналичный' ,'
 									    </li>
+                                        <li style="font-size: 90%; margin-bottom: 5px;">
+                                            ', $order_j[0]['org_pay'] == 1 ? '<i>оплата произведена от организации</i>' : '' ,'
+									    </li>
 								    </ul>
 								</div>
 							</div>';

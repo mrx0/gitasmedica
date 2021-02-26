@@ -4440,6 +4440,11 @@
 					}
 				}
 
+				//если оплата от организации
+				if ($items['org_pay'] == 1) {
+					$order_type_mark .= '<br><i style="font-size: 90%; color: #400086;">орг.</i>';
+				}
+
                 $itemTemp_str = '';
 
                 $itemTemp_str .= '

@@ -109,7 +109,8 @@
                                                     </li>
                                                     <li style="font-size: 90%; margin-bottom: 5px;">
                                                         <input id="summ_type" name="summ_type" value="1" type="radio" ', $order_j[0]['summ_type'] == 1 ? 'checked' : '', '> Наличный<br>
-                                                        <input id="summ_type" name="summ_type" value="2" type="radio" ', $order_j[0]['summ_type'] == 2 ? 'checked' : '', '> Безналичный
+                                                        <input id="summ_type" name="summ_type" value="2" type="radio" ', $order_j[0]['summ_type'] == 2 ? 'checked' : '', '> Безналичный<br><br>
+                                                        <input type="checkbox" name="org_pay" value="1"', $order_j[0]['org_pay'] == 1 ? 'checked' : '', '> от Организации (не будет учитываться в кассе)
                                                     </li>
                                                 </ul>
                                             </div>
