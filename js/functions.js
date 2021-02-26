@@ -9897,7 +9897,7 @@
             org_pay = 0;
         }
 
-        if (invoice_id != 0){
+        if ((mode == 'add') && (invoice_id != 0)){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                 '<a href= "payment_add.php?invoice_id='+invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
                 '</li>';

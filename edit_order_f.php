@@ -12,7 +12,7 @@
 		
 		if ($_POST){
 
-			if (!isset($_POST['order_id']) || !isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['summtype']) || !isset($_POST['date_in']) || !isset($_POST['office_id'])){
+			if (!isset($_POST['order_id']) || !isset($_POST['client_id']) || !isset($_POST['summ']) || !isset($_POST['summtype']) || !isset($_POST['date_in']) || !isset($_POST['office_id']) || !isset($_POST['org_pay'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
 			}else{
 			    if ($_POST['summ'] < 1){
@@ -32,7 +32,7 @@
                         $comment = addslashes($_POST['comment']);
 
                         //Обновляем
-                        $query = "UPDATE `journal_order` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `summ`='{$_POST['summ']}', `summ_type`='{$_POST['summtype']}', `date_in`='{$date_in}', `comment`='{$_POST['comment']}', `office_id`='{$_POST['office_id']}' WHERE `id`='{$_POST['order_id']}'";
+                        $query = "UPDATE `journal_order` SET `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}', `summ`='{$_POST['summ']}', `summ_type`='{$_POST['summtype']}', `org_pay`='{$_POST['org_pay']}', `date_in`='{$date_in}', `comment`='{$_POST['comment']}', `office_id`='{$_POST['office_id']}' WHERE `id`='{$_POST['order_id']}'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
