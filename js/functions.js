@@ -2844,10 +2844,11 @@
 	}
 
 	//Удаляем позицию в истории цен
-    function deletePriceHistory(id) {
+    function deletePriceHistory(id, insure = 0) {
 
         var Data = {
-            id:id
+            id: id,
+            insure: insure
         };
 
         var link = "deletePriceHistory.php";

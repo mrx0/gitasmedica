@@ -82,7 +82,7 @@
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $query = "DELETE FROM `spr_priceprices_insure` WHERE `insure`='{$_POST['id2']}'";
-                        //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
 
                         foreach ($arr4fill as $item) {
@@ -112,6 +112,7 @@
                                 `insure`, `item`, `price`, `price2`, `price3`, `date_from`, `create_time`, `create_person`) 
                                 VALUES (
                             '{$_POST['id2']}', '{$item['item']}', '{$price}', '{$price2}', '{$price3}', '{$fromdate}', '{$time}', '{$_SESSION['id']}')";
+
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         }
