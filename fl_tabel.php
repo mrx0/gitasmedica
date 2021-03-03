@@ -981,10 +981,13 @@
                                                 </div>
                                             </div>';
 
+                                //!!!Цена одной пустой смены (!!! перенести потом отдельно в какой-нибудь справочник что ли)
+                                $empty_smena_price = 250;
+
                                 echo '
                                             <div style="margin: 10px 0;">
                                                 <div style="font-size: 90%;  color: #555;">
-                                                    <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (250 руб. за одну "пустую" смену)
+                                                    <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> ('.$empty_smena_price.' руб. за одну "пустую" смену)
                                                 </div>';
 
                                 if ($tabel_j[0]['empty_smena'] == 0) {
@@ -998,8 +1001,15 @@
                                     }
 
                                 } else {
-                                    echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за "пустые" смены <span style="font-size: 120%; font-weight: bold;">' . $tabel_j[0]['empty_smena'] . '</span> руб.';
+                                    echo '<div style="font-size: 80%; color: rgb(7, 199, 41); padding-top: 5px;">В табель уже включена сумма за "пустые" смены <span style="font-size: 120%; font-weight: bold;">' . $tabel_j[0]['empty_smena'] . '</span> руб. <span style="font-size: 120%; color: #247624;">За ' . ($tabel_j[0]['empty_smena'] / $empty_smena_price) . ' смен</span>';
                                     if (($tabel_j[0]['status'] != 7) && ($tabel_j[0]['status'] != 9)) {
+
+                                        if ($tabel_j[0]['empty_smena'] / $empty_smena_price != 1) {
+                                            echo '<a href="#" class="b" style="font-size: 80%; padding: 2px 7px; color: black;" title="Убрать одну смену" onclick="Ajax_emptySmenaAddINTabel (' . $_GET['id'] . ', ' . ($tabel_j[0]['empty_smena'] / $empty_smena_price - 1) . ');">-1</a>';
+                                        }
+
+                                        echo '<a href="#" class="b" style="font-size: 80%; padding: 2px 7px; color: black;" title="Добавить одну смену" onclick="Ajax_emptySmenaAddINTabel (' . $_GET['id'] . ', '.($tabel_j[0]['empty_smena'] / $empty_smena_price + 1).');">+1</a>';
+
                                         echo '<span style="margin-left: 20px; font-size: 90%; color: red; cursor:pointer;" onclick="emptySmenaTabelDelete(' . $_GET['id'] . ');"><i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 150%;"></i> Удалить из табеля "пустые" смены</span>';
                                     }
                                     echo '</div>';
