@@ -144,6 +144,7 @@
                                         </div>';
                         echo '
                                         <div class="cellCosmAct calculateInvoice" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px; font-size: 110%; border-top: 0; border-bottom: 0; border-right: 0;">
+                                            <!--<span style="font-style: italic; font-weight: normal; font-size: 80%; color: #8C8C8C;">общий долг</span><br>-->
                                             '.$client_debt['summ'].'
                                         </div>
                                         <div class="cellCosmAct calculateOrder" style="text-align: center; width: 100px; min-width: 100px; max-width: 100px; font-size: 112%; border-top: 0; border-bottom: 0; border-right: 0;">
