@@ -119,7 +119,7 @@
                         $dostOstatok = $client_balance['summ'] - $client_balance['debited'] - $client_balance['withdraw'] + $client_balance['refund'];
 
                         echo '
-                                <ul class="live_filter cellsBlockHover" id="livefilter-list" style="width: 694px; margin-left: 6px; border: 1px solid #BFBCB5; /*box-shadow: 2px 2px 2px rgba(84, 90, 121, 0.5);*/box-shadow: rgba(146, 146, 146, 0.82) 0px 4px 10px;">
+                                <ul class="live_filter cellsBlockHover" id="cl_data_user_'.$client_id.'" id_old="livefilter-list" style="width: 694px; margin-left: 6px; border: 1px solid #BFBCB5; /*box-shadow: 2px 2px 2px rgba(84, 90, 121, 0.5);*/box-shadow: rgba(146, 146, 146, 0.82) 0px 4px 10px;">
                                     <li class="cellsBlock" style="font-weight:bold;">	
                                         <div class="cellFullName" style="width: 462px; min-width: 462px; text-align: left; border: 0; font-size: 130%; font-style: italic;">';
 
@@ -176,7 +176,7 @@
 
                             if ($payment_data[0]['invoice_summ'] - $payment_data[0]['invoice_paid'] <= 0) {
                                 echo '
-                                            <div class="" style="font-size: 80%; text-align: left; float: right; font-weight: normal;">
+                                            <div id="changeInstallmentStatus2_btn_'.$invoice_id.'" class="" style="font-size: 80%; text-align: left; float: right; font-weight: normal;">
                                                 <span class="info ahref  b4"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus2(' . $payment_data[0]['id'] . ', ' . $payment_data[0]['client_id'] . ', ' . $invoice_id . ', ' . $payment_data[0]['status'] . ', false);">
                                                     <i class="fa fa-database" aria-hidden="true" style=" font-size: 120%;" title="Есть незакрытая рассрочка"></i> Закрыть рассрочку
                                                 </span>
