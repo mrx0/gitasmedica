@@ -200,6 +200,7 @@
                         $temp_str .= '
                         <div style="position: absolute; top: 6px; right: 0px; text-align: right;">
                             <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 0);"><i class="fa fa-reply" aria-hidden="true" style="color: grey; " title="Вернуть"></i></span>
+                            <span style="background-color: #e8e8e8; padding: 1px 3px; border: 1px solid #868686; font-size: 15px; cursor: pointer;" onclick="announcingDelete(' . $announcing['id'] . ', 9);"><i class="fa fa-trash-o" aria-hidden="true" title="Удалить"></i></span>
                         </div>
                         ';
                     }elseif($announcing['status'] == 9){

@@ -453,7 +453,7 @@
         // var invoice_id = $("#invoice_id").val();
         // var filial_id = $("#filial_id").val();
         //
-        // var client_id = $("#client_id").val();
+        let client_id = $("#client_id").val();
         // var date_in = $("#date_in").val();
         // //console.log(date_in);
         //

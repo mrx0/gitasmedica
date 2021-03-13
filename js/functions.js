@@ -12881,6 +12881,7 @@
                         //Удаляем из документа, чтобы не перезагружать таблицу
                         $('#cl_data_main_'+client_id).remove();
                         $('#user_options_'+client_id).remove();
+                        $('#cl_data_user_'+client_id).css('backgroundColor', 'yellow');
                     }
                 }
             }
@@ -12918,8 +12919,11 @@
                         location.reload();
                     }else{
                         //Удаляем из документа, чтобы не перезагружать таблицу
-                        $('#cl_data_main_'+client_id).remove();
+                        //$('#cl_data_main_'+client_id).remove();
                         //$('#user_options_'+client_id).remove();
+                        $('#cl_data_user_'+client_id).css('backgroundColor', 'rgb(254 255 116 / 60%)');
+                        // $('#cl_data_main_'+client_id).css('backgroundColor', 'yellow');
+                        $('#changeInstallmentStatus2_btn_'+ invoice_id).html('Закрыто');
                     }
                 }
             }
