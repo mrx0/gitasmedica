@@ -326,23 +326,7 @@
 						<div class="nav">
 							<a href="scheduler_template.php" class="b">График план</a>
 							<a href="scheduler_own.php?id='.$_SESSION['id'].'" class="b">Мой график</a>';
-            if (($finances['see_all'] == 1) || $god_mode) {
-                //var_dump($who);
-//                var_dump($type);
 
-                if (($type == 4) || ($type == 7)) {
-                    echo '
-                    <a href="fl_tabels2.php?who=' . $type . '&m=' . $month . '&y=' . $year . '" class="b3">Отчёт по часам</a>';
-                }
-                if (($type == 13) || ($type == 14) || ($type == 15)) {
-                    echo '
-                    <a href="fl_tabels3.php?who=' . $type . '&m=' . $month . '&y=' . $year . '" class="b3">Отчёт по часам</a>';
-                }
-                if ($type == 11) {
-                    echo '
-                    <a href="fl_tabels4.php?who=' . $type . '&m=' . $month . '&y=' . $year . '" class="b3">Отчёт по часам</a>';
-                }
-            }
             echo '
 						</div>
 						<!--<span style="color: red;">Тестовый режим</span>-->

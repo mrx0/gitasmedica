@@ -80,7 +80,6 @@ if ($enter_ok){
                 <div id="status">
                     <header>
                         <div class="nav">
-                            <!--<a href="fl_tabels.php" class="b">Важный отчёт</a>-->
                             <a href="zapis_solar.php?filial_id='.$filial_id.'" class="b">Солярий</a>
                         </div>
                         <h2>Добавить посещение солярия ';

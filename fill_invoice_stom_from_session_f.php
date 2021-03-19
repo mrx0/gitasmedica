@@ -372,24 +372,7 @@
 
 
 
-                                //2018-03-13 попытка разобраться с гарантийной ценой для зарплаты
-                                /*if ($items['guarantee'] == 0) {
-                                    //if (isset($items['manual_itog_price'])){
-                                    if (isset($items['itog_price'])) {
-                                        if ($items['itog_price'] > 0) {
-                                            $request .= $items['itog_price'];
-                                        } else {
-                                            $request .= '0';
-                                        }
-                                    } else {
-                                        $request .= '0';
-                                    }
-                                    //}else{
-                                    //$request .= '0';
-                                    //}
-                                }else{
-                                    $request .= '0';
-                                }*/
+
 
                                 $request .= $items['itog_price'];
 

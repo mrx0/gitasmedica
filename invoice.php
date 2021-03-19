@@ -841,12 +841,6 @@
                                             //$stoim_item = round($stoim_item/10) * 10;
                                         }
 
-                                        //2018-03-13 попытка разобраться с гарантийной ценой для зарплаты
-                                        /*if ($item['guarantee'] == 0) {
-                                            echo $stoim_item;
-                                        }else{
-                                            echo 0;
-                                        }*/
                                         echo $stoim_item;
 
 
