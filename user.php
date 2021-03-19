@@ -226,11 +226,6 @@
                         <a href="zapis_own.php?y='.$year.'&m='.$month.'&d='.$day.'&worker='.$_SESSION['id'].'" class="b">Запись сегодня</a>';
 			}
 
-            //if (($_SESSION['permissions'] == 5) || ($_SESSION['permissions'] == 6)) {
-                echo '
-                        <a href="fl_my_tabels.php" class="b">Табели</a>';
-            //}
-
 			echo '
                         <div id="status_notes">';
 

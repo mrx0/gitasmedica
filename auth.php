@@ -17,9 +17,6 @@
     unset($_SESSION['permissions']);
     unset($_SESSION['filial']);
     unset($_SESSION['invoice_data']);
-    unset($_SESSION['calculate_data']);
-    unset($_SESSION['fl_calcs_tabels']);
-    unset($_SESSION['fl_calcs_tabels2']);
     unset($_SESSION['scheduler3']);
     unset($_SESSION['subtraction_data']);
     //!!! Для склада

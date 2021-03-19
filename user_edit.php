@@ -254,22 +254,7 @@
 									</div>
 								</div>';
 
-                    echo '								
-								
-								<div class="cellsBlock2">
-									<div class="cellLeft">Особые отметки</div>
-									<div class="cellRight">
-									    <div>
-                                            <input type="checkbox" name="spec_prikaz8" value="1" '.$spec_prikaz8_checked.'> Приказ №8
-										</div>
-										<div>
-										    <input type="checkbox" name="spec_oklad" value="1" '.$spec_oklad_checked.'> Оклад
-										</div>
-										<div>
-										    <input type="checkbox" name="spec_work_6days" value="1" '.$spec_work_6days_checked.'> 6 дней/нед.
-										</div>
-									</div>
-								</div>';
+
 
                     $selected0 = '';
                     $selected8 = '';

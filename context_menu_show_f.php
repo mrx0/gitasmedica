@@ -346,35 +346,7 @@
                     }
                 }
 
-				//Для РЛ в табеле
-				if ($_POST['mark'] == 'tabel_calc_options'){
-                    $data .= '
-                            <li><div onclick="fl_deleteCalculateFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить РЛ из табеля</div></li>';
-				}
 
-				//Для Вычетов в табеле
-				if ($_POST['mark'] == 'tabel_deduction_options'){
-                    $data .= '
-                            <li><div onclick="fl_deleteDeductionFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
-				}
-
-				//Для Надбавок в табеле
-                if ($_POST['mark'] == 'tabel_surcharge_options'){
-                    $data .= '
-                            <li><div onclick="fl_deleteSurchargeFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
-				}
-
-				//Для Выплат в табеле
-                if ($_POST['mark'] == 'tabel_paidout_options'){
-                    $data .= '
-                            <li><div onclick="fl_deletePaidoutFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить из табеля</div></li>';
-				}
-
-				//Для ночных отчетов в табеле
-                if ($_POST['mark'] == 'tabel_night_options'){
-                    $data .= '
-                            <li><div onclick="fl_deleteNightFromTabel('.$_POST['ind'].', '.$_POST['key'].')">Удалить расчёт</div></li>';
-				}
 
 				//Настройка для записи
 				if ($_POST['mark'] == 'zapis_options'){

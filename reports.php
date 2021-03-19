@@ -167,22 +167,12 @@
 								<a href="stat_client_finance2.php" class="b3" style="width: 270px;">Открытые наряды</a>
 							</li>';
 
-                /*echo '
-                                <li class="cellsBlock" style="margin: 1px;">
-                                    <a href="stat_client_finance3.php" class="b3">Свободные средства на счетах пациентов</a>
-                                </li>';*/
 
                 echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_invoice.php" class="b3" style="width: 270px;">Наряды</a>
 							</li>';
 
-//                if (($finances['see_all'] == 1) || $god_mode) {
-//                    echo '
-//							<li class="cellsBlock" style="margin: 1px;">
-//								<a href="fl_in_bank_add.php" class="b3" style="width: 270px;">В банк</a>
-//							</li>';
-//                }
                 echo '
 						</ul>';
             }
@@ -203,35 +193,11 @@
                 echo '
 						</ul>';
             }
-            /*echo '
-						<ul class="reportBlock" style="">
-								<h1>Работы</h1>';
-			echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="stat_invoices.php" class="b3" style="width: 270px;">Наряды</a>
-							</li>';
 
-			echo '
-						</ul>';*/
             if (($finances['see_all'] == 1) || $god_mode) {
                 echo '
 						<ul class="reportBlock" style="">
 								<h1>Управление</h1>';
-                /*echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="calculates.php" class="b3" style="width: 270px;">-%-</a>
-							</li>';*/
-
-                echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_tabels.php" class="b3" style="width: 270px;">Важный отчёт</a>
-							</li>';
-
-
-                echo '
-                            <li class="cellsBlock" style="margin: 1px;">
-                                <a href="fl_tabels2.php" class="b3" style="width: 270px;">Отчёт по часам</a>
-                            </li>';
 
                 echo '
 							<li class="cellsBlock" style="margin: 1px;">
@@ -240,14 +206,6 @@
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportCategory2.php" class="b3" style="width: 270px;">Отчёт по категориям (общее соотношение)</a>
-							</li>';
-                echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_mainReportCategory3.php" class="b3" style="width: 270px;">Отчёт по категориям 3</a>
-							</li>';
-                echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="worker_zapis_report2.php" class="b3" style="width: 270px;">Отчёт посещений по врачу</a>
 							</li>';
                 echo '
 							<li class="cellsBlock" style="margin: 1px;">
@@ -261,33 +219,7 @@
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="material_costs_test.php" class="b3" style="width: 270px;">Расходы на материалы</a>
 							</li>';
-                /*echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="absents.php" class="b3" style="width: 270px;">Отпуск/больничный</a>
-							</li>';*/
 
-//                echo '
-//							<li class="cellsBlock" style="margin: 1px;">
-//								<a href="stat_invoice2.php" class="b3" style="width: 270px;">Отчёт по оплатам (выручка)</a>
-//							</li>';
-
-                echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="remarks_to_employees.php" class="b3" style="width: 270px;">Замечания сотрудникам</a>
-							</li>';
-
-
-                //if (($finances['see_all'] == 1) || $god_mode) {
-
-
-
-//                echo '
-//                            <li class="cellsBlock" style="margin: 1px;">
-//                                <a href="fl_report_noch.php" class="b3">Ночь</a>
-//                            </li>';
-
-
-                //}
                 echo '
 						</ul>';
             }
