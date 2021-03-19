@@ -24,34 +24,6 @@
 
                 $msql_cnnct = ConnectToDB();
 
-                //Выплаты
-                $subtractions_j = array();
-
-                //По филиально в зависимости от оплат
-                //$query = "SELECT * FROM  `fl_journal_filial_subtractions` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
-
-                //По филиалам конкретно по табелям (не зависит от оплат, только от того, где открыта была работа)
-//                $query = "SELECT fl_jp.*
-//                FROM `fl_journal_paidouts` fl_jp
-//                LEFT JOIN `fl_journal_tabels` fl_tj ON fl_tj.id = fl_jp.tabel_id
-//                WHERE fl_tj.filial_id='{$_POST['filial_id']}' AND fl_tj.month='{$_POST['month']}' AND fl_tj.year='{$_POST['year']}'";
-
-                $query = "SELECT fl_jp.*, sw.permissions, sw.name, fl_tj.worker_id
-                FROM `fl_journal_tabels` fl_tj
-                INNER JOIN `fl_journal_paidouts` fl_jp ON fl_tj.id = fl_jp.tabel_id
-                LEFT JOIN spr_workers sw ON sw.id = fl_tj.worker_id
-                WHERE fl_tj.office_id='{$_POST['filial_id']}' AND (fl_tj.month='0{$_POST['month']}' OR fl_tj.month='".(int)$_POST['month']."') AND fl_tj.year='{$_POST['year']}'";
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                $number = mysqli_num_rows($res);
-
-                if ($number != 0) {
-                    while ($arr = mysqli_fetch_assoc($res)) {
-                        array_push($subtractions_j, $arr);
-                    }
-                }
-                //var_dump($subtractions_j);
 
                 //Выдачи (возвраты) денег пациентам
                 $fl_withdraw_j = array();
@@ -70,37 +42,11 @@
                 //var_dump($fl_withdraw_j);
 
                 //Выплаты !!! не доделал, переделать всё, если понадобится вообще.
+                $subtractions_j = array();
                 $fl_refunds_j = array();
-
-//                $query = "SELECT * FROM  `fl_journal_refund` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
-//
-//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-//
-//                $number = mysqli_num_rows($res);
-//
-//                if ($number != 0) {
-//                    while ($arr = mysqli_fetch_assoc($res)) {
-//                        array_push($fl_refunds_j, $arr);
-//                    }
-//                }
-                //var_dump($fl_refunds_j);
 
                 //Затраты на материалы
                 $material_consumption_j = array();
-
-//                $query = "SELECT * FROM `journal_inv_material_consumption` WHERE `filial_id`='{$_POST['filial_id']}' AND `month`='{$_POST['month']}' AND `year`='{$_POST['year']}'";
-//
-//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-//
-//                $number = mysqli_num_rows($res);
-//
-//                if ($number != 0) {
-//                    while ($arr = mysqli_fetch_assoc($res)) {
-//                        array_push($material_consumption_j, $arr);
-//                    }
-//                }
-//                var_dump($material_consumption_j);
-
 
                 //Типы расходов (справочник)
                 $give_out_cash_types_j = array();
@@ -159,18 +105,6 @@
                                         <b>Расходный ордер #' . $item['id'] . '</b><br>от ' . date('d.m.y', strtotime($item['date_in'])) . '<br>
                                         <span style="font-size: 90%;  color: #555;">';
 
-//                            if (($item['create_time'] != 0) || ($item['create_person'] != 0)) {
-//                                $giveouts_result_str .= '
-//                                            Добавлен: ' . date('d.m.y H:i', strtotime($item['create_time'])) . '<br>
-//                                            Автор: ' . WriteSearchUser('spr_workers', $item['create_person'], 'user', true) . '<br>';
-//                            } else {
-//                                $giveouts_result_str .= 'Добавлен: не указано<br>';
-//                            }
-                            /*if (($order_item['last_edit_time'] != 0) || ($order_item['last_edit_person'] != 0)){
-                                echo'
-                                                Последний раз редактировался: '.date('d.m.y H:i',strtotime($order_item['last_edit_time'])).'<br>
-                                                <!--Кем: '.WriteSearchUser('spr_workers', $order_item['last_edit_person'], 'user', true).'-->';
-                            }*/
                             $giveouts_result_str .= '
                                         </span>
                                                         
@@ -226,68 +160,8 @@
                     }
                 }
 
-//                if (!empty($giveouts_j)) {
-//                    //var_dump($giveouts_j);
-//                }
 
-                //!!! Суммы долгов/авансов за прошлые месяцы (пока ручной ввод)
-//                11 => ЦО,
-//                12 => Авиаконструкторов 10,
-//                13 => Просвещения 54,
-//                14 => Комендантский 17,
-//                15 => Энгельса 139,
-//                16 => Гражданский 114,
-//                17 => Чернышевского 17,
-//                18 => Некрасова 58,
-//                19 => Просвещения 72,
-//                20 => Литейный 59,
-//                21 => Бассейная 45
-
-//                $prev_month_filial_summ_arr = array(
-//                    11 => 0,
-//                    12 => -151929,
-//                    13 => -169961,
-//                    14 => -232,
-//                    15 => -411380,
-//                    16 => -684164,
-//                    17 => -533,
-//                    18 => -16780,
-//                    19 => -218297,
-//                    20 => -323,
-//                    21 => 0
-//                );
-
-                //Получаем дефициты предыдущих месяцев
-                $prev_month_filial_summ_arr = array();
-
-                $query = "SELECT `filial_id`, `summ` 
-                        FROM `fl_journal_prev_month_filial_deficit` 
-                        WHERE `filial_id`='{$_POST['filial_id']}' AND `year`='{$_POST['year']}' 
-                        AND (`month`='0{$_POST['month']}' OR `month`='".(int)$_POST['month']."')";
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                $number = mysqli_num_rows($res);
-
-                if ($number != 0){
-                    while ($arr = mysqli_fetch_assoc($res)){
-                        //array_push($paidouts_temp_j, $arr);
-
-                        $prev_month_filial_summ_arr[$arr['filial_id']] = $arr['summ'];
-                    }
-                }
-//            var_dump($prev_month_filial_summ_arr);
-
-                $prev_month_filial_summ = 0;
-
-                //if (((int)$_POST['month'] == 7) && ($_POST['year'] == 2019)){
-                    if (isset($prev_month_filial_summ_arr[$_POST['filial_id']])){
-                        $prev_month_filial_summ = $prev_month_filial_summ_arr[$_POST['filial_id']];
-                    }
-                //}
-
-
-                echo json_encode(array('result' => 'success', 'subtractions_j' => $subtractions_j, 'refunds_j' => $fl_refunds_j, 'withdraw_j' => $fl_withdraw_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => $prev_month_filial_summ));
+                echo json_encode(array('result' => 'success', 'subtractions_j' => 0, 'refunds_j' => $fl_refunds_j, 'withdraw_j' => $fl_withdraw_j, 'material_consumption_j' => $material_consumption_j, 'giveouts_j' => $giveouts_result_str, 'prev_month_filial_summ' => 0));
 
             }
         }else{

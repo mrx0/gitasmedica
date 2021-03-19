@@ -5390,13 +5390,6 @@
     //Подсчет итогов за месяц
     function fl_getDailyReportsSummAllMonth(filial_id, month, year){
 
-        //Памятка
-        // 1 - аванс
-        // 2 - отпускной
-        // 3 - больничный
-        // 4 - на карту
-        // 7 - зп
-        // 5 - ночь
 
         //Все выплаты ЗП и тп
         var link = "fl_get_giveouts_f.php";
@@ -5872,10 +5865,6 @@
                         (Number(
                                 $("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')
                             )
-                            -
-                            Number(
-                                $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
-                            )
                         )
                         , 2, '.', ' ')
                     );
@@ -5884,11 +5873,7 @@
                         (Number(
                                 $("#ostatokNalAllMonth").html().replace(/\s{1,}/g, '')
                             )
-                            -
-                            Number(
-                                $("#SummGiveoutMonth").html().replace(/\s{1,}/g, '')
-                            )
-                        )
+                         )
                         , 2, '.', ' ')
                     );
 

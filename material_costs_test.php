@@ -67,7 +67,6 @@
                     <header id="header">
                         <div class="nav">
                             <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
-                            <a href="fl_main_report2.php?filial_id='.$filial_id.'" class="b">Финальный отчёт</a>
                         </div>
                         <h2 style="">Расходы на материалы по филиалам</h2>
                         <div>

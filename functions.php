@@ -4043,7 +4043,7 @@
 					//Отметка об объеме оплат
 					$paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не оплачено"></i>';
 					$status_mark = '<i class="fa fa-ban" aria-hidden="true" style="color: red; font-size: 110%;" title="Работа не закрыта"></i>';
-					$calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: red; font-size: 100%;" title="Нет расчётного листа"></i>';
+					$calculate_mark = '';
 
 					//Сумма рассчетных листов
 					$calcSumm = 0;
@@ -4069,26 +4069,6 @@
 						$status_debt = true;
 					}
 
-					//Расчетный лист
-					$query = "SELECT SUM(`summ_inv`) AS `summCalcs` FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}'";
-					//var_dump($query);
-
-					$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-					$number = mysqli_num_rows($res);
-
-					if ($number != 0) {
-						$arr = mysqli_fetch_assoc($res);
-						if ($arr['summCalcs'] != NULL) {
-							$calcSumm = round($arr['summCalcs'], 2);
-							//var_dump($arr);
-						} else {
-							$calculate_debt = true;
-						}
-					} else {
-						//Отсутствуют РЛ
-						$calculate_debt = true;
-					}
 
 					//Возвраты
 					$query = "SELECT SUM(`summ`) AS `summRefund` FROM `fl_journal_refund` WHERE `invoice_id`='{$items['id']}'";
@@ -4124,14 +4104,7 @@
 					if (!$status_debt) {
 						$status_mark = '<i class="fa fa-check-circle-o" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Работа закрыта"></i>';
 					}
-					if (!$calculate_debt) {
-						if ($calcSumm >= $items['summ']) {
-							$calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
-						}
-						if ($calcSumm < $items['summ']) {
-							$calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: rgba(255, 152, 0, 1); font-size: 110%;" title="Не вся сумма распределена по РЛ"></i>';
-						}
-					}
+
 
 					$itemPercentCats_str = '';
 
@@ -4468,8 +4441,10 @@
 					$itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
 				}
 
-				if ($items['org_name'] != NULL) {
-					$itemTemp_str .= '<br>Юр.лицо: <i style="font-size: 105%;"><b>' . $items['org_name'] . '</b></i>';
+				if (isset($items['org_name'])) {
+					if ($items['org_name'] != NULL) {
+						$itemTemp_str .= '<br>Юр.лицо: <i style="font-size: 105%;"><b>' . $items['org_name'] . '</b></i>';
+					}
 				}
 
                 $itemTemp_str .= '
@@ -4658,302 +4633,6 @@
     }
 
 
-/*    //функция формирует и показывает расчетные листы визуализация
-    function showCalculateDivRezult($data){
-
-        $rezult = '';
-
-        $itemAll_str = '';
-        $itemClose_str = '';
-
-        //Количество
-        $rezult_count = 0;
-
-        if (!empty($data)) {
-
-            include_once 'DBWork.php';
-            include_once 'functions.php';
-
-            require 'variables.php';
-
-            $msql_cnnct = ConnectToDB ();
-
-            if ($show_categories){
-                //Категории процентов
-                $percent_cats_j = array();
-                //Для сортировки по названию
-                $percent_cats_j_names = array();
-                //$percent_cats_j = SelDataFromDB('fl_spr_percents', '', '');
-                $query = "SELECT `id`, `name` FROM `fl_spr_percents`";
-                //var_dump( $percent_cats_j);
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                $number = mysqli_num_rows($res);
-                if ($number != 0){
-                    while ($arr = mysqli_fetch_assoc($res)){
-                        $percent_cats_j[$arr['id']] = $arr['name'];
-                        //array_push($percent_cats_j_names, $arr['name']);
-                    }
-                }
-
-                //Определяющий массив из названий для сортировки
-                /*foreach ($percent_cats_j as $key => $arr) {
-                    array_push($percent_cats_j_names, $arr['name']);
-                }*/
-
-                //Сортируем по названию
-                //array_multisort($percent_cats_j_names, SORT_LOCALE_STRING, $percent_cats_j);
-                //var_dump( $percent_cats_j);
-
-            /*}
-
-            foreach ($data as $items) {
-                //var_dump($items);
-
-                //Отметка об объеме оплат
-                $paid_mark = '<i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%;" title="Не оплачено"></i>';
-                $status_mark = '<i class="fa fa-ban" aria-hidden="true" style="color: red; font-size: 110%;" title="Работа не закрыта"></i>';
-                $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: red; font-size: 100%;" title="Нет расчётного листа"></i>';
-
-                //Маркеры для статусов
-                $paid_debt = false;
-                $status_debt = false;
-                $calculate_debt = false;
-
-                //Не оплачен
-                if ($items['summ'] == $items['paid']) {
-                    //
-                }else{
-                    $paid_debt = true;
-                }
-
-                //Работа закрыта
-                if ($items['status'] == 5) {
-                    //
-                }else{
-                    $status_debt = true;
-                }
-
-                //Расчетный лист
-                $query = "SELECT * FROM `fl_journal_calculate` WHERE `invoice_id`='{$items['id']}' LIMIT 1";
-                //var_dump($query);
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                $number = mysqli_num_rows($res);
-
-                if ($number != 0) {
-                    //
-                }else{
-                    $calculate_debt = true;
-                }
-
-                //Если "нулевой наряд", то будем считать, что РЛ ему не нужен и статус закрыт у него автоматически должен быть
-                if (($items['summ'] == $items['paid']) && ($items['summ'] == 0) && ($items['paid'] == 0) && ($items['summins'] == 0)){
-                    if ($only_debt) {
-                        $status_debt = false;
-                        $calculate_debt = false;
-                    }
-                }
-
-
-                if (!$paid_debt){
-                    $paid_mark = '<i class="fa fa-check" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Оплачено"></i>';
-                }
-                if (!$status_debt) {
-                    $status_mark = '<i class="fa fa-check-circle-o" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Работа закрыта"></i>';
-                }
-                if (!$calculate_debt) {
-                    $calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title="РЛ сделан"></i>';
-                }
-
-
-                $itemPercentCats_str = '';
-
-                if (($only_debt && ($paid_debt || $status_debt || $calculate_debt)) || (!$only_debt)) {
-
-                    //Покажем категории работ
-                    if ($show_categories) {
-                        $invoice_ex_j = array();
-                        $invoice_ex_j_temp = array();
-
-                        $query = "SELECT `percent_cats` FROM `journal_invoice_ex` WHERE `invoice_id`='{$items['id']}'";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-                        $number = mysqli_num_rows($res);
-
-                        if ($number != 0) {
-                            while ($arr = mysqli_fetch_assoc($res)) {
-                                array_push($invoice_ex_j, $arr);
-                            }
-                        }
-                        //var_dump($invoice_ex_j);
-
-                        if (!empty($invoice_ex_j)) {
-                            //var_dump($invoice_ex_j);
-
-                            foreach ($invoice_ex_j as $invoice_ex_item) {
-                                //var_dump($invoice_ex_item['percent_cats']);
-
-                                if ($invoice_ex_item['percent_cats'] == 0) {
-                                    //--
-                                } else {
-                                    if (!in_array($invoice_ex_item['percent_cats'], $invoice_ex_j_temp)) {
-                                        $itemPercentCats_str .= '<i style="color: #041E35; font-size: 100%;">' . $percent_cats_j[$invoice_ex_item['percent_cats']] . '</i><br>';
-                                        array_push($invoice_ex_j_temp, $invoice_ex_item['percent_cats']);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (!$minimal) {
-
-                        $rezult_count++;
-
-                        $itemTemp_str = '';
-
-                        $itemTemp_str .= '
-                                                    <li class="cellsBlock" style="width: auto; border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36);">';
-                        $itemTemp_str .= '
-                                                        <a href="invoice.php?id=' . $items['id'] . '" class="cellOrder ahref" style="position: relative;">
-                                                            <div style="font-weight: bold;">Наряд #' . $items['id'] . '</div>
-                                                            <div style="margin: 3px;">';
-
-
-                        $itemTemp_str .= $itemPercentCats_str;
-
-
-                        $itemTemp_str .= '
-                                                            </div>
-                                                            <div style="font-size:80%; color: #555; border-top: 1px dashed rgb(179, 179, 179); margin-top: 5px;">';
-
-                        if (($items['create_time'] != 0) || ($items['create_person'] != 0)) {
-                            $itemTemp_str .= '
-                                                                    Добавлен: ' . date('d.m.y H:i', strtotime($items['create_time'])) . '<br>
-                                                                    <!--Автор: ' . WriteSearchUser('spr_workers', $items['create_person'], 'user', true) . '<br>-->';
-                        } else {
-                            $itemTemp_str .= 'Добавлен: не указано<br>';
-                        }
-                        if (($items['last_edit_time'] != 0) || ($items['last_edit_person'] != 0)) {
-                            $itemTemp_str .= '
-                                                                    Редактировался: ' . date('d.m.y H:i', strtotime($items['last_edit_time'])) . '<br>
-                                                                    <!--Кем: ' . WriteSearchUser('spr_workers', $items['last_edit_person'], 'user', true) . '-->';
-                        }
-
-                        $itemTemp_str .= '
-                                                            </div>';
-
-
-                        //Цвет если оплачено или нет
-                        $paycolor = "color: red;";
-                        if ($items['summ'] == $items['paid']) {
-                            $paycolor = 'color: #333333;';
-                        }
-
-                        $itemTemp_str .= '
-                                                            <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . ' ' . $calculate_mark . '</span>
-                                                        </a>
-                                                        <div class="cellName">
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Сумма:<br>
-                                                                <span class="calculateInvoice" style="font-size: 13px; ' . $paycolor . '">' . $items['summ'] . '</span> руб.
-                                                            </div>';
-                        if ($items['summins'] != 0) {
-                            $itemTemp_str .= '
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Страховка:<br>
-                                                                <span class="calculateInsInvoice" style="font-size: 13px">' . $items['summins'] . '</span> руб.
-                                                            </div>';
-                        }
-                        $itemTemp_str .= '
-                                                        </div>';
-
-                        $itemTemp_str .= '
-                                                        <div class="cellName">
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Оплачено:<br>
-                                                                <span class="calculateInvoice" style="font-weight: normal; font-size: 13px; color: #333;">' . $items['paid'] . '</span> руб.
-                                                            </div>';
-                        if ($items['summ'] != $items['paid']) {
-                            $itemTemp_str .= '
-                                                            <div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
-                                                                Осталось <a href="payment_add.php?invoice_id=' . $items['id'] . '" class="ahref">внести <i class="fa fa-thumb-tack" aria-hidden="true"></i></a><br>
-                                                                <span class="calculateInvoice" style="font-size: 13px">' . ($items['summ'] - $items['paid']) . '</span> руб.
-                                                            </div>';
-                        }
-
-                        $itemTemp_str .= '
-                                                        </div>
-                                                    </li>';
-
-                        if ($items['status'] != 9) {
-                            $itemAll_str .= $itemTemp_str;
-                        } else {
-                            $itemClose_str .= $itemTemp_str;
-                        }
-                    }
-
-                    if ($minimal) {
-
-                        $rezult_count++;
-
-                        $rezult .= '
-                                                            <div class="cellsBlockHover" style=" border: 1px solid rgba(165, 158, 158, 0.92); box-shadow: -2px 2px 9px 1px rgba(67, 160, 255, 0.36); margin-top: 1px; position: relative;">
-                                                                <a href="invoice.php?id=' . $items['id'] . '" class="ahref">
-                                                                    <div>
-                                                                        <div style="display: inline-block; vertical-align: middle; font-size: 120%; margin: 1px; padding: 2px; font-weight: bold; font-style: italic;">
-                                                                            <i class="fa fa-file-o" aria-hidden="true" style="background-color: #FFF; text-shadow: none;"></i>
-                                                                        </div>
-                                                                        <div style="display: inline-block; vertical-align: middle;">
-                                                                            <i>#' . $items['id'] . '</i> <span style="font-size: 80%;"><!--от ' . date('d.m.y', strtotime($items['create_time'])) . '--></span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div style="margin: 3px;">';
-
-                        $rezult .= $itemPercentCats_str;
-
-                        $rezult .= '
-                                                                    </div>
-                                                                    <div>
-                                                                        <div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
-                                                                            <span class="calculateInvoice" style="font-size: 11px">' . $items['summ'] . '</span> руб.
-                                                                        </div>';
-                        if ($items['summins'] != 0) {
-                            $rezult .= '
-                                                                        <div style="border: 1px dotted #AAA; margin: 2px 2px; padding: 1px 3px; font-size: 10px">
-                                                                            Страховка:<br>
-                                                                            <span class="calculateInsInvoice" style="font-size: 11px">' . $items['summins'] . '</span> руб.
-                                                                        </div>';
-                        }
-                        $rezult .= '
-                                                                    </div>
-            
-                                                                </a>
-                                                                <span style="position: absolute; top: 2px; right: 3px;">' . $paid_mark . ' ' . $status_mark . ' ' . $calculate_mark . '</span>
-                                                            </div>';
-                    }
-                }
-            }
-
-
-            $rezult .= $itemAll_str;
-            if ($show_deleted && !$minimal){
-                $rezult .= $itemClose_str;
-            }
-
-            return array('data' => $rezult, 'count' => $rezult_count);
-
-        }else{
-            if ($show_absent) {
-                $rezult .= '<i style="font-size: 80%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</i>';
-            }
-
-            return array('data' => $rezult, 'count' => 1);
-        }
-    }*/
 
 	function prepareDrawZapisDay($zapis, $start, $end, $worker_id, $filials_j, $filial_id, $kab, $year, $month, $day, $type, $edit_options, $upr_edit, $admin_edit, $stom_edit, $cosm_edit, $finance_edit){
 		//var_dump($zapis);

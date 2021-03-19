@@ -73,7 +73,6 @@ if ($enter_ok){
                         <div class="nav">
                             <a href="material_costs_test.php?filial_id='.$filial_id.'" class="b">Расходы на материалы</a>
                             <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
-                            <a href="fl_main_report2.php?filial_id='.$filial_id.'" class="b">Финальный отчёт</a>
                         </div>
                         <h2>Добавить расходы на метериалы';
 
