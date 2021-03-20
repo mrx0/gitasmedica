@@ -4104,6 +4104,9 @@
 						$status_mark = '<i class="fa fa-check-circle-o" aria-hidden="true" style="color: darkgreen; font-size: 110%;" title="Работа закрыта"></i>';
 					}
 
+					$calculate_mark = '<i class="fa fa-file" aria-hidden="true" style="color: darkgreen; font-size: 100%;" title=""></i>';
+
+
 
 					$itemPercentCats_str = '';
 
