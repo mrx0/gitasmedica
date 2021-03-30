@@ -51,7 +51,8 @@
 			<script type="text/javascript" src="js/common1.js"></script>
 
 			<script src="js/utils.js" type="text/javascript"></script>
-			<script src="js/Chart.js" type="text/javascript"></script>
+			<script src="js/moment.min.js" type="text/javascript"></script>
+			<script src="js/chart.js" type="text/javascript"></script>
 			<!--<script src="js/chart2.js" type="text/javascript"></script>-->
 
 			<script src="js/tooth_status.js" type="text/javascript"></script>

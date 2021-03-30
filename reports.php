@@ -309,7 +309,13 @@
             if (($finances['see_all'] == 1) || $god_mode) {
                 echo '
 						<ul class="reportBlock" style="">
-								<h1>Складской учёт [ТЕСТ]</h1>';
+								<h1>Учёт</h1>';
+
+
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="reportLamps.php" class="b3" style="width: 270px;">Отчет по лампам</a>
+							</li>';
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
