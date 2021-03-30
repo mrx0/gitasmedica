@@ -99,7 +99,7 @@
         return sign + ch_first + ch_rest + ch_last;
     }
 
-	//
+	//Задаёт цвет в зависимости от заполнения от 0 до 100% данных (от красного к зеленому)
     function Colorize (data, alpha){
 		//console.log(data);
 		//console.log(typeof (data));
@@ -131,6 +131,17 @@
 
         return ' rgba('+red+', '+green+', 0, '+alpha+')';
     }
+
+    //Рандомный случайный цвет
+    function randColor() {
+        let r = Math.floor(Math.random() * (256)),
+            g = Math.floor(Math.random() * (256)),
+            b = Math.floor(Math.random() * (256)),
+            color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+
+        return color;
+    }
+
 
     //Функция для создания бланка платежки с QR кодом в формате PDF
     function createPayBlankPdfQRCode(){
@@ -15546,6 +15557,124 @@
             }
         })
 
+    }
+
+    //Функция получения данных по лампам
+    function reportLamps() {
+
+        let link = "reportLamps_f.php";
+
+        let reqData = {
+            month_start: $("#month_start").val(),
+            year_start: $("#year_start").val(),
+            month_end: $("#month_end").val(),
+            year_end: $("#year_end").val(),
+            filial_id: $("#SelectFilial").val(),
+        }
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                $('#res_table_tmpl').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                // console.log(res);
+                // console.log(res.query);
+
+                if (res.result == "success") {
+                    // console.log(res.data);
+
+                    //очищаем
+                    $("#res_table_tmpl").html('');
+                    //помещаем
+                    $("#res_table_tmpl").append('<div style="padding: 2px; width: 75%; background-color: azure; border: 1px solid #CCC; margin-bottom: 5px;"><canvas id="canvas" height="300" width="700" style="background-color: white; border: 1px solid #CCC;"></canvas></div>');
+
+                    //заполняем данные
+                    let color, lamp_datas = [];
+
+                    for (lamp_id in res.data_count) {
+                        var temp_lamp_datas = {};
+
+                        color = randColor();
+
+                        temp_lamp_datas['label'] = 'Какая-то лампа '+lamp_id;
+                        temp_lamp_datas['backgroundColor'] = color;
+                        temp_lamp_datas['borderColor'] = color;
+                        temp_lamp_datas['fill'] = false;
+                        temp_lamp_datas['data'] = [];
+
+                        res.data_count[lamp_id].forEach(function(data){
+                            // console.log(data['x']);
+                            // console.log(data['y']);
+
+                            temp_lamp_datas['data'].push({'x': data['x'], 'y': data['y']})
+                        })
+
+                        lamp_datas.push(temp_lamp_datas);
+                    }
+                    //console.log(lamp_datas);
+
+
+                    let config = {
+                        type: 'line',
+                        data: {
+                            // labels: [ // Date Objects
+                            //     '2021-03-01',
+                            //     '2021-03-05',
+                            //     '2021-03-10',
+                            //     '2021-03-12',
+                            //     '2021-03-15',
+                            //     '2021-03-25',
+                            //     '2021-03-30'
+                            // ],
+                            datasets: lamp_datas,
+                        },
+                        options: {
+                            title: {
+                                text: 'Отчёт'
+                            },
+                            scales: {
+                                xAxes: [{
+                                    type: 'time',
+                                    /*time: {
+                                        parser: timeFormat,
+                                        // round: 'day'
+                                        tooltipFormat: 'll HH:mm'
+                                    },*/
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Дата'
+                                    }
+                                }],
+                                yAxes: [{
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Значение'
+                                    }
+                                }]
+                            },
+                        }
+                    };
+                    //console.log(config);
+
+                    //Рисуем
+                    let ctx = document.getElementById('canvas').getContext('2d');
+                    window.myLine = new Chart(ctx, config);
+
+
+
+                } else {
+                    //--
+                    $('#res_table_tmpl').html(res.data);
+                }
+            }
+        })
     }
 
 
