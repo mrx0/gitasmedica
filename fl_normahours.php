@@ -1,7 +1,7 @@
 <?php
 
 //fl_normahours.php
-//
+//Нормы часов
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -222,7 +222,7 @@
 					echo '
 							<li class="cellsBlock2 cellsBlockHover" style="font-weight: bold; font-size: 11px;'.$bgcolor.'">
 								<div class="cellPriority"></div>
-								<a href="fl_percent_cat.php?id='.$normahours_j[$i]['id'].'" class="cellName ahref 4filter" style="text-align: left; width: 180px; min-width: 180px;" id="4filter">'.$permissions_j[$normahours_j[$i]['type']].'</a>';
+								<a href="normahours_item.php?id='.$normahours_j[$i]['id'].'" class="cellName ahref 4filter" style="text-align: left; width: 180px; min-width: 180px;" id="4filter">'.$permissions_j[$normahours_j[$i]['type']].'</a>';
 //                    if ($normahours_j[$i]['summ_special'] > 0){
 //                        echo '
 //                                <div class="cellTime" style="text-align: center">-</div>
