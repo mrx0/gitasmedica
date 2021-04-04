@@ -15698,7 +15698,7 @@
 
                 if (res.result == "success") {
                     // console.log(res.data_count);
-                    console.log(res.spr_lamps_j);
+                    // console.log(res.spr_lamps_j);
 
                     //очищаем
                     $("#res_table_tmpl").html('');
