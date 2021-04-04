@@ -15697,7 +15697,8 @@
                 // console.log(res.query);
 
                 if (res.result == "success") {
-                    // console.log(res.data);
+                    // console.log(res.data_count);
+                    // console.log(res.spr_lamps_j);
 
                     //очищаем
                     $("#res_table_tmpl").html('');
@@ -15712,7 +15713,8 @@
 
                         color = randColor2();
 
-                        temp_lamp_datas['label'] = res.spr_lamps_j[lamp_id].descr;
+                        temp_lamp_datas['label'] = res.spr_lamps_j[lamp_id];
+                        // console.log(res.spr_lamps_j[lamp_id]);
                         temp_lamp_datas['backgroundColor'] = color;
                         temp_lamp_datas['borderColor'] = color;
                         temp_lamp_datas['fill'] = false;
