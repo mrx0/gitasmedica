@@ -2195,7 +2195,7 @@
                 personal_id: $('#personal_id').val(),
                 cat_id: id
             };
-            console.log(reqData);
+            // console.log(reqData);
 
             // убираем класс ошибок с инпутов
             $("input").each(function () {
@@ -2264,6 +2264,71 @@
                     }
                 }
             })
+        }
+    }
+
+    //Редактируем норму часов
+    function Ajax_normahours_add(id, mode){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        let link = "fl_normahours_add_f.php";
+
+        if (mode == 'edit'){
+            link = "fl_normahours_edit_f.php";
+        }
+		//console.log(link);
+
+        if ($('#norma_hours').val() == 0) {
+            $("#norma_hours_error").html('<span style="color: red">В этом поле ошибка</span>');
+            $("#norma_hours_error").show();
+        }else{
+
+            let reqData = {
+                count: $('#norma_hours').val(),
+                norma_id: id
+            };
+            // console.log(reqData);
+
+
+            // убираем класс ошибок с инпутов
+            $("input").each(function () {
+                $(this).removeClass("error_input");
+            });
+            // прячем текст ошибок
+            $(".error").hide();
+
+            //проверка данных на валидность
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: reqData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(data.data);
+
+                    if (res.result == 'success') {
+                        $('#data').html(res.data);
+
+                        setTimeout(function () {
+                            window.location.href = 'normahours_item.php?id='+id;
+                        }, 100);
+                    } else {
+                        //console.log('error');
+                        $('#errror').html(res.data);
+                        //$('#errrror').html('');
+                    }
+                }
+            });
         }
     }
 

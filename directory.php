@@ -28,6 +28,10 @@
 
                 echo '<a href="fl_taxes.php" class="b3" style="width: 230px;" title="Налоги">Налоги</a>';
 
+//                if (($_SESSION['permissions'] == 3) || $god_mode) {
+                    echo '<a href="fl_normahours.php" class="b3" style="width: 230px;" title="Нормы часов">Нормы часов</a>';
+//                }
+
                 echo '<a href="fl_salaries.php" class="b3" style="width: 230px;" title="Оклады сотрудников">Оклады сотрудников</a>';
 
                 echo '<a href="fl_salaries_category.php" class="b3" style="width: 230px;" title="Оклады по должностям">Оклады по должностям</a>';

@@ -1016,6 +1016,97 @@
         }
     }
 
+
+    //Для изменений в нормах часов персональных
+    let changePersonalNormaHours_elems = document.getElementsByClassName("changePersonalNormaHours"), newInputNormaHours;
+    //console.log(elems);
+
+    if (changePersonalNormaHours_elems.length > 0) {
+        for (let i = 0; i < changePersonalNormaHours_elems.length; i++) {
+
+            let el = changePersonalNormaHours_elems[i];
+
+            el.addEventListener("click", function () {
+                let workerID = this.getAttribute("worker_id");
+                let normaID = this.getAttribute("norma_id");
+                // let typeID = this.getAttribute("type_id");
+
+                let thisVal = this.innerHTML;
+                let newVal = thisVal;
+
+                let inputs = this.getElementsByTagName("input");
+                if (inputs.length > 0) return;
+                if (!newInputNormaHours) {
+
+                    newInputNormaHours = document.createElement("input");
+                    newInputNormaHours.type = "text";
+                    newInputNormaHours.maxLength = 5;
+                    newInputNormaHours.setAttribute("size", 20);
+                    newInputNormaHours.style.width = "40px";
+                    newInputNormaHours.addEventListener("blur", function () {
+
+                        workerID = newInputNormaHours.parentNode.getAttribute("worker_id");
+                        normaID = newInputNormaHours.parentNode.getAttribute("norma_id");
+                        // typeID = newInputNormaHours.parentNode.getAttribute("type_id");
+
+                        //Новые данные
+                        if ((newInputNormaHours.value == "") || (isNaN(newInputNormaHours.value)) || (newInputNormaHours.value < 0) || (isNaN(parseInt(newInputNormaHours.value, 10)))) {
+                            newInputNormaHours.parentNode.innerHTML = thisVal;
+                            newVal = thisVal;
+                        } else {
+                            newInputNormaHours.parentNode.innerHTML = parseInt(newInputNormaHours.value, 10);
+                            newVal = parseInt(newInputNormaHours.value, 10);
+                        }
+
+                        if (Number(thisVal) != Number(newVal)) {
+
+                            $.ajax({
+                                url: "fl_change_personal_norma_hours_f.php",
+                                global: false,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: {
+                                    worker_id: workerID,
+                                    norma_id: normaID,
+                                    //type: typeID,
+                                    val: newVal
+                                },
+                                cache: false,
+                                beforeSend: function () {
+                                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                                },
+                                // действие, при ответе с сервера
+                                success: function (res) {
+                                    if (res.result == "success") {
+                                        //console.log(data);
+                                        $('#infoDiv').html(res.data);
+                                        $('#infoDiv').show();
+                                        setTimeout(function () {
+                                            $('#infoDiv').hide('slow');
+                                            $('#infoDiv').html();
+                                        }, 1000);
+
+                                        //location.reload();
+                                    }
+
+                                }
+                            });
+                        }
+                    }, false);
+                }
+
+                //newInputNormaHours.value = this.firstChild.innerHTML;
+                newInputNormaHours.value = thisVal;
+                this.innerHTML = "";
+                //this.appendChild(buttonDiv);
+                this.appendChild(newInputNormaHours);
+                //newInputNormaHours.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+                newInputNormaHours.focus();
+                newInputNormaHours.select();
+            }.bind(el), false);
+        }
+    }
+
     //Функция для поочередного вывода на экран табелей для печати
     function fl_printCheckedWorkersTabels (){
         //console.log (calcIDForTabelINarr());
@@ -6427,7 +6518,7 @@
 
     //Редактирование налога / добавление новой строчки
     //Для изменений в процентах персональных
-    var changeTax_elems = document.getElementsByClassName("changeCurrentTax"), newInput;
+    var changeTax_elems = document.getElementsByClassName("changeCurrentTax"), newInputTax;
     //console.log(elems);
 
     if (changeTax_elems.length > 0) {
@@ -6453,7 +6544,7 @@
 
                 var inputs = this.getElementsByTagName("input");
                 if (inputs.length > 0) return;
-                if (!newInput) {
+                if (!newInputTax) {
 
                     /*buttonDiv = document.createElement("div");
                      //buttonDiv.innerHTML = '<i class="fa fa-check" aria-hidden="true" title="Применить" style="margin-right: 4px;"></i> <i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
@@ -6469,17 +6560,17 @@
 
                      buttonDiv.id = "changePersonalPercentCatdefault";*/
 
-                    newInput = document.createElement("input");
-                    newInput.type = "text";
-                    newInput.maxLength = 10;
-                    newInput.setAttribute("size", 20);
-                    newInput.style.width = "50px";
-                    newInput.addEventListener("blur", function () {
-                        //console.log(newInput.parentNode.getAttribute("worker_id"));
+                    newInputTax = document.createElement("input");
+                    newInputTax.type = "text";
+                    newInputTax.maxLength = 10;
+                    newInputTax.setAttribute("size", 20);
+                    newInputTax.style.width = "50px";
+                    newInputTax.addEventListener("blur", function () {
+                        //console.log(newInputTax.parentNode.getAttribute("worker_id"));
 
-                        workerID = newInput.parentNode.getAttribute("worker_id");
-                        //catID = newInput.parentNode.getAttribute("cat_id");
-                        //typeID = newInput.parentNode.getAttribute("type_id");
+                        workerID = newInputTax.parentNode.getAttribute("worker_id");
+                        //catID = newInputTax.parentNode.getAttribute("cat_id");
+                        //typeID = newInputTax.parentNode.getAttribute("type_id");
 
                         //Попытка обработать клика на кнопке для сброса на значения по умолчанию - провалилась, всегда сбрасывается на по умолчанию
                         //var changePersonalPercentCatdefault = document.getElementById("changePersonalPercentCatdefault");
@@ -6488,14 +6579,14 @@
                         //changePersonalPercentCatdefault.addEventListener("click", fl_changePersonalPercentCatdefault(workerID, catID, typeID), false);
 
                         //Новые данные
-                        //if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (newInput.value > 100) || (isNaN(parseInt(newInput.value, 10)))) {
-                        if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (isNaN(parseInt(newInput.value, 10)))) {
-                            //newInput.parentNode.innerHTML = 0;
-                            newInput.parentNode.innerHTML = thisVal;
+                        //if ((newInputTax.value == "") || (isNaN(newInputTax.value)) || (newInputTax.value < 0) || (newInputTax.value > 100) || (isNaN(parseInt(newInputTax.value, 10)))) {
+                        if ((newInputTax.value == "") || (isNaN(newInputTax.value)) || (newInputTax.value < 0) || (isNaN(parseInt(newInputTax.value, 10)))) {
+                            //newInputTax.parentNode.innerHTML = 0;
+                            newInputTax.parentNode.innerHTML = thisVal;
                             newVal = thisVal;
                         } else {
-                            newInput.parentNode.innerHTML = number_format(parseFloat(newInput.value, 10), 2, '.', '');
-                            newVal = number_format(parseFloat(newInput.value, 10), 2, '.', '');
+                            newInputTax.parentNode.innerHTML = number_format(parseFloat(newInputTax.value, 10), 2, '.', '');
+                            newVal = number_format(parseFloat(newInputTax.value, 10), 2, '.', '');
                         }
                         //console.log(this);
                         //console.log(workerID);
@@ -6541,14 +6632,14 @@
                     }, false);
                 }
 
-                //newInput.value = this.firstChild.innerHTML;
-                newInput.value = thisVal;
+                //newInputTax.value = this.firstChild.innerHTML;
+                newInputTax.value = thisVal;
                 this.innerHTML = "";
                 //this.appendChild(buttonDiv);
-                this.appendChild(newInput);
-                //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
-                newInput.focus();
-                newInput.select();
+                this.appendChild(newInputTax);
+                //newInputTax.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+                newInputTax.focus();
+                newInputTax.select();
             }.bind(el), false);
         }
     }
@@ -6558,7 +6649,7 @@
     });*/
 
     //Редактирование надбавки / добавление новой строчки
-    var changeSur_elems = document.getElementsByClassName("changeCurrentSur"), newInput;
+    var changeSur_elems = document.getElementsByClassName("changeCurrentSur"), newInputSur;
     //console.log(elems);
 
     if (changeSur_elems.length > 0) {
@@ -6584,7 +6675,7 @@
 
                 var inputs = this.getElementsByTagName("input");
                 if (inputs.length > 0) return;
-                if (!newInput) {
+                if (!newInputSur) {
 
                     /*buttonDiv = document.createElement("div");
                      //buttonDiv.innerHTML = '<i class="fa fa-check" aria-hidden="true" title="Применить" style="margin-right: 4px;"></i> <i class="fa fa-refresh" aria-hidden="true" title="По умолчанию" style="color: red;"></i>';
@@ -6600,17 +6691,17 @@
 
                      buttonDiv.id = "changePersonalPercentCatdefault";*/
 
-                    newInput = document.createElement("input");
-                    newInput.type = "text";
-                    newInput.maxLength = 10;
-                    newInput.setAttribute("size", 20);
-                    newInput.style.width = "50px";
-                    newInput.addEventListener("blur", function () {
-                        //console.log(newInput.parentNode.getAttribute("worker_id"));
+                    newInputSur = document.createElement("input");
+                    newInputSur.type = "text";
+                    newInputSur.maxLength = 10;
+                    newInputSur.setAttribute("size", 20);
+                    newInputSur.style.width = "50px";
+                    newInputSur.addEventListener("blur", function () {
+                        //console.log(newInputSur.parentNode.getAttribute("worker_id"));
 
-                        workerID = newInput.parentNode.getAttribute("worker_id");
-                        //catID = newInput.parentNode.getAttribute("cat_id");
-                        //typeID = newInput.parentNode.getAttribute("type_id");
+                        workerID = newInputSur.parentNode.getAttribute("worker_id");
+                        //catID = newInputSur.parentNode.getAttribute("cat_id");
+                        //typeID = newInputSur.parentNode.getAttribute("type_id");
 
                         //Попытка обработать клика на кнопке для сброса на значения по умолчанию - провалилась, всегда сбрасывается на по умолчанию
                         //var changePersonalPercentCatdefault = document.getElementById("changePersonalPercentCatdefault");
@@ -6619,14 +6710,14 @@
                         //changePersonalPercentCatdefault.addEventListener("click", fl_changePersonalPercentCatdefault(workerID, catID, typeID), false);
 
                         //Новые данные
-                        //if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (newInput.value > 100) || (isNaN(parseInt(newInput.value, 10)))) {
-                        if ((newInput.value == "") || (isNaN(newInput.value)) || (newInput.value < 0) || (isNaN(parseInt(newInput.value, 10)))) {
-                            //newInput.parentNode.innerHTML = 0;
-                            newInput.parentNode.innerHTML = thisVal;
+                        //if ((newInputSur.value == "") || (isNaN(newInputSur.value)) || (newInputSur.value < 0) || (newInputSur.value > 100) || (isNaN(parseInt(newInputSur.value, 10)))) {
+                        if ((newInputSur.value == "") || (isNaN(newInputSur.value)) || (newInputSur.value < 0) || (isNaN(parseInt(newInputSur.value, 10)))) {
+                            //newInputSur.parentNode.innerHTML = 0;
+                            newInputSur.parentNode.innerHTML = thisVal;
                             newVal = thisVal;
                         } else {
-                            newInput.parentNode.innerHTML = number_format(parseFloat(newInput.value, 10), 2, '.', '');
-                            newVal = number_format(parseFloat(newInput.value, 10), 2, '.', '');
+                            newInputSur.parentNode.innerHTML = number_format(parseFloat(newInputSur.value, 10), 2, '.', '');
+                            newVal = number_format(parseFloat(newInputSur.value, 10), 2, '.', '');
                         }
                         //console.log(this);
                         //console.log(workerID);
@@ -6672,14 +6763,14 @@
                     }, false);
                 }
 
-                //newInput.value = this.firstChild.innerHTML;
-                newInput.value = thisVal;
+                //newInputSur.value = this.firstChild.innerHTML;
+                newInputSur.value = thisVal;
                 this.innerHTML = "";
                 //this.appendChild(buttonDiv);
-                this.appendChild(newInput);
-                //newInput.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
-                newInput.focus();
-                newInput.select();
+                this.appendChild(newInputSur);
+                //newInputSur.innerHTML = ('<i class="fa fa-check" aria-hidden="true"></i>');
+                newInputSur.focus();
+                newInputSur.select();
             }.bind(el), false);
         }
     }
