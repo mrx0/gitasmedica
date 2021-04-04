@@ -75,7 +75,14 @@
                         }
                     }
 
-                    echo json_encode(array('result' => 'success',  'spr_lamps_j' => $spr_lamps_j, 'data_count' => $res));
+                    //Чуть-чуть переделам массим с лампами (справочник)
+                    $spr_lamps_res = array();
+
+                    foreach ($spr_lamps_j as $lamp_item){
+                        $spr_lamps_res[$lamp_item['id']] = $lamp_item['descr'];
+                    }
+
+                    echo json_encode(array('result' => 'success',  'spr_lamps_j' => $spr_lamps_res, 'data_count' => $res));
                 }else{
                     echo json_encode(array('result' => 'error', 'data' => '<span style="color: red;">Ничего не найдено.</span>'));
                 }
