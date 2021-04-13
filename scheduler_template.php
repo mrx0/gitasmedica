@@ -174,26 +174,35 @@
 								<span id="manageMessage" style="font-size: 120%; color: #7D7D7D; margin-bottom: 5px;">', $displayBlock ? 'Управление <span style=\'color: green;\'>включено</span>' : 'Управление <span style=\'color: red;\'>выключено</span>' ,'</span> <i class="fa fa-cog" title="Настройки"></i>
 							</div>
 							<div id="div1" style="', $displayBlock ? 'display: block;' : '' ,'  width: 400px; margin-bottom: 10px; border: 1px dotted #BFBCB5; padding: 20px 10px 10px; background-color: #EEE;">
-								<div id="changeShedOptionsReq"></div>
+								<div id="changeShedOptionsReq"></div>';
+                if (empty($shedTemplate)){
+                    if ($_GET['filial'] > 0) {
+                        echo '
+                        <span style="color: red; font-size: 100%;"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 120%"></i> Шаблон пустой </span><br>
+							<input type="button" class="b" value="Создать пустую смену" onclick="if (iCanManage) Ajax_add_empty_shed(' . $type . ', ' . $_GET['filial'] . ')"> (открывает пустой шаблон)';
+                    }
+                }
+                if (!empty($shedTemplate)) {
+                    echo '
 								<div style="margin-bottom: 18px;">
 									Применить этот график на месяц ';
-				echo '
+                    echo '
 									<select name="SelectMonthShedOptions" id="SelectMonthShedOptions">';
 
-				foreach ($monthsName as $mNumber => $mName){
-					$selected = '';
-					if ((int)$mNumber == (int)date('m')+1){
-						$selected = 'selected';
-					}
-					echo '
-										<option value="'.$mNumber.'" '.$selected.'>'.$mName.'</option>';
-				}
-				echo '
+                    foreach ($monthsName as $mNumber => $mName) {
+                        $selected = '';
+                        if ((int)$mNumber == (int)date('m') + 1) {
+                            $selected = 'selected';
+                        }
+                        echo '
+										<option value="' . $mNumber . '" ' . $selected . '>' . $mName . '</option>';
+                    }
+                    echo '
 									</select>
 									год 
 									<select name="SelectYearShedOptions" id="SelectYearShedOptions">
-										<option value="'.date('Y').'" selected>'.date('Y').'</option>
-										<option value="'.(date('Y')+1).'">'.(date('Y')+1).'</option>
+										<option value="' . date('Y') . '" selected>' . date('Y') . '</option>
+										<option value="' . (date('Y') + 1) . '">' . (date('Y') + 1) . '</option>
 									</select>
 								</div>
 								<div style="margin-bottom: 18px;">
@@ -202,22 +211,24 @@
 								<div s  tyle="margin-bottom: 18px;">
                                     <span style="color: rgba(82, 81, 81, 0.93);">Выберите филиалы, которые хотите изменить</span><br><br>';
 
-                echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1"> Все<br>';
+                    echo '<input type="checkbox" id="fullAll" name="fullAll" class="fullType" value="1"> Все<br>';
 
-                if (!empty($filials_j)){
-                    foreach ($filials_j as $filials_j_data) {
-                        echo '<input type="checkbox" id="filial_'.$filials_j_data['id'].'" name="filials_chckd[]" filial_id="'.$filials_j_data['id'].'" class="fullType filialItem" value="'.$filials_j_data['id'].'"> '.$filials_j_data['name'].'<br>';
+                    if (!empty($filials_j)) {
+                        foreach ($filials_j as $filials_j_data) {
+                            echo '<input type="checkbox" id="filial_' . $filials_j_data['id'] . '" name="filials_chckd[]" filial_id="' . $filials_j_data['id'] . '" class="fullType filialItem" value="' . $filials_j_data['id'] . '"> ' . $filials_j_data['name'] . '<br>';
+                        }
                     }
-                }
 
 
-                echo '
+                    echo '
 				                </div>
 								<div style="margin-top: 10px; margin-bottom: 18px;">
 									Игнорировать существующий график <input type="checkbox" name="ignoreshed" id="ignoreshed" value="1">
 								</div>
-								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed('.$type.')">
-							</div>
+								<input type="button" class="b" value="Применить" onclick="if (iCanManage) Ajax_change_shed(' . $type . ')">
+							</div>';
+                }
+                echo '
 						</li>';
 			}
 			echo '

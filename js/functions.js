@@ -3056,6 +3056,35 @@
 		})
 	};
 
+	//Создаём пустую смену, чтобы открывался шаблона графика плана
+	function Ajax_add_empty_shed(type_id, filial_id) {
+
+        let link = "add_empty_shed_f.php";
+
+        let reqData = {
+            type_id: type_id,
+            filial_id: filial_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                location.reload()
+            }
+        });
+	};
+
 	//
 	function iWantThisDate(path){
 
