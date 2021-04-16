@@ -8,7 +8,7 @@
 
 	if ($enter_ok){
 		require_once 'header_tags.php';
-		//var_dump($stom);
+//		var_dump($_SESSION);
 
         //!!! Исправить
         //чтобы не пускало врачей в общую запись
@@ -22,6 +22,9 @@
 			//var_dump ($offices);
 
             $filials_j = getAllFilials(true, false, false);
+            if ($scheduler['see_all'] == 1){
+                $filials_j = getAllFilials(true, false, true);
+            }
             //var_dump($filials_j);
 
             require 'variables.php';
