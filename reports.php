@@ -118,7 +118,7 @@
 
             echo '
 						</ul>';
-            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
+            if (($finances['see_all'] == 1) /*|| ($finances['see_own'] == 1)*/ || $god_mode) {
 
                 echo '
 						<ul class="reportBlock" style="">
@@ -194,7 +194,7 @@
 						</ul>';
             }
 
-            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
+            if (($finances['see_all'] == 1) /*|| ($finances['see_own'] == 1)*/ || $god_mode) {
                 echo '
 						<ul class="reportBlock" style="">
                             <h1>Страховые</h1>';
