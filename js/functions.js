@@ -2427,6 +2427,75 @@
         })
     }
 
+    //Добавим тип абонемента
+    function Ajax_abon_type_add(id, mode, reqData){
+
+        let link = "abon_type_add_f.php";
+
+        if (mode == 'edit'){
+            link = "abon_type_edit_f.php";
+        }
+
+        reqData['abon_type_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+                if(data.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(data.data);
+
+                    setTimeout(function() {
+                        window.location.href = "abonement_add.php";
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
+	//!!! тут очередная "правильная" ф-ция
+    //Промежуточная функция добавления/редактирования типа абонемента
+    function showAbonTypeAdd(id, mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if (($('#name').val().length == 0) || ($('#min_count').val().length == 0) || ($('#exp_days').val().length == 0) || ($('#summ').val().length == 0)){
+            $('#errror').html('<div class="query_neok">Ошибка в одном из полей. Проверьте данные.</div>');
+        }else {
+            if (isNaN($('#min_count').val()) || isNaN($('#exp_days').val()) || isNaN($('#summ').val())){
+                $('#errror').html('<div class="query_neok">Ошибка в одном из полей. Проверьте данные.</div>');
+            }else {
+
+                let reqData = {
+                    name: $('#name').val(),
+                    min_count: $('#min_count').val(),
+                    exp_days: $('#exp_days').val(),
+                    summ: $('#summ').val()
+                };
+                //console.log(certData);
+
+                Ajax_abon_type_add(id, mode, reqData);
+            }
+        }
+    }
+
 	//!!! тут очередная "правильная" ф-ция
     //Промежуточная функция добавления/редактирования сертификата именного
     function showCertNameAdd(id, mode){
