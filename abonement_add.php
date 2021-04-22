@@ -54,7 +54,15 @@ if ($enter_ok){
 						</div>
 						
 						<div class="cellsBlock2" style="width: auto;">
-							<div class="cellLeft">Тип абонемента</div>
+							<div class="cellLeft">
+							    Тип абонемента';
+    if (($finances['see_all'] == 1) || $god_mode){
+        echo '
+							    <a href="abonement_type_add.php" class="b4">Добавить тип</a>';
+    }
+
+    echo '
+							</div>
 							<div class="cellRight">';
     if (!empty($abon_types_j)){
         echo '<table style="font-size: 80%;">
