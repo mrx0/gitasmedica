@@ -85,7 +85,7 @@ if ($enter_ok){
                         <i class="fa fa-cog" title="Настройки"></i>
                     </td>';
         }
-        
+
         echo '
                 </tr>';
         foreach ($abon_types_j as $ab_type){
