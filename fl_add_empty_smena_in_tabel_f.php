@@ -17,7 +17,7 @@
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
 
-                $price = 250;
+                $empty_smena_price = 500;
 
                 $rez = array();
 
@@ -28,10 +28,10 @@
                 $query = "INSERT INTO `fl_journal_tabel_emptysmens` 
                                 (`tabel_id`, `price`, `count`, `summ`, `create_time`, `create_person`)
                             VALUES 
-                                ('{$_POST['tabel_id']}', '{$price}', '{$_POST['count']}', '". $price * $_POST['count'] ."', '{$time}', '{$_SESSION['id']}')
+                                ('{$_POST['tabel_id']}', '{$empty_smena_price}', '{$_POST['count']}', '". $empty_smena_price * $_POST['count'] ."', '{$time}', '{$_SESSION['id']}')
                             ON DUPLICATE KEY UPDATE
 					            `count` = '{$_POST['count']}',
-					            `summ` = '". $price * $_POST['count'] ."';";
+					            `summ` = '". $empty_smena_price * $_POST['count'] ."';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
