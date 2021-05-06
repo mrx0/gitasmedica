@@ -1749,6 +1749,7 @@
 			})
 		}
 	};
+
 	//Перемещение записи другому
 	function Ajax_edit_zapis_change_client(zapis_id, client_id) {
 
@@ -1782,6 +1783,7 @@
 			})
 		}
 	};
+
 	//Редактировать ФИО пациента
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
@@ -1916,6 +1918,7 @@
 			}
 		})
 	};
+
 	//Добавить лабораторию
 	function Ajax_add_labor(session_id) {
 
@@ -2509,6 +2512,42 @@
             }
         });
     }
+
+    //Удаление персональной нормы часов
+    function Ajax_personal_norma_hours_delete(id) {
+
+        let rys = false;
+
+        rys = confirm("Вы собираетесь удалить норму часов. \nЭто невозможно будет исправить \n\nВы уверены?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "personal_norma_hours_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log(res);
+
+                    $("#errrror").html(res.data);
+                    if (res.result == 'success') {
+                        setTimeout(function () {
+                            window.location.replace('fl_normahours_personal.php');
+                            //console.log('client.php?id='+id);
+                        }, 200);
+                    }
+                }
+            })
+        }
+    };
 
 	//!!! тут очередная "правильная" ф-ция
     //Промежуточная функция добавления/редактирования типа абонемента

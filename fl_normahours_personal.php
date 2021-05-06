@@ -205,7 +205,7 @@
                     if (($_SESSION['permissions'] == 3) || $god_mode) {
                         echo '
 								<div class="cellName" style="text-align: center; width: 40px; min-width: 40px; padding: 4px 0 0;">
-								    <a href="" class="info" style="font-size: 110%;" title="Удалить"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+								    <span class="info" style="font-size: 110%; cursor: pointer;" title="Удалить" onclick="Ajax_personal_norma_hours_delete('.$worker['id'].');"><i class="fa fa-trash-o" aria-hidden="true"></i></span>
 								</div>';
                     }
 
