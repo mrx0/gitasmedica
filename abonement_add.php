@@ -78,10 +78,15 @@ if ($enter_ok){
                     </td>
                     <td style="text-align: center; border: 1px solid rgba(102, 102, 102, 0.38);">
                         Стоим. (руб.)
-                    </td>
-<!--                    <td>
-                        Стоим. 1 мин.
-                    </td>-->
+                    </td>';
+        if (($finances['see_all'] == 1) || $god_mode) {
+            echo '
+                    <td style="text-align: right; border: 1px solid rgba(102, 102, 102, 0.38);">
+                        <i class="fa fa-cog" title="Настройки"></i>
+                    </td>';
+        }
+
+        echo '
                 </tr>';
         foreach ($abon_types_j as $ab_type){
             echo '
@@ -97,10 +102,14 @@ if ($enter_ok){
                     </td>
                     <td style="text-align: right; border: 1px solid rgba(102, 102, 102, 0.38);">
                         '.$ab_type['summ'].'
-                    </td>
-                    <!--<td>
-                        -
-                    </td>-->
+                    </td>';
+            if (($finances['see_all'] == 1) || $god_mode) {
+                echo '
+                    <td style="text-align: right; border: 1px solid rgba(102, 102, 102, 0.38);">
+                            <a href="abonement_type_edit.php?id=' . $ab_type['id'] . '" class="info" style="font-size: 110%;" title="Редактировать"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    </td>';
+            }
+            echo '
                 </tr>';
         }
         echo '</table>';

@@ -157,10 +157,12 @@
                     </div>
                     <div id="data" style="margin: 8px 0 0;">';
 
-            echo '
+            if (($_SESSION['permissions'] == 3) || $god_mode) {
+                echo '
                         <li class="cellsBlock" style="font-weight: bold; width: auto; text-align: right; margin-bottom: 10px;">
-                            <a href="add_new_norma_hours.php" class="b" style="">Добавить сотрудника и норму</a>
+                            <a href="add_new_norma_hours.php" class="b" style="">Добавить норму сотруднику</a>
                         </li>';
+            }
 
             if (!empty($workers_j)){
                 echo '
@@ -175,8 +177,17 @@
 								<div class="cellName" style="text-align: center; width: 210px; min-width: 210px; padding: 4px 0 0;">
 								    Норма
 								</div>';
+
+                if (($_SESSION['permissions'] == 3) || $god_mode) {
+                    echo '
+								<div class="cellName" style="text-align: center; width: 40px; min-width: 40px; padding: 4px 0 0;">
+								    <i class="fa fa-cog" title="Настройки"></i>
+								</div>';
+                }
+
                 echo '
 							</li>';
+
 
                 foreach ($workers_j as $worker){
 //                    var_dump($worker);
@@ -191,6 +202,12 @@
                                         <span class="changePersonalNormaHours cpp_1_'.$worker['worker_id'].'_'.$worker['id'].'" worker_id="'.$worker['worker_id'].'" norma_id="'.$worker['id'].'" type_id="1" style="cursor: pointer;">'.$worker['count'].'</span> часов                
                                     </div>
                                 </div>';
+                    if (($_SESSION['permissions'] == 3) || $god_mode) {
+                        echo '
+								<div class="cellName" style="text-align: center; width: 40px; min-width: 40px; padding: 4px 0 0;">
+								    <span class="info" style="font-size: 110%; cursor: pointer;" title="Удалить" onclick="Ajax_personal_norma_hours_delete('.$worker['id'].');"><i class="fa fa-trash-o" aria-hidden="true"></i></span>
+								</div>';
+                    }
 
                     echo '
 							</li>';

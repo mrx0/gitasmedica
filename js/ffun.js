@@ -2340,7 +2340,7 @@
                                             "height": "50%"
                                         })
                                         .append('<div style="margin: 10px;">Кол-во "пустых" смен: <span class="calculateInsInvoice">' + emptySmens + '</span></div>')
-                                        .append('<div style="margin: 10px;">Общая сумма: <span class="calculateInvoice">' + emptySmens * 250 + '</span> руб.</div>')
+                                        .append('<div style="margin: 10px;">Общая сумма: <span class="calculateInvoice">' + emptySmens * 500 + '</span> руб.</div>')
                                 )
                                 .append(
                                     $('<div/>')
