@@ -869,7 +869,8 @@
                         }
 
                         //Админы, ассистенты, санитарки, уборщицы, дворники
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)) {
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)
+                        || $spec_oklad_work) {
                             //Часы работника
                             $w_hours = 0;
                             $w_normaSmen = 0;
@@ -1114,8 +1115,9 @@
                         }
 
 
-                        //Админы, ассистенты, санитарки, уборщицы, дворники
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)) {
+                        //Админы, ассистенты, санитарки, уборщицы, дворники, особые отметки
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)
+                        || $spec_oklad_work) {
 
 //                            if ($tabel_j[0]['type'] == 11) {
 //                                !!! хотел тут рассчтитать нормы рабочих дней для прочее, но лень
@@ -1148,7 +1150,7 @@
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1); display: inline;">
                                                 (<span class="allMonthHours" style="font-size: 12px; /*font-weight: bold; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);*/">' . $w_percentHours . '</span>% от нормы ';
 
-                            if ($tabel_j[0]['type'] != 11) {
+                            if (($tabel_j[0]['type'] != 11) && !$spec_oklad_work) {
                                 echo $w_normaSmen . ' часов';
                             }
 
@@ -1349,6 +1351,11 @@
                             $summItog += $tabel_j[0]['summ_calc'];
                         }
                         //var_dump($summItog);
+
+                        // Если оклад с работой
+                        if ($spec_oklad_work){
+                            $summItog += $tabel_j[0]['per_from_salary'];
+                        }
 
                         //Коэффициенты +/-
                         if (($tabel_j[0]['k_plus'] != 0) || ($tabel_j[0]['k_minus'] != 0)){

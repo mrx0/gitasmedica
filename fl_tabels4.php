@@ -607,6 +607,7 @@
 //                                }
 
                         $w_normaHours = $work_days_norma_temp * $normaHours;
+                        //var_dump($w_normaHours);
 
                                 //Смены часы
                                 if (isset($hours_j[$worker_data['id']])) {
