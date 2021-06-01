@@ -581,8 +581,8 @@
                                 $normaHours = getNormaHours($worker_data['id']);
                                 //var_dump($normaHours);
 
-                                //Если тип сотрудника не соответствует текущему (для особых отметок)
-                                //!!! костыль, потому что сотрудник такой пока только ОДИН, потом переделеать по необходимости под все случаи
+                        //Если тип сотрудника не соответствует текущему (для особых отметок) - 202010602 не работает!!!
+                        //!!! костыль, потому что сотрудник такой пока только ОДИН, потом переделеать по необходимости под все случаи
 //                                if ($worker_data['permissions'] != $type) {
 //
 //                                    $work_days_norma_temp = 0;
@@ -603,10 +603,10 @@
 //                                    }
 //
 //                                }else{
-                                    $work_days_norma_temp = $work_days_norma;
+                        $work_days_norma_temp = $work_days_norma;
 //                                }
 
-                                $w_normaHours = $work_days_norma_temp * $normaHours;
+                        $w_normaHours = $work_days_norma_temp * $normaHours;
 
                                 //Смены часы
                                 if (isset($hours_j[$worker_data['id']])) {
