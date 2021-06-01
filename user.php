@@ -38,6 +38,7 @@
             //Отметки по дополнительным опциям
             $spec_prikaz8_checked = '';
             $spec_oklad_checked = '';
+            $spec_oklad_work_checked = '';
 
             $msql_cnnct = ConnectToDB ();
 
@@ -48,6 +49,7 @@
 
             $spec_prikaz8 = false;
             $spec_oklad = false;
+            $spec_oklad_work = false;
             $work_6days = false;
 
             if ($number != 0){
@@ -57,6 +59,9 @@
                 }
                 if ($arr['oklad'] == 1){
                     $spec_oklad = true;
+                }
+                if ($arr['oklad_work'] == 1){
+                    $spec_oklad_work = true;
                 }
                 if ($arr['work6days'] == 1){
                     $work_6days = true;
@@ -200,6 +205,13 @@
                 echo '
                     <div>
                         Оклад
+                    </div>';
+            }
+
+            if ($spec_oklad_work){
+                echo '
+                    <div>
+                        Оклад+работа
                     </div>';
             }
 

@@ -36,6 +36,7 @@
                 //Отметки по дополнительным опциям
                 $spec_prikaz8_checked = '';
                 $spec_oklad_checked = '';
+                $spec_oklad_work_checked = '';
                 $spec_work_6days_checked = '';
 
                 $msql_cnnct = ConnectToDB ();
@@ -52,6 +53,9 @@
                     }
                     if ($arr['oklad'] == 1){
                         $spec_oklad_checked = 'checked';
+                    }
+                    if ($arr['oklad_work'] == 1){
+                        $spec_oklad_work_checked = 'checked';
                     }
                     if ($arr['work6days'] == 1){
                         $spec_work_6days_checked = 'checked';
@@ -264,6 +268,9 @@
 										</div>
 										<div>
 										    <input type="checkbox" name="spec_oklad" value="1" '.$spec_oklad_checked.'> Оклад
+										</div>
+										<div>
+										    <input type="checkbox" name="spec_oklad_work" value="1" '.$spec_oklad_work_checked.'> Оклад+работа
 										</div>
 										<div>
 										    <input type="checkbox" name="spec_work_6days" value="1" '.$spec_work_6days_checked.'> 6 дней/нед.

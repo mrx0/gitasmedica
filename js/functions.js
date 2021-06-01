@@ -820,6 +820,10 @@
         if (spec_oklad === undefined){
             spec_oklad = 0;
         }
+        var spec_oklad_work = $("input[name=spec_oklad_work]:checked").val();
+        if (spec_oklad_work === undefined){
+            spec_oklad_work = 0;
+        }
 
         var spec_work_6days = $("input[name=spec_work_6days]:checked").val();
         if (spec_work_6days === undefined){
@@ -848,6 +852,7 @@
 
                     spec_prikaz8: spec_prikaz8,
                     spec_oklad: spec_oklad,
+                    spec_oklad_work: spec_oklad_work,
                     spec_work_6days: spec_work_6days
                 },
             cache: false,
