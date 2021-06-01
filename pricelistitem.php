@@ -91,6 +91,14 @@
                     echo '
                             <div id="data">';
 
+                    if ($rezult[0]['new'] == 1) {
+                        echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft"></div>
+                                    <div class="cellRight"><i style="color: red;">Новый прайс</i></div>
+                                </div>';
+                    }
+
                     echo '
                                 <div class="cellsBlock2">
                                     <div class="cellLeft">Код</div>

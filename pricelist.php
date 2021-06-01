@@ -52,6 +52,9 @@
 			
 			echo '
 				<header>
+                    <div class="nav">
+                        <a href="pricelist_new2.php" class="b">Новый прайс</a>
+                    </div>
 					<h1>Основной прайс</h1>
 						<div>
 							<span style="font-size: 80%; color: #AAA">Перейти к прайсу страховой</span><br>';

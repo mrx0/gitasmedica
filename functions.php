@@ -6300,6 +6300,120 @@ function showTreePrice2 ($level, $space, $type, $sel_id, $first, $last_level, $d
 }
 
 
+//для Теста нового прайса
+function showTreeNewPrice2 ($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $msql_cnnct){
+	//var_dump($first);
+
+	$price_rez = array();
+
+	$rez_str = '';
+
+	//определяем уровень для запроса
+	if ($level == NULL){
+		$parent_str = "`parent_id` = '0'";
+	}else{
+		$parent_str = "`parent_id` = ".$level;
+	}
+
+	//берем верхний уровень
+	$query = "SELECT * FROM `$dbtable` WHERE ".$parent_str;
+	//var_dump($query);
+
+	$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+	$number = mysqli_num_rows($res);
+
+	if ($number != 0){
+		while ($arr = mysqli_fetch_assoc($res)){
+			array_push($price_rez, $arr);
+		}
+	}
+	//var_dump($price_rez);
+
+	//Если первый проход
+	if ($first){
+		//var_dump($price_rez);
+
+		if ($type == 'list') {
+			$rez_str .= '	
+						<ol class="tree">
+						<li>
+							<label id="catPrice_0" class="droppable hover" onclick="getPriceItems (0, 0, 1000, false, true, 0); return;" cat_name=""><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
+						</li>';
+		}
+
+
+	}else{
+		if ($type == 'list') {
+			$rez_str .= '<ol class="tree2">';
+		}
+	}
+
+	if (!empty($price_rez)){
+		foreach ($price_rez as $price_rez_value){
+
+			if ($type == 'list'){
+
+				if ($price_rez_value['node_count'] > 0) {
+					$rez_str .= '	
+							<li>
+								<label id="catPrice_'.$price_rez_value['id'].'" class="draggable droppable hover" onclick="getPriceItems ('.$price_rez_value['id'].', 0, 1000, false, true, '.$price_rez_value['id'].'); return;" cat_name="' . $price_rez_value['name'] . '"><b>#' . $price_rez_value['id'] . '</b> ' . $price_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$price_rez_value['id'].'" checked />';
+
+					$rez_str .= showTreeNewPrice2($price_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+
+					$rez_str .= '	
+							</li>';
+
+				} else {
+					$rez_str .= '	
+							<li>
+								<label id="catPrice_'.$price_rez_value['id'].'" class="draggable droppable hover" onclick="getPriceItems ('.$price_rez_value['id'].', 0, 1000, false, true, '.$price_rez_value['id'].'); return;" cat_name="' . $price_rez_value['name'] . '"><b>#' . $price_rez_value['id'] . '</b> ' . $price_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$price_rez_value['id'].'" checked />';
+					$rez_str .= '	
+							</li>';
+				}
+			}
+
+			if ($type == 'select'){
+				//echo $space.$value['name'].'<br>';
+
+				$selected = '';
+				if ($price_rez_value['id'] == $sel_id){
+					$selected = ' selected';
+				}
+				$rez_str .= '<option value="'.$price_rez_value['id'].'" '.$selected.'>'.$space.$price_rez_value['name'].'</option>';
+
+				$space2 = $space. '...';
+				//$last_level2 = $last_level+1;
+
+				$rez_str .= showTreeNewPrice2($price_rez_value['id'], $space2, 'select', $sel_id, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+			}
+		}
+
+		if ($type == 'list') {
+			$rez_str .= '	
+					</ol>';
+		}
+
+
+	}
+
+	if ($first){
+		if ($type == 'list') {
+			$rez_str .= '	
+					</ol>';
+		}
+	}
+
+
+
+	return $rez_str;
+}
+
+
+
+
+
+
 
 
 ?>

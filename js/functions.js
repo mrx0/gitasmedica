@@ -15994,5 +15994,124 @@
     }
 
 
+    //!!! Новый как бы прайс (тест)
+
+    //Загрузка категорий прайса
+    function getPriceCategories (){
+
+        var link = "get_price_categories_f.php";
+
+        var reqData = {
+            type: 5
+        };
+        //console.log(reqData);
+
+        //Если надо выделить группу
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    $("#sclad_cat_rezult").html(res.data);
+
+
+                    //!!! Правильный пример контекстного меню (правильный? точно? ну пока работает)
+
+                    /*                    var menuArea = document.querySelector(".tree");
+
+                                        //if(menuArea){
+                                            menuArea.addEventListener( "contextmenu", event => {
+                                                event.preventDefault();
+
+                                                contextMenuShow(0, 0, event, "sclad_cat");
+
+                                            }, false);
+                                        //}*/
+
+                }
+            }
+        })
+    }
+
+    //Загрузка элементов прайса
+    function getPriceItems (cat_id, start, limit, free=true, pick=false, pick_id=-1, search_data=''){
+        //Для позиции ВООБЩЕ СОВСЕМ БЕЗ категории free == 'true'
+
+        var link = "get_price_items_f.php";
+
+        var reqData = {
+            cat_id: cat_id,
+            start: start,
+            limit: limit,
+            free: free,
+            search_data: search_data
+        };
+        // console.log(reqData);
+
+        //Если надо выделить группу c id == pick_id
+        if (pick){
+            //Сначала очищаем у всех окраску
+            $(".droppable").css({"background-color": ""});
+
+            //Теперь покрасим
+            $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+        }
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res.q);
+
+                if (res.result == 'success') {
+
+                    if (cat_id == 0){
+                        if (free){
+                            //Если поиск по фразе делаем
+                            if (search_data.length > 0){
+                                $("#cat_name_show").html("Результат поиска");
+                                $("#cat_name_show").show();
+                            }
+                        }else {
+                            $("#cat_name_show").html("Вне категории");
+                            $("#cat_name_show").show();
+                        }
+                    }else {
+                        //console.log(cat_id);
+                        $("#cat_name_show").html($("#cat_" + cat_id).attr("cat_name"));
+                        $("#cat_name_show").show();
+                    }
+
+                    if (res.count > 0) {
+                        $("#sclad_items_rezult").html(res.data);
+                    }else{
+                        $("#sclad_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего не найдено</span>');
+                    }
+
+                }
+            }
+        })
+    }
+
+
+
 
 
