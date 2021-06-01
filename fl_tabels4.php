@@ -200,7 +200,7 @@
                   
                 LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
                 LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
-                WHERE (sw.permissions = '".$type."' OR opt_ws.oklad = '1')  AND sw.status <> '8'
+                WHERE (sw.permissions = '".$type."' OR opt_ws.oklad = '1' OR opt_ws.oklad_work = '1')  AND sw.status <> '8'
                 ORDER BY sw.full_name ASC";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
