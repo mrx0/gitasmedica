@@ -41,7 +41,7 @@
 
                 $msql_cnnct = ConnectToDB ();
 
-                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_GET['id']} LIMIT 1'";
+                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_GET['id']}' LIMIT 1";
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);

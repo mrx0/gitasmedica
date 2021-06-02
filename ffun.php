@@ -640,13 +640,38 @@
         $msql_cnnct = ConnectToDB2();
 
         //Тип табеля (стом, косм, ассист, ... и т.д.)
-        $query = "SELECT `type` FROM `fl_journal_tabels` WHERE `id`='{$tabel_id}' LIMIT 1";
+        $query = "SELECT `type`, `worker_id` FROM `fl_journal_tabels` WHERE `id`='{$tabel_id}' LIMIT 1";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
         $arr = mysqli_fetch_assoc($res);
 
         $type = $arr['type'];
+        $worker_id = $arr['worker_id'];
+
+
+        //Проверим специальные отметки
+        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$worker_id}' LIMIT 1";
+        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+        $number = mysqli_num_rows($res);
+
+        $spec_prikaz8 = false;
+        $spec_oklad = false;
+        $spec_oklad_work = false;
+
+        if ($number != 0){
+            $arr = mysqli_fetch_assoc($res);
+            if ($arr['prikaz8'] == 1){
+                $spec_prikaz8 = true;
+            }
+            if ($arr['oklad'] == 1){
+                $spec_oklad = true;
+            }
+            if ($arr['oklad_work'] == 1){
+                $spec_oklad_work = true;
+            }
+        }
 
         //Сумма рассчетных листов в табеле
         $query = "SELECT SUM(`summ`) AS `summCalcs`  FROM `fl_journal_calculate` WHERE `id` IN (SELECT `calculate_id` FROM `fl_journal_tabels_ex` WHERE `tabel_id`='{$tabel_id}' AND `noch` = '0');";
@@ -672,7 +697,11 @@
         if ($type == 7){
             $query = "UPDATE `fl_journal_tabels` SET `summ_calc` = '" . round($summCalcs, 2) . "', `night_smena` = '" . round($summNight, 2) . "' WHERE `id`='{$tabel_id}';";
         }else {
-            $query = "UPDATE `fl_journal_tabels` SET `summ` = '" . round($summCalcs, 2) . "', `summ_calc` = '" . round($summCalcs, 2) . "', `night_smena` = '" . round($summNight, 2) . "' WHERE `id`='{$tabel_id}';";
+            if ($spec_oklad_work){
+                $query = "UPDATE `fl_journal_tabels` SET `summ_calc` = '" . round($summCalcs, 2) . "', `night_smena` = '" . round($summNight, 2) . "' WHERE `id`='{$tabel_id}';";
+            }else {
+                $query = "UPDATE `fl_journal_tabels` SET `summ` = '" . round($summCalcs, 2) . "', `summ_calc` = '" . round($summCalcs, 2) . "', `night_smena` = '" . round($summNight, 2) . "' WHERE `id`='{$tabel_id}';";
+            }
         }
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);

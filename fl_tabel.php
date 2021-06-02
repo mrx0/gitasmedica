@@ -259,7 +259,7 @@
                         $spec_oklad_checked = '';
                         $spec_oklad_work_checked = '';
 
-                        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$tabel_j[0]['worker_id']} LIMIT 1'";
+                        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$tabel_j[0]['worker_id']}' LIMIT 1";
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $number = mysqli_num_rows($res);
@@ -1184,15 +1184,15 @@
 
 
                         //Врачи
-                        if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10)) {
+                        if ((($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10))/* && !$spec_oklad_work*/) {
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб. <div style="display: inline; color: #5f5f5f; font-size: 90%; font-style: italic;">Сумма всех нарядов: <span id="invoiceSumm"></span>  руб. (включая страховые)</div>
+                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб. <div style="display: inline; color: #5f5f5f; font-size: 90%; font-style: italic;">Сумма всех нарядов: <span id="invoiceSumm"></span>  руб. (включая страховые)</div>
                                         </div>';
                         }
                         //Админы, ассистенты
                         if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
-                            if ($tabel_j[0]['type'] == 7){
+                            if (($tabel_j[0]['type'] == 7) || $spec_oklad_work){
                                 echo '
                                         <div style="font-size: 90%; background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
                                             Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб.
@@ -1347,14 +1347,14 @@
 //                        var_dump($summItog);
 
                         //Если ассистент, то плюсуем сумму за РЛ
-                        if ($tabel_j[0]['type'] == 7){
+                        if (($tabel_j[0]['type'] == 7) || $spec_oklad_work){
                             $summItog += $tabel_j[0]['summ_calc'];
                         }
                         //var_dump($summItog);
 
                         // Если оклад с работой
                         if ($spec_oklad_work){
-                            $summItog += $tabel_j[0]['per_from_salary'];
+//                            $summItog += $tabel_j[0]['per_from_salary'];
                         }
 
                         //Коэффициенты +/-
