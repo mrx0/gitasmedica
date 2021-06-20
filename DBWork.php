@@ -227,15 +227,15 @@
 	}
 
 	//Добавление услуги.
-	function WriteToDB_EditPriceName ($name, $pricecode, $pricecodemkb, $category_id, $session_id){
+	function WriteToDB_EditPriceName ($name, $pricecode, $pricecodemkb, $pricecode_u, $pricecode_nom, $category_id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		$query = "INSERT INTO `spr_pricelist_template` (
-			`name`, `category`, `code`, `code_mkb`, `create_time`, `create_person`) 
+			`name`, `category`, `code`, `code_u`, `code_nom`, `create_time`, `create_person`) 
 			VALUES (
-			'{$name}', '{$category_id}', '{$pricecode}', '{$pricecodemkb}', '{$time}', '{$session_id}')";
+			'{$name}', '{$category_id}', '{$pricecode}', '{$pricecode_u}', '{$pricecode_nom}', '{$time}', '{$session_id}')";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -250,13 +250,13 @@
 	}
 	
 	//
-	function WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $category_id, $id, $session_id){
+	function WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $code_u, $code_nom, $category_id, $id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		
-		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `code_mkb`='{$codemkb}', `category`='{$category_id}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `code_u`='{$code_u}', `code_nom`='{$code_nom}', `category`='{$category_id}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -944,7 +944,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_prikaz8, $spec_work_6days){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_oklad_work, $spec_prikaz8, $spec_work_6days){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -998,11 +998,12 @@
 
         //Приказ8 и Оклад
         $query = "INSERT INTO `options_worker_spec` (
-					`worker_id`, `oklad`, `prikaz8`, `work6days`)
+					`worker_id`, `oklad`, `oklad_work`, `prikaz8`, `work6days`)
 					VALUES (
-						'{$worker_id}', '{$spec_oklad}', '{$spec_prikaz8}', '{$spec_work_6days}')
+						'{$worker_id}', '{$spec_oklad}', '{$spec_oklad_work}', '{$spec_prikaz8}', '{$spec_work_6days}')
 					ON DUPLICATE KEY UPDATE
 					`oklad` = '{$spec_oklad}',
+					`oklad_work` = '{$spec_oklad_work}',
 					`prikaz8` = '{$spec_prikaz8}',
 					`work6days` = '{$spec_work_6days}'
 					";

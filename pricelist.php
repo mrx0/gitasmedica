@@ -52,6 +52,9 @@
 			
 			echo '
 				<header>
+                    <div class="nav">
+                        <a href="pricelist_new2.php" class="b">Новый прайс</a>
+                    </div>
 					<h1>Основной прайс</h1>
 						<div>
 							<span style="font-size: 80%; color: #AAA">Перейти к прайсу страховой</span><br>';
@@ -226,7 +229,23 @@
                         //}
                         echo '
 												<div class="priceitemDivname">
-													<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref 4filter" id="4filter"><i>'.$items_j[$i]['code'].'</i> '.$items_j[$i]['name'].'</a>
+													<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref" id="4filter" target="_blank" rel="nofollow noopener" style="position: relative;">
+													    <span style="/*position: absolute;*/ font-size: 70%; /*font-weight: bold;*/ top: -4px; color: #555;">[#'.$items_j[$i]['id'].']</span> 
+													    <i>'.$items_j[$i]['code'].'</i>
+													    '.$items_j[$i]['name'].' ';
+
+                        if (mb_strlen($items_j[$i]['code_u']) > 0) {
+                            echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
+                        }
+                        if (mb_strlen($items_j[$i]['code_nom']) > 0) {
+                            echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
+                        }
+
+                        //!!! Категория процентов - не доделано!!!
+                        //echo '['.$items_j[$i]['category'].']';
+
+                        echo '
+                                                    </a>
 												</div>
 												<div class="priceitemDiv">
 													<div class="priceitemDivcost"><b>'.$price.'</b> руб.</div>';

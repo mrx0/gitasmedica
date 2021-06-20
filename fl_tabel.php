@@ -257,14 +257,16 @@
                         //!!! Здесь функция большая и избыточная, но лень переписывать
                         $spec_prikaz8_checked = '';
                         $spec_oklad_checked = '';
+                        $spec_oklad_work_checked = '';
 
-                        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$tabel_j[0]['worker_id']} LIMIT 1'";
+                        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$tabel_j[0]['worker_id']}' LIMIT 1";
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                         $number = mysqli_num_rows($res);
 
                         $spec_prikaz8 = false;
                         $spec_oklad = false;
+                        $spec_oklad_work = false;
 
                         if ($number != 0){
                             $arr = mysqli_fetch_assoc($res);
@@ -274,8 +276,12 @@
                             if ($arr['oklad'] == 1){
                                 $spec_oklad = true;
                             }
+                            if ($arr['oklad_work'] == 1){
+                                $spec_oklad_work = true;
+                            }
                         }
                         //var_dump($spec_prikaz8);
+//                        var_dump($spec_oklad);
 
                         //Категории процентов
                         $percent_cats_j = array();
@@ -863,7 +869,8 @@
                         }
 
                         //Админы, ассистенты, санитарки, уборщицы, дворники
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)) {
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)
+                        || $spec_oklad_work) {
                             //Часы работника
                             $w_hours = 0;
                             $w_normaSmen = 0;
@@ -1108,8 +1115,9 @@
                         }
 
 
-                        //Админы, ассистенты, санитарки, уборщицы, дворники
-                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)) {
+                        //Админы, ассистенты, санитарки, уборщицы, дворники, особые отметки
+                        if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7) || ($tabel_j[0]['type'] == 13) || ($tabel_j[0]['type'] == 14) || ($tabel_j[0]['type'] == 15) || ($tabel_j[0]['type'] == 11)
+                        || $spec_oklad_work) {
 
 //                            if ($tabel_j[0]['type'] == 11) {
 //                                !!! хотел тут рассчтитать нормы рабочих дней для прочее, но лень
@@ -1142,7 +1150,7 @@
                                             <div style="font-size: 90%; color: rgba(10, 10, 10, 1); display: inline;">
                                                 (<span class="allMonthHours" style="font-size: 12px; /*font-weight: bold; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);*/">' . $w_percentHours . '</span>% от нормы ';
 
-                            if ($tabel_j[0]['type'] != 11) {
+                            if (($tabel_j[0]['type'] != 11) && !$spec_oklad_work) {
                                 echo $w_normaSmen . ' часов';
                             }
 
@@ -1176,15 +1184,15 @@
 
 
                         //Врачи
-                        if (($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10)) {
+                        if ((($tabel_j[0]['type'] == 5) || ($tabel_j[0]['type'] == 6) || ($tabel_j[0]['type'] == 10))/* && !$spec_oklad_work*/) {
                             echo '
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
-                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ'] . '</span> руб. <div style="display: inline; color: #5f5f5f; font-size: 90%; font-style: italic;">Сумма всех нарядов: <span id="invoiceSumm"></span>  руб. (включая страховые)</div>
+                                            Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб. <div style="display: inline; color: #5f5f5f; font-size: 90%; font-style: italic;">Сумма всех нарядов: <span id="invoiceSumm"></span>  руб. (включая страховые)</div>
                                         </div>';
                         }
                         //Админы, ассистенты
                         if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
-                            if ($tabel_j[0]['type'] == 7){
+                            if (($tabel_j[0]['type'] == 7) || $spec_oklad_work){
                                 echo '
                                         <div style="font-size: 90%; background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
                                             Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб.
@@ -1339,10 +1347,15 @@
 //                        var_dump($summItog);
 
                         //Если ассистент, то плюсуем сумму за РЛ
-                        if ($tabel_j[0]['type'] == 7){
+                        if (($tabel_j[0]['type'] == 7) || $spec_oklad_work){
                             $summItog += $tabel_j[0]['summ_calc'];
                         }
                         //var_dump($summItog);
+
+                        // Если оклад с работой
+                        if ($spec_oklad_work){
+//                            $summItog += $tabel_j[0]['per_from_salary'];
+                        }
 
                         //Коэффициенты +/-
                         if (($tabel_j[0]['k_plus'] != 0) || ($tabel_j[0]['k_minus'] != 0)){
