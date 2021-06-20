@@ -227,15 +227,15 @@
 	}
 
 	//Добавление услуги.
-	function WriteToDB_EditPriceName ($name, $pricecode, $pricecodemkb, $category_id, $session_id){
+	function WriteToDB_EditPriceName ($name, $pricecode, $pricecodemkb, $pricecode_u, $pricecode_nom, $category_id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		$query = "INSERT INTO `spr_pricelist_template` (
-			`name`, `category`, `code`, `code_mkb`, `create_time`, `create_person`) 
+			`name`, `category`, `code`, `code_u`, `code_nom`, `create_time`, `create_person`) 
 			VALUES (
-			'{$name}', '{$category_id}', '{$pricecode}', '{$pricecodemkb}', '{$time}', '{$session_id}')";
+			'{$name}', '{$category_id}', '{$pricecode}', '{$pricecode_u}', '{$pricecode_nom}', '{$time}', '{$session_id}')";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -250,13 +250,13 @@
 	}
 	
 	//
-	function WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $category_id, $id, $session_id){
+	function WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $code_u, $code_nom, $category_id, $id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		
-		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `code_mkb`='{$codemkb}', `category`='{$category_id}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `code_u`='{$code_u}', `code_nom`='{$code_nom}', `category`='{$category_id}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
