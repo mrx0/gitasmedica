@@ -172,7 +172,7 @@
             $query = "
             SELECT s_w.* FROM `spr_workers` s_w 
               LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
-              WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+              WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1' OR opt_ws.oklad_work = '1') AND s_w.status = '0' 
             ORDER BY s_w.full_name ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -200,7 +200,7 @@
               sch.worker IN (
                 SELECT s_w.id FROM `spr_workers` s_w 
                   LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
-                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1' OR opt_ws.oklad_work = '1') AND s_w.status = '0' 
               ))
               AND sch.month = '$month' AND sch.year = '$year' AND sch.filial='{$_GET['filial']}'";
 
@@ -248,7 +248,7 @@
               sch.worker IN (
                 SELECT s_w.id FROM `spr_workers` s_w 
                   LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
-                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1' OR opt_ws.oklad_work = '1') AND s_w.status = '0' 
               ))
               AND sch.month = '$month' AND sch.year = '$year' AND sch.filial <> '{$_GET['filial']}'";
 
@@ -307,7 +307,7 @@
               fl_jsch_rep.worker_id IN (
                 SELECT s_w.id FROM `spr_workers` s_w 
                   LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
-                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+                  WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1' OR opt_ws.oklad_work = '1') AND s_w.status = '0' 
               ))
               AND fl_jsch_rep.month = '$month' AND fl_jsch_rep.year = '$year'";
 

@@ -26,9 +26,9 @@
                     ($_POST['type'] == 1) || ($_POST['type'] == 9) || ($_POST['type'] == 11) || ($_POST['type'] == 12) || ($_POST['type'] == 777)
                 ) {
 
-                    //Смотрим, нет ли у этого сотрудника уже табеля за этот месяц
                     $msql_cnnct = ConnectToDB();
 
+                    //Смотрим, нет ли у этого сотрудника уже табеля за этот месяц
                     $query = "SELECT * FROM `fl_journal_tabels` WHERE `worker_id`='{$_POST['worker_id']}' AND `month`='{$_POST['month']}' AND  `year`='{$_POST['year']}' AND `status`<>'9'";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -37,6 +37,29 @@
 
                     //Если ничего нет
                     if ($number == 0) {
+
+                        //Проверим специальные отметки
+                        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_POST['worker_id']}' LIMIT 1";
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
+                        $spec_prikaz8 = false;
+                        $spec_oklad = false;
+                        $spec_oklad_work = false;
+
+                        if ($number != 0){
+                            $arr = mysqli_fetch_assoc($res);
+                            if ($arr['prikaz8'] == 1){
+                                $spec_prikaz8 = true;
+                            }
+                            if ($arr['oklad'] == 1){
+                                $spec_oklad = true;
+                            }
+                            if ($arr['oklad_work'] == 1){
+                                $spec_oklad_work = true;
+                            }
+                        }
 
                         $time = date('Y-m-d H:i:s', time());
 

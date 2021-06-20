@@ -820,6 +820,10 @@
         if (spec_oklad === undefined){
             spec_oklad = 0;
         }
+        var spec_oklad_work = $("input[name=spec_oklad_work]:checked").val();
+        if (spec_oklad_work === undefined){
+            spec_oklad_work = 0;
+        }
 
         var spec_work_6days = $("input[name=spec_work_6days]:checked").val();
         if (spec_work_6days === undefined){
@@ -848,6 +852,7 @@
 
                     spec_prikaz8: spec_prikaz8,
                     spec_oklad: spec_oklad,
+                    spec_oklad_work: spec_oklad_work,
                     spec_work_6days: spec_work_6days
                 },
             cache: false,
@@ -2918,41 +2923,82 @@
 	// !!! правильный пример AJAX
 	function Ajax_add_priceitem(session_id) {
 
-		var pricename = $("#pricename").val();
-		var category_id = $("#category_id").val();
-		var pricecode = $("#pricecode").val();
-		var pricecodemkb = $("#pricecodemkb").val();
-		var price = $("#price").val();
-		var price2 = $("#price2").val();
-		var price3 = $("#price3").val();
-		var group = $("#group").val();
-		var iWantThisDate2 = $("#iWantThisDate2").val();
+        let link = "add_priceitem_f.php";
 
-		$.ajax({
-			url:"add_priceitem_f.php",
-			global: false,
-			type: "POST",
-			data:
-			{
-				pricename:pricename,
-                category_id:category_id,
-                pricecode:pricecode,
-                pricecodemkb:pricecodemkb,
-				price:price,
-				price2:price2,
-				price3:price3,
-				group:group,
-				iWantThisDate2:iWantThisDate2,
-				session_id:session_id,
-			},
-			cache: false,
-			beforeSend: function() {
-				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			success:function(data){
-				$('#errror').html(data);
-			}
-		})
+        // let pricename = $("#pricename").val();
+        // let category_id = $("#category_id").val();
+        // let pricecode = $("#pricecode").val();
+        // let pricecodemkb = $("#pricecodemkb").val();
+        // let price = $("#price").val();
+        // let price2 = $("#price2").val();
+        // let price3 = $("#price3").val();
+        // let group = $("#group").val();
+        // let iWantThisDate2 = $("#iWantThisDate2").val();
+
+        let reqData = {
+            pricename: $("#pricename").val(),
+            category_id: $("#category_id").val(),
+            pricecode: $("#pricecode").val(),
+            pricecodemkb: $("#pricecodemkb").val(),
+
+            pricecode_u: $("#pricecode_u").val(),
+            pricecode_nom: $("#pricecode_nom").val(),
+
+            price: $("#price").val(),
+            price2: $("#price2").val(),
+            price3: $("#price3").val(),
+            group: $("#group").val(),
+            iWantThisDate2: $("#iWantThisDate2").val(),
+            session_id:session_id,
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                //console.log(data);
+
+                // $('#errror').html(data);
+                $('#errror').html('');
+                $('#add_form_id').html(data);
+                // window.location.href = "";
+
+            }
+        })
+
+		// $.ajax({
+		// 	url:"add_priceitem_f.php",
+		// 	global: false,
+		// 	type: "POST",
+		// 	data:
+		// 	{
+		// 		pricename:pricename,
+        //         category_id:category_id,
+        //         pricecode:pricecode,
+        //         pricecodemkb:pricecodemkb,
+		// 		price:price,
+		// 		price2:price2,
+		// 		price3:price3,
+		// 		group:group,
+		// 		iWantThisDate2:iWantThisDate2,
+		// 		session_id:session_id,
+		// 	},
+		// 	cache: false,
+		// 	beforeSend: function() {
+		// 		$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+		// 	},
+		// 	success:function(data){
+		// 		$('#errror').html(data);
+		// 	}
+		// })
 	};
 
 	//Добавить в прайс страховой
@@ -3013,34 +3059,73 @@
 
 	function Ajax_edit_pricelistitem(id, session_id) {
 
-		var pricelistitemname = $("#pricelistitemname").val();
-		var pricelistitemcode = $("#pricelistitemcode").val();
-		var pricelistitemcodemkb = $("#pricelistitemcodemkb").val();
-		var group = $("#group").val();
-		var category_id = $("#category_id").val();
+        let link = "pricelistitem_edit_f.php";
 
-		$.ajax({
-			url:"pricelistitem_edit_f.php",
-			global: false,
-			type: "POST",
-			data:
-			{
-				pricelistitemname: pricelistitemname,
-                pricelistitemcode: pricelistitemcode,
-                pricelistitemcodemkb: pricelistitemcodemkb,
-				session_id:session_id,
-				group:group,
-                category_id:category_id,
-				id: id,
-			},
-			cache: false,
-			beforeSend: function() {
-				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			success:function(data){
-				$('#errror').html(data);
-			}
-		})
+		// var pricelistitemname = $("#pricelistitemname").val();
+		// var pricelistitemcode = $("#pricelistitemcode").val();
+		// var pricelistitemcodemkb = $("#pricelistitemcodemkb").val();
+		// var group = $("#group").val();
+		// var category_id = $("#category_id").val();
+
+        let reqData = {
+            pricelistitemname: $("#pricelistitemname").val(),
+            pricelistitemcode: $("#pricelistitemcode").val(),
+            pricelistitemcodemkb: $("#pricelistitemcodemkb").val(),
+
+            pricelistitemcode_u: $("#pricelistitemcode_u").val(),
+            pricelistitemcode_nom: $("#pricelistitemcode_nom").val(),
+
+            group: $("#group").val(),
+            category_id: $("#category_id").val(),
+
+            session_id:session_id,
+            id: id
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                //console.log(data);
+
+                // $('#errror').html(data);
+                $('#errror').html('');
+                $('#edit_form_id').html(data);
+                // window.location.href = "";
+
+            }
+        })
+
+		// $.ajax({
+		// 	url:"pricelistitem_edit_f.php",
+		// 	global: false,
+		// 	type: "POST",
+		// 	data:
+		// 	{
+		// 		pricelistitemname: pricelistitemname,
+        //         pricelistitemcode: pricelistitemcode,
+        //         pricelistitemcodemkb: pricelistitemcodemkb,
+		// 		session_id:session_id,
+		// 		group:group,
+        //         category_id:category_id,
+		// 		id: id,
+		// 	},
+		// 	cache: false,
+		// 	beforeSend: function() {
+		// 		$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+		// 	},
+		// 	success:function(data){
+		// 		$('#errror').html(data);
+		// 	}
+		// })
 	};
 
 	function Ajax_edit_pricelistgroup(id, session_id) {

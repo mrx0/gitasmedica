@@ -34,23 +34,7 @@
 					echo '
 								<div id="errror"></div>';
 					echo '
-								<form action="pricelistitem_edit_f.php">
-					
-									<div class="cellsBlock2">
-										<div class="cellLeft">Код</div>
-										<div class="cellRight">
-											<input type="text" name="pricelistitemcode" id="pricelistitemcode" style="" value="'.$items_j[0]['code'].'">
-											<label id="pricelistitemcode_error" class="error"></label>
-										</div>
-									</div>
-									
-									<div class="cellsBlock2">
-										<div class="cellLeft">Код МКБ</div>
-										<div class="cellRight">
-											<input type="text" name="pricelistitemcodemkb" id="pricelistitemcodemkb" style="" value="'.$items_j[0]['code_mkb'].'">
-											<label id="pricelistitemcodemkb_error" class="error"></label>
-										</div>
-									</div>
+								<form action="pricelistitem_edit_f.php" id="edit_form_id">
 									
 									<div class="cellsBlock2">
 										<div class="cellLeft">Название</div>
@@ -59,6 +43,43 @@
 											<label id="pricelistitemname_error" class="error"></label>
 										</div>
 									</div>
+									
+									<div class="cellsBlock2">
+										<div class="cellLeft">Код<br>страховых</div>
+										<div class="cellRight">
+											<input type="text" name="pricelistitemcode" id="pricelistitemcode" style="" value="'.$items_j[0]['code'].'">
+											<label id="pricelistitemcode_error" class="error"></label>
+										</div>
+									</div>
+									
+									<div class="cellsBlock2" style="display: none;">
+										<div class="cellLeft">Код МКБ</div>
+										<div class="cellRight">
+											<input type="text" name="pricelistitemcodemkb" id="pricelistitemcodemkb" style="" value="">
+											<label id="pricelistitemcodemkb_error" class="error"></label>
+										</div>
+									</div>
+
+                                    <div class="cellsBlock2" style="margin-bottom: 5px;">
+                                        <div class="cellLeft" style="position: relative;">
+                                            Код услуги
+                                            <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
+                                        </div>
+                                        <div class="cellRight">
+                                            <input type="text" name="pricelistitemcode_u" id="pricelistitemcode_u" value="">
+                                            <label id="pricelistitemcode_u_error" class="error"></label>
+                                        </div>
+                                    </div>
+                                    <div class="cellsBlock2" style="margin-bottom: 5px;">
+                                        <div class="cellLeft" style="position: relative;">
+                                            Код услуги<br>по номенклатуре
+                                            <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
+                                        </div>
+                                        <div class="cellRight">
+                                            <input type="text" name="pricelistitemcode_nom" id="pricelistitemcode_nom" value="">
+                                            <label id="pricelistitemcode_nom_error" class="error"></label>
+                                        </div>
+                                    </div>
         
                                     <div class="cellsBlock2">
                                         <div class="cellLeft">Категория</div>

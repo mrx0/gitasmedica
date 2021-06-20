@@ -34,6 +34,30 @@
 
                 $msql_cnnct = ConnectToDB();
 
+                //Проверим специальные отметки
+                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_POST['worker']}' LIMIT 1";
+                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                $number = mysqli_num_rows($res);
+
+                $spec_prikaz8 = false;
+                $spec_oklad = false;
+                $spec_oklad_work = false;
+
+                if ($number != 0){
+                    $arr = mysqli_fetch_assoc($res);
+                    if ($arr['prikaz8'] == 1){
+                        $spec_prikaz8 = true;
+                    }
+                    if ($arr['oklad'] == 1){
+                        $spec_oklad = true;
+                    }
+                    if ($arr['oklad_work'] == 1){
+                        $spec_oklad_work = true;
+                    }
+                }
+//                var_dump($spec_oklad_work);
+
                 //Выбираем обычные табели
                 $query = "SELECT * FROM `fl_journal_tabels` WHERE `type`='{$_POST['permission']}' AND `worker_id`='{$_POST['worker']}' AND `office_id`='{$_POST['office']}' AND `status` <> '9' AND (`year` > '2019' OR (`year` = '2019' AND `month` > '05'));";
 
@@ -158,7 +182,7 @@
                                 }
 
                                 //Если ассистент, то плюсуем сумму за РЛ
-                                if ($_POST['permission'] == 7){
+                                if (($_POST['permission'] == 7) || $spec_oklad_work){
                                     $summItog += $rezData['summ_calc'];
                                 }
 

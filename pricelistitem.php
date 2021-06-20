@@ -101,20 +101,34 @@
 
                     echo '
                                 <div class="cellsBlock2">
-                                    <div class="cellLeft">Код</div>
-                                    <div class="cellRight">'.$rezult[0]['code'].'</div>
-                                </div>';
-
-                    echo '
-                                <div class="cellsBlock2">
-                                    <div class="cellLeft">Код МКБ</div>
-                                    <div class="cellRight">'.$rezult[0]['code_mkb'].'</div>
-                                </div>';
-
-                    echo '
-                                <div class="cellsBlock2">
                                     <div class="cellLeft">Название</div>
                                     <div class="cellRight">'.$rezult[0]['name'].'</div>
+                                </div>';
+                    echo '
+                                <div class="cellsBlock2">
+                                    <div class="cellLeft">Код<br>страховых</div>
+                                    <div class="cellRight">'.$rezult[0]['code'].'</div>
+                                </div>';
+//                    echo '
+//                                <div class="cellsBlock2">
+//                                    <div class="cellLeft">Код МКБ</div>
+//                                    <div class="cellRight">'.$rezult[0]['code_mkb'].'</div>
+//                                </div>';
+                    echo '
+                                <div class="cellsBlock2" style="margin-bottom: 5px;">
+                                    <div class="cellLeft" style="position: relative;">
+                                        Код услуги
+                                        <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
+                                    </div>
+                                    <div class="cellRight">'.$rezult[0]['code_u'].'</div>
+                                </div>';
+                    echo '
+                                <div class="cellsBlock2" style="margin-bottom: 5px;">
+                                    <div class="cellLeft" style="position: relative;">
+                                        Код услуги<br>по номенклатуре
+                                        <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
+                                    </div>
+                                    <div class="cellRight">'.$rezult[0]['code_nom'].'</div>
                                 </div>';
                     echo '
                                 <div class="cellsBlock2">
