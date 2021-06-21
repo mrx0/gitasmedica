@@ -200,7 +200,7 @@ if ($enter_ok){
                   
                 LEFT JOIN `journal_work_cat` jwcat ON sw.id = jwcat.worker_id
                 LEFT JOIN `spr_categories` sc ON jwcat.category = sc.id
-                WHERE (sw.permissions = '".$type."' OR opt_ws.oklad = '1')  AND sw.status <> '8'
+                WHERE (sw.permissions = '".$type."' OR opt_ws.oklad = '1' OR opt_ws.oklad_work = '1')  AND sw.status <> '8'
                 ORDER BY sw.full_name ASC";
 
             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -372,7 +372,7 @@ if ($enter_ok){
                   fl_jsch_rep.worker_id IN (
                     SELECT s_w.id FROM `spr_workers` s_w 
                       LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
-                      WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1') AND s_w.status = '0' 
+                      WHERE (s_w.permissions = '$type' OR opt_ws.oklad = '1' OR opt_ws.oklad_work = '1') AND s_w.status = '0' 
                   ))
                   AND fl_jsch_rep.month = '$month' AND fl_jsch_rep.year = '$year'";
 
@@ -607,6 +607,7 @@ if ($enter_ok){
 //                                }
 
                     $w_normaHours = $work_days_norma_temp * $normaHours;
+                    //var_dump($w_normaHours);
 
                     //Смены часы
                     if (isset($hours_j[$worker_data['id']])) {

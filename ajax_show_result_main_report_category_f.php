@@ -450,6 +450,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                     </li>
                                 ';
 
+//                                var_dump($journal);
+
 
                                 echo showInvoiceDivRezult($journal, false, false, true, true, true, false)['data'];
 
