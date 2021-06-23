@@ -1208,11 +1208,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`  + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`  + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1375,7 +1375,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -1430,11 +1430,11 @@
 			$deleted_str = 'AND `status` <> 9';
 		}
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && (($type == 'list') || ($type == 'clear'))){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1557,12 +1557,12 @@
 		}*/
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		//var_dump ($query);
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'return')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1726,7 +1726,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -1796,11 +1796,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1955,7 +1955,7 @@
 				}
 
 				
-				$query = "SELECT COUNT(`id`) AS total FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT COUNT(`id`) AS total FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
 				$total = $db::getValue($query, []);
@@ -2021,11 +2021,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}else{
 		}
@@ -2247,7 +2247,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -2521,10 +2521,10 @@
 		);
 		$color_index = $last_level;
 		
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name` + 0";
 		
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -2645,7 +2645,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name` + 0";
 				//var_dump($query);
 				
 				$res = mysql_query($query) or die($query);
