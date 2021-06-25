@@ -82,7 +82,7 @@
                             (`name`, `code_u`, `code_nom`, `new`)
                             VALUES (:name, :code_u, :code_nom, :new);";
 
-            //$db::sql($query, $args);
+            $db::sql($query, $args);
 
             //Получаем id вставленной записи
             $insert_id = $db->lastInsertId();
@@ -97,7 +97,7 @@
                             (`item`, `group`)
                             VALUES (:item, :group);";
 
-            //$db::sql($query, $args);
+            $db::sql($query, $args);
 
              //Вставляем цену
             $args = [
@@ -112,7 +112,7 @@
                                 (`item`, `date_from`, `price`, `price2`, `price3`)
                                 VALUES (:item, :date_from, :price, :price2, :price3);";
 
-            //$db::sql($query, $args);
+            $db::sql($query, $args);
 
 
 
