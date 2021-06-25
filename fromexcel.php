@@ -30,7 +30,7 @@
 	$objPHPExcel = PHPExcel_IOFactory::load("excel/new_prise_s.xlsx");
 
 	// Устанавливаем индекс активного листа
-	$objPHPExcel->setActiveSheetIndex(0);
+	$objPHPExcel->setActiveSheetIndex(1);
 	// Получаем активный лист
 	$sheet = $objPHPExcel->getActiveSheet();
 	
