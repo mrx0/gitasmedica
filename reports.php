@@ -115,6 +115,11 @@
 							</li>';
             }
 
+            echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_mainReportCategory.php" class="b3" style="width: 270px;">Отчёт по категориям</a>
+							</li>';
+
 
             echo '
 						</ul>';
@@ -247,10 +252,6 @@
                                 <a href="fl_tabels2.php" class="b3" style="width: 270px;">Отчёт по часам</a>
                             </li>';
 
-                echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_mainReportCategory.php" class="b3" style="width: 270px;">Отчёт по категориям</a>
-							</li>';
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportCategory2.php" class="b3" style="width: 270px;">Отчёт по категориям (общее соотношение)</a>
