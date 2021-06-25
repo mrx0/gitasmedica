@@ -234,11 +234,15 @@
 													    <i>'.$items_j[$i]['code'].'</i>
 													    '.$items_j[$i]['name'].' ';
 
-                        if (mb_strlen($items_j[$i]['code_u']) > 0) {
-                            echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
-                        }
-                        if (mb_strlen($items_j[$i]['code_nom']) > 0) {
-                            echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
+                        if ((mb_strlen($items_j[$i]['code_u']) > 0) || (mb_strlen($items_j[$i]['code_nom']) > 0)) {
+                            echo '<br>';
+
+                            if (mb_strlen($items_j[$i]['code_u']) > 0) {
+                                echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
+                            }
+                            if (mb_strlen($items_j[$i]['code_nom']) > 0) {
+                                echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
+                            }
                         }
 
                         //!!! Категория процентов - не доделано!!!

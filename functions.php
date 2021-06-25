@@ -1208,11 +1208,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`  + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`  + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1375,7 +1375,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -1430,11 +1430,11 @@
 			$deleted_str = 'AND `status` <> 9';
 		}
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && (($type == 'list') || ($type == 'clear'))){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1557,12 +1557,12 @@
 		}*/
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		//var_dump ($query);
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'return')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1726,7 +1726,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -1796,11 +1796,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1955,7 +1955,7 @@
 				}
 
 				
-				$query = "SELECT COUNT(`id`) AS total FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT COUNT(`id`) AS total FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
 				$total = $db::getValue($query, []);
@@ -2021,11 +2021,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}else{
 		}
@@ -2209,13 +2209,16 @@
 														<i>'.$items_j[$i]['code'].'</i> 
 														'.$items_j[$i]['name'].' ';
 
-                            if (mb_strlen($items_j[$i]['code_u']) > 0) {
-								echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
-							}
-							if (mb_strlen($items_j[$i]['code_nom']) > 0) {
-								echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
-							}
+							if ((mb_strlen($items_j[$i]['code_u']) > 0) || (mb_strlen($items_j[$i]['code_nom']) > 0)) {
+								echo '<br>';
 
+								if (mb_strlen($items_j[$i]['code_u']) > 0) {
+									echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
+								}
+								if (mb_strlen($items_j[$i]['code_nom']) > 0) {
+									echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
+								}
+							}
                             //!!! Категория процентов - не доделано!!!
                             //echo '['.$items_j[$i]['category'].']';
 
@@ -2247,7 +2250,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -2521,10 +2524,10 @@
 		);
 		$color_index = $last_level;
 		
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name` + 0";
 		
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -2645,7 +2648,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name` + 0";
 				//var_dump($query);
 				
 				$res = mysql_query($query) or die($query);
@@ -3987,7 +3990,7 @@
     }
 
     //функция формирует и показывает наряды визуализация
-    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt){
+    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt, $show_client = false){
         //$show_absent - сообщение если ничего нет
 		//$only_debt - если полностью оплачены или оплата не требуется
     	//var_dump($data);
@@ -4271,7 +4274,22 @@
 							}
 
 							$itemTemp_str .= '
-													</div>
+													</div>';
+
+							if ($show_client){
+								$itemTemp_str .= '
+														<div class="cellName" style="width: 240px; min-width: 240px;">
+															<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+																<b>Пациент:</b><br>
+																<a href="client.php?id='.$items['client_id'].'" class="ahref calculateInvoice" target="_blank" rel="nofollow noopener" style="font-weight: normal; font-size: 13px; color: #333;">' . $items['full_name'] . '</a>
+															</div>';
+
+								$itemTemp_str .= '
+														</div>';
+
+							}
+
+							$itemTemp_str .= '
 												</li>';
 
 							if ($items['status'] != 9) {

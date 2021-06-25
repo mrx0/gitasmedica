@@ -229,6 +229,37 @@
                 foreach($rez as $rezData) {
                     //var_dump($rezData);
 
+                    //Отметки по дополнительным опциям
+                    //!!! Здесь функция большая и избыточная, но лень переписывать
+                    $spec_prikaz8_checked = '';
+                    $spec_oklad_checked = '';
+                    $spec_oklad_work_checked = '';
+
+                    $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$rezData['worker_id']}' LIMIT 1";
+                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                    $number = mysqli_num_rows($res);
+
+                    $spec_prikaz8 = false;
+                    $spec_oklad = false;
+                    $spec_oklad_work = false;
+
+                    if ($number != 0){
+                        $arr = mysqli_fetch_assoc($res);
+                        if ($arr['prikaz8'] == 1){
+                            $spec_prikaz8 = true;
+                        }
+                        if ($arr['oklad'] == 1){
+                            $spec_oklad = true;
+                        }
+                        if ($arr['oklad_work'] == 1){
+                            $spec_oklad_work = true;
+                        }
+                    }
+//                    var_dump($spec_prikaz8);
+//                    var_dump($spec_oklad);
+//                    var_dump($spec_oklad_work);
+
                     $bgcolor = "background-color: rgba(73, 252, 78, 0.17);";
 
                     if (($rezData['month'] == date('m')) && ($rezData['year'] == date('Y'))){
@@ -245,7 +276,7 @@
                     $summItog = $rezData['summ'] + $rezData['surcharge'] + $rezData['night_smena'] + $rezData['empty_smena'];
 
                     //Если ассистент, то плюсуем сумму за РЛ
-                    if ($rezData['type'] == 7){
+                    if (($rezData['type'] == 7) || $spec_oklad_work){
                         $summItog += $rezData['summ_calc'];
                     }
                     //var_dump(intval($summItog - $rezData['paidout'] - $rezData['deduction']));
