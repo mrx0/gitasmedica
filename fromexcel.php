@@ -41,23 +41,90 @@
 	
 		
 		echo '<tr>';
-		echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>строка ".$i."</td>";
+		//echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>строка $i</td>";
 
 		$nColumn = PHPExcel_Cell::columnIndexFromString(
 			$sheet->getHighestColumn());
 		
-		for ($j = 0; $j < $nColumn; $j++) {
+//		for ($j = 0; $j < $nColumn; $j++) {
 
-		    $value = $sheet->getCellByColumnAndRow($j, $i)->getValue();
+//		    $value = $sheet->getCellByColumnAndRow($j, $i)->getValue();
 
-		    //Если группа/подгруппа
-            if ($value === 'gr'){
-                $value = '<b>'.$value.'</b>';
-                $group_id = $sheet->getCellByColumnAndRow($j+1, $i)->getValue();
+            $code_u = $sheet->getCellByColumnAndRow(0, $i)->getValue();
+
+            //Если группа/подгруппа
+            if ($code_u === 'gr'){
+
+//                $value = '<b>'.$value.'</b>';
+
+                $group_id = $sheet->getCellByColumnAndRow(1, $i)->getValue();
+                //$group_id = $code_u;
 //                var_dump($group_id);
-            }
 
-			echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>$group_id.' / '.$value</td>";
+                continue;
+            }
+//            var_dump($group_id);
+
+            $code_nom = $sheet->getCellByColumnAndRow(1, $i)->getValue();
+            if ($code_nom == null) $code_nom = '';
+            $name = $sheet->getCellByColumnAndRow(2, $i)->getValue();
+            $price = $sheet->getCellByColumnAndRow(3, $i)->getValue();
+
+            //Вставляем позицию прайса
+            $args = [
+                'name' => $name,
+                'code_u' => $code_u,
+                'code_nom' => $code_nom,
+                'new' => 1
+            ];
+
+            $query = "INSERT INTO `spr_pricelist_template`
+                            (`name`, `code_u`, `code_nom`, `new`)
+                            VALUES (:name, :code_u, :code_nom, :new);";
+
+            //$db::sql($query, $args);
+
+            //Получаем id вставленной записи
+            $insert_id = $db->lastInsertId();
+
+            //Вставляем в какой она группе
+            $args = [
+                'item' => $insert_id,
+                'group' => $group_id
+            ];
+
+            $query = "INSERT INTO `spr_itemsingroup`
+                            (`item`, `group`)
+                            VALUES (:item, :group);";
+
+            //$db::sql($query, $args);
+
+             //Вставляем цену
+            $args = [
+                'item' => $insert_id,
+                'date_from' => 1622538000,
+                'price' => (int)$price,
+                'price2' => (int)$price,
+                'price3' => (int)$price
+            ];
+
+            $query = "INSERT INTO `spr_priceprices`
+                                (`item`, `date_from`, `price`, `price2`, `price3`)
+                                VALUES (:item, :date_from, :price, :price2, :price3);";
+
+            //$db::sql($query, $args);
+
+
+
+            echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>$code_u</td>";
+            echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>$code_nom</td>";
+            echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>$name</td>";
+            echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>".(int)$price."</td>";
+
+
+
+
+//			echo "<td style='border: 1px solid #BFBCB5; padding: 3px;'>$j $i - $value</td>";
 			//Если ячейка с именем
 //			if ($j == 0){
 //				$full_name = $value;
@@ -94,7 +161,7 @@
 //					$request3 = '<td style="border: 1px solid #CF0737; padding: 3px; color:#AD0015;">нет такой конторы в спр.</td>';
 //				}
 //			}
-		}
+//		}
 		
 		//echo $request1.$request2.$request3;
 		

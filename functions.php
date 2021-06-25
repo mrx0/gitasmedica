@@ -2209,13 +2209,16 @@
 														<i>'.$items_j[$i]['code'].'</i> 
 														'.$items_j[$i]['name'].' ';
 
-                            if (mb_strlen($items_j[$i]['code_u']) > 0) {
-								echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
-							}
-							if (mb_strlen($items_j[$i]['code_nom']) > 0) {
-								echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
-							}
+							if ((mb_strlen($items_j[$i]['code_u']) > 0) || (mb_strlen($items_j[$i]['code_nom']) > 0)) {
+								echo '<br>';
 
+								if (mb_strlen($items_j[$i]['code_u']) > 0) {
+									echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
+								}
+								if (mb_strlen($items_j[$i]['code_nom']) > 0) {
+									echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
+								}
+							}
                             //!!! Категория процентов - не доделано!!!
                             //echo '['.$items_j[$i]['category'].']';
 
@@ -3987,7 +3990,7 @@
     }
 
     //функция формирует и показывает наряды визуализация
-    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt){
+    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt, $show_client = false){
         //$show_absent - сообщение если ничего нет
 		//$only_debt - если полностью оплачены или оплата не требуется
     	//var_dump($data);
@@ -4271,7 +4274,22 @@
 							}
 
 							$itemTemp_str .= '
-													</div>
+													</div>';
+
+							if ($show_client){
+								$itemTemp_str .= '
+														<div class="cellName" style="width: 240px; min-width: 240px;">
+															<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+																<b>Пациент:</b><br>
+																<a href="client.php?id='.$items['client_id'].'" class="ahref calculateInvoice" target="_blank" rel="nofollow noopener" style="font-weight: normal; font-size: 13px; color: #333;">' . $items['full_name'] . '</a>
+															</div>';
+
+								$itemTemp_str .= '
+														</div>';
+
+							}
+
+							$itemTemp_str .= '
 												</li>';
 
 							if ($items['status'] != 9) {

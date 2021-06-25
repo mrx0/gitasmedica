@@ -396,8 +396,18 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             $invoice_ids_str = implode("','", $invoice_ids);
     //                        var_dump($zapis_ids_str);
 
-                            $query = "SELECT * FROM `journal_invoice` WHERE `id` IN ('".$invoice_ids_str."')";
-                            //var_dump($query);
+                            $query = "
+                                SELECT ji.*, sc.full_name FROM `journal_invoice` ji
+                                LEFT JOIN `spr_clients` sc ON sc.id = ji.client_id
+                                WHERE ji.id IN ('".$invoice_ids_str."')";
+//                            var_dump($query);
+
+                            if ($dop['patientUnic'] == 1){
+                                $show_client = true;
+                                $query .=  " GROUP BY sc.full_name ORDER BY sc.full_name";
+                            }else{
+                                $show_client = false;
+                            }
 
                             $journal = $db::getRows($query, $args);
 //                            var_dump($journal);
@@ -453,7 +463,8 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 //                                var_dump($journal);
 
 
-                                echo showInvoiceDivRezult($journal, false, false, true, true, true, false)['data'];
+
+                                echo showInvoiceDivRezult($journal, false, false, true, true, true, false, $show_client)['data'];
 
                                 //Категории процентов
 //                                $percent_cats_j = array();

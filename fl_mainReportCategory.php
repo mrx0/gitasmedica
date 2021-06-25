@@ -275,7 +275,7 @@
 										Показывать только ФИО уникальных пациентов
 									</div>
 									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
-										<input type="checkbox" id="patientUnic" name="patientUnic" class="invoicePatientUnic" value="1" disabled><br>
+										<input type="checkbox" id="patientUnic" name="patientUnic" class="invoicePatientUnic" value="1"><br>
 										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
 									</div>
 								</li>
