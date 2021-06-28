@@ -66,7 +66,7 @@
                                             <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
                                         </div>
                                         <div class="cellRight">
-                                            <input type="text" name="pricelistitemcode_u" id="pricelistitemcode_u" value="">
+                                            <input type="text" name="pricelistitemcode_u" id="pricelistitemcode_u" value="'.$items_j[0]['code_u'].'">
                                             <label id="pricelistitemcode_u_error" class="error"></label>
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                             <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
                                         </div>
                                         <div class="cellRight">
-                                            <input type="text" name="pricelistitemcode_nom" id="pricelistitemcode_nom" value="">
+                                            <input type="text" name="pricelistitemcode_nom" id="pricelistitemcode_nom" value="'.$items_j[0]['code_nom'].'">
                                             <label id="pricelistitemcode_nom_error" class="error"></label>
                                         </div>
                                     </div>
