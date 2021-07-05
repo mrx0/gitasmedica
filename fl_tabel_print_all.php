@@ -87,6 +87,37 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $tabel_paidouts_j = array();
 
 
+                        //Отметки по дополнительным опциям
+                        //!!! Здесь функция большая и избыточная, но лень переписывать
+                        $spec_prikaz8_checked = '';
+                        $spec_oklad_checked = '';
+                        $spec_oklad_work_checked = '';
+
+                        $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$tabel_j[0]['worker_id']}' LIMIT 1";
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+                        $number = mysqli_num_rows($res);
+
+                        $spec_prikaz8 = false;
+                        $spec_oklad = false;
+                        $spec_oklad_work = false;
+
+                        if ($number != 0){
+                            $arr = mysqli_fetch_assoc($res);
+                            if ($arr['prikaz8'] == 1){
+                                $spec_prikaz8 = true;
+                            }
+                            if ($arr['oklad'] == 1){
+                                $spec_oklad = true;
+                            }
+                            if ($arr['oklad_work'] == 1){
+                                $spec_oklad_work = true;
+                            }
+                        }
+//                    var_dump($spec_prikaz8);
+//                    var_dump($spec_oklad);
+//                    var_dump($spec_oklad_work);
+
                         //Получаем всё по сотруднику
                         $query = "SELECT s_w.name, s_w.permissions AS type, s_p.name AS type_name, s_c.name AS cat_name
                           FROM  `spr_workers` s_w
@@ -252,7 +283,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $tabel_summ = intval($tabel_j[0]['summ']);
 
                         //Если ассистент
-                        if ($tabel_j[0]['type'] == 7){
+                        if (($tabel_j[0]['type'] == 7) || $spec_oklad_work){
                             $tabel_summ = intval($tabel_j[0]['summ'] + $tabel_j[0]['summ_calc']);
                         }
 
