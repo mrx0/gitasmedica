@@ -1680,14 +1680,14 @@
                   LOWER(`full_name`) RLIKE LOWER('^$search_data') 
                   OR
                   UPPER(`card`) LIKE UPPER('%$search_data%') 
-                  OR
+                  /*OR
                   `telephone` LIKE '%$search_data%'
                   OR
                   `htelephone` LIKE '%$search_data%'
                   OR
                   `telephoneo` LIKE '%$search_data%'
                   OR
-                  `htelephoneo` LIKE '%$search_data%'
+                  `htelephoneo` LIKE '%$search_data%'*/
                   OR
                   `passport` RLIKE '^$search_data'
                   OR
