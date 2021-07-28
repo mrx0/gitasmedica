@@ -58,6 +58,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
         $dop['invoice']['invoiceInsure'] = $_POST['invoiceInsure'];
 
         $dop['patientUnic'] = $_POST['patientUnic'];
+        $dop['withFIO'] = $_POST['withFIO'];
 
 
         $db = new DB();
@@ -402,11 +403,18 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 WHERE ji.id IN ('".$invoice_ids_str."')";
 //                            var_dump($query);
 
+                            $show_client = false;
+
                             if ($dop['patientUnic'] == 1){
-                                $show_client = true;
                                 $query .=  " GROUP BY sc.full_name ORDER BY sc.full_name";
-                            }else{
-                                $show_client = false;
+                            }
+
+                            if ($dop['withFIO'] == 1){
+                                $query .=  " ORDER BY ji.client_id, ji.create_time";
+                            }
+
+                            if (($dop['patientUnic'] == 1) || ($dop['withFIO'] == 1)){
+                                $show_client = true;
                             }
 
                             $journal = $db::getRows($query, $args);

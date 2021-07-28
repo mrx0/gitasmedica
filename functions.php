@@ -3990,7 +3990,7 @@
     }
 
     //функция формирует и показывает наряды визуализация
-    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt, $show_client = false){
+    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt, $show_client = false, $show_withFIO = false){
         //$show_absent - сообщение если ничего нет
 		//$only_debt - если полностью оплачены или оплата не требуется
     	//var_dump($data);

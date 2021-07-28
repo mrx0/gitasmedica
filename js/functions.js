@@ -4760,6 +4760,11 @@
             patientUnic = 0;
         }
 
+        var withFIO = $("input[id=withFIO]:checked").val();
+        if (withFIO === undefined){
+            withFIO = 0;
+        }
+
         var reqData = {
             //all_time: all_time,
             all_time: 0,
@@ -4799,7 +4804,8 @@
             invoiceNotPaid: invoiceNotPaid,
             invoiceInsure: invoiceInsure,
 
-            patientUnic: patientUnic
+            patientUnic: patientUnic,
+            withFIO: withFIO
         };
 
         $.ajax({
