@@ -410,7 +410,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                             }
 
                             if ($dop['withFIO'] == 1){
-                                $query .=  " ORDER BY ji.client_id, ji.create_time";
+                                $query .=  " ORDER BY sc.full_name, ji.create_time";
                             }
 
                             if (($dop['patientUnic'] == 1) || ($dop['withFIO'] == 1)){
