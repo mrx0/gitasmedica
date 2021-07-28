@@ -294,6 +294,17 @@
 									</div>
 								</li>
 								
+								
+								<li class="filterBlock">
+									<div class="filtercellLeft" style="width: 120px; min-width: 120px;">
+										Показывать наряды с  ФИО
+									</div>
+									<div class="filtercellRight" style="width: 245px; min-width: 245px;">
+										<input type="checkbox" id="withFIO" name="withFIO" class="invoiceWithFIO" value="1"><br>
+										<!--<input type="checkbox" id="statusAnother" name="statusAnother" class="invoiceType" value="1" checked> Все остальные<br>-->
+									</div>
+								</li>
+								
 							</ul>
 							</div>';
 				
