@@ -1676,18 +1676,24 @@
 		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
+        $str_tel = preg_replace("/[^0-9]/", '', $search_data);
+        //костыль
+        if (mb_strlen($str_tel) == 0){
+            $str_tel = '_x_';
+        }
+
 		$query = "SELECT * FROM `$datatable` WHERE (
                   LOWER(`full_name`) RLIKE LOWER('^$search_data') 
                   OR
                   UPPER(`card`) LIKE UPPER('%$search_data%') 
-                  /*OR
-                  `telephone` LIKE '%$search_data%'
                   OR
-                  `htelephone` LIKE '%$search_data%'
+                  (REPLACE(REPLACE(REPLACE(`telephone`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`telephone`) > 4)
                   OR
-                  `telephoneo` LIKE '%$search_data%'
+                  (REPLACE(REPLACE(REPLACE(`htelephone`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`htelephone`) > 4)
                   OR
-                  `htelephoneo` LIKE '%$search_data%'*/
+                  (REPLACE(REPLACE(REPLACE(`telephoneo`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`telephoneo`) > 4)
+                  OR
+                  (REPLACE(REPLACE(REPLACE(`htelephoneo`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`htelephoneo`) > 4)
                   OR
                   `passport` RLIKE '^$search_data'
                   OR
@@ -1696,6 +1702,8 @@
 
 	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
 	//	$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' LIMIT 10";
+
+//        return $query;
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
