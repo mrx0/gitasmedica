@@ -38,7 +38,7 @@
                     $m = $data_temp_arr[1];
                     $y = $data_temp_arr[2];*/
 
-                    $create_time = date('Y-m-d H:i:s', time());
+                    $edit_time = date('Y-m-d H:i:s', time());
 
                     $query = "UPDATE `fl_journal_daily_report` SET
                       `itogSumm`='" . str_replace(' ', '', $_POST['itogSumm']) . "', `arenda`='{$_POST['arenda']}', `zreport`='{$_POST['zreport']}',
@@ -51,7 +51,7 @@
                       `temp_analiz_nal`='{$_POST['analizSummNal']}', `temp_analiz_beznal`='{$_POST['analizSummBeznal']}',
                       `temp_solar_nal`='{$_POST['solarSummNal']}', `temp_solar_beznal`='{$_POST['solarSummBeznal']}', 
                       `temp_giveoutcash`='{$_POST['summMinusNal']}', 
-                      `last_edit_time`='{$time}', `last_edit_person`='{$_SESSION['id']}' 
+                      `last_edit_time`='{$edit_time}', `last_edit_person`='{$_SESSION['id']}' 
                     WHERE `id`='{$_POST['report_id']}'";
 
 

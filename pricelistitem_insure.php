@@ -135,10 +135,16 @@
 								<div id="data">';
 
                         echo '
-							<div class="cellsBlock2">
-								<div class="cellLeft">Код</div>
-								<div class="cellRight">'.$rezult2[0]['code'].'</div>
-							</div>';
+                                    <div class="cellsBlock2">
+                                        <div class="cellLeft">Код</div>
+                                        <div class="cellRight">'.$rezult2[0]['code'].'</div>
+                                    </div>';
+
+                        echo '
+                                    <div class="cellsBlock2">
+                                        <div class="cellLeft">Код МКБ</div>
+                                        <div class="cellRight">'.$rezult2[0]['code_mkb'].'</div>
+                                    </div>';
 
 						echo '
 									<div class="cellsBlock2">
@@ -231,8 +237,8 @@
 
                                 if (($items['edit'] == 1) || $god_mode) {
                                     if ($rezult[0]['status'] != 9) {
-                                        echo '
-                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить" onclick="deletePriceHistory ('.$rez[$i]['id'].', '.$_GET['insure'].');"></i>';
+//                                        echo '
+//                                            <i class="fa fa-times" aria-hidden="true" style="cursor: pointer; color: red;"  title="Удалить" onclick="deleteThisPrice ('.$rez[$i]['id'].', '.$_GET['insure'].');"></i>';
                                     }
                                 }
 

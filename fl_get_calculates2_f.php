@@ -32,14 +32,16 @@
                 //!!! Здесь функция большая и избыточная, но лень переписывать
                 $spec_prikaz8_checked = '';
                 $spec_oklad_checked = '';
+                $spec_oklad_work_checked = '';
 
-                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_POST['worker']} LIMIT 1'";
+                $query = "SELECT * FROM `options_worker_spec` WHERE `worker_id`='{$_POST['worker']}' LIMIT 1";
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
                 $number = mysqli_num_rows($res);
 
                 $spec_prikaz8 = false;
                 $spec_oklad = false;
+                $spec_oklad_work = false;
 
                 if ($number != 0){
                     $arr = mysqli_fetch_assoc($res);
@@ -48,6 +50,9 @@
                     }
                     if ($arr['oklad'] == 1){
                         $spec_oklad = true;
+                    }
+                    if ($arr['oklad_work'] == 1){
+                        $spec_oklad_work = true;
                     }
                 }
 
@@ -172,6 +177,9 @@
                         if ($spec_oklad){
                             $disabled_chkbox = 'disabled';
                         }
+//                        if ($spec_oklad_work){
+//                            $disabled_chkbox = '';
+//                        }
 
                         //include_once 'fl_showCalculateRezult.php';
 

@@ -46,15 +46,8 @@
 			echo '
 						<div id="errror"></div>';
 			echo '
-						<form action="add_pricelistitem_f.php" style="font-size: 90%;" class="input_form">
-					
-							<div class="cellsBlock2" style="margin-bottom: 5px;">
-								<div class="cellLeft">Код</div>
-								<div class="cellRight">
-									<input type="text" name="pricecode" id="pricecode" value="">
-									<label id="pricecode_error" class="error"></label>
-								</div>
-							</div>
+						<form action="add_pricelistitem_f.php" id="add_form_id" style="font-size: 90%;" class="input_form">
+							
 							<div class="cellsBlock2" style="margin-bottom: 5px;">
 								<div class="cellLeft">Название</div>
 								<div class="cellRight">
@@ -62,6 +55,44 @@
 									<label id="pricename_error" class="error"></label>
 								</div>
 							</div>
+
+							<div class="cellsBlock2" style="margin-bottom: 5px;">
+								<div class="cellLeft">Код<br>страховых</div>
+								<div class="cellRight">
+									<input type="text" name="pricecode" id="pricecode" value="">
+									<label id="pricecode_error" class="error"></label>
+								</div>
+							</div>
+							
+							<div class="cellsBlock2" style="display: none; margin-bottom: 5px;">
+								<div class="cellLeft">Код МКБ</div>
+								<div class="cellRight">
+									<input type="text" name="pricecodemkb" id="pricecodemkb" value="">
+									<label id="pricecodemkb_error" class="error"></label>
+								</div>
+							</div>
+							
+							<div class="cellsBlock2" style="margin-bottom: 5px;">
+								<div class="cellLeft" style="position: relative;">
+								    Код услуги
+								    <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
+                                </div>
+								<div class="cellRight">
+									<input type="text" name="pricecode_u" id="pricecode_u" value="">
+									<label id="pricecode_u_error" class="error"></label>
+								</div>
+							</div>
+							<div class="cellsBlock2" style="margin-bottom: 5px;">
+								<div class="cellLeft" style="position: relative;">
+								    Код услуги<br>по номенклатуре
+								    <div class="notes_count" style="top: 0; right: 2px;">новый прайс</div>
+                                </div>
+								<div class="cellRight">
+									<input type="text" name="pricecode_nom" id="pricecode_nom" value="">
+									<label id="pricecode_nom_error" class="error"></label>
+								</div>
+							</div>
+							
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Категория</div>
                                 <div class="cellRight">
@@ -77,7 +108,14 @@
                                         </div>
                                     </div>
 							<div class="cellsBlock2">
-								<div class="cellLeft">Цена</div>
+								<div class="cellLeft">
+								    Цена
+                                    <ul style="margin-left: 6px; margin-bottom: 10px;">
+                                        <li style="width: auto; color:#777; font-size: 80%;">
+                                            Цены 2 и 3 указываются явно для тех позиций, для которых цены фиксированы
+                                        </li>
+                                    </ul>
+                                </div>
 								<div class="cellRight">
 									<input type="text" name="price" id="price" value="0"  style="width: 50px;"> руб.
 									<label id="price_error" class="error"></label>
@@ -104,7 +142,7 @@
 								<div class="cellsBlock2">
 									<div class="cellLeft">С какого числа применять цену:</div>
 									<div class="cellRight">
-										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date($day.'.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
+										<input type="text" id="iWantThisDate2" name="iWantThisDate2" class="dateс" style="border:none; color: rgb(30, 30, 30); font-weight: bold;" value="'.date('01.'.$month.'.'.$year).'" onfocus="this.select();_Calendar.lcs(this)" 
 										onclick="event.cancelBubble=true;this.select();_Calendar.lcs(this)"> 
 									</div>
 								</div>';

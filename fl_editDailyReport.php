@@ -12,11 +12,14 @@
             if ($_GET) {
                 if (isset($_GET['report_id'])){
 
+                    include_once('DBWorkPDO.php');
                     include_once 'DBWork.php';
                     include_once 'functions.php';
 
                     //!!! @@@
                     include_once 'ffun.php';
+
+                    $db = new DB();
 
                     $filials_j = getAllFilials(false, false, false);
                     //var_dump($filials_j);
@@ -30,437 +33,570 @@
                     //Смотрим не было ли уже отчета на этом филиале за этот день
                     $dailyReports_j = array();
 
-                    $msql_cnnct = ConnectToDB();
+                    //$msql_cnnct = ConnectToDB();
 
-                    $query = "SELECT * FROM `fl_journal_daily_report` WHERE `id`='{$_GET['report_id']}'";
+                    //Основные данные
+                    $args = [
+                        'report_id' => $_GET['report_id']
+                    ];
 
-                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                    $query = "SELECT * FROM `fl_journal_daily_report` WHERE `id`=:report_id";
 
-                    $number = mysqli_num_rows($res);
+                    $dailyReports_j = $db::getRows($query, $args);
 
-                    if ($number != 0) {
-                        while ($arr = mysqli_fetch_assoc($res)) {
-                            array_push($dailyReports_j, $arr);
-                        }
-                    }
+//                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//
+//                    $number = mysqli_num_rows($res);
+//
+//                    if ($number != 0) {
+//                        while ($arr = mysqli_fetch_assoc($res)) {
+//                            array_push($dailyReports_j, $arr);
+//                        }
+//                    }
                     //var_dump($query);
                     //var_dump($dailyReports_j);
 
-                    CloseDB($msql_cnnct);
+                    //CloseDB($msql_cnnct);
 
-                    $report_date = $dailyReports_j[0]['day'].'.'.$dailyReports_j[0]['month'].'.'.$dailyReports_j[0]['year'];
+                    if (!empty($dailyReports_j)) {
 
-                    $datastart = date('Y-m-d', strtotime($report_date.' 00:00:00'));
-                    $dataend = date('Y-m-d', strtotime($report_date.' 23:59:59'));
+                        $report_date = $dailyReports_j[0]['day'] . '.' . $dailyReports_j[0]['month'] . '.' . $dailyReports_j[0]['year'];
 
-                    $filial_id = $dailyReports_j[0]['filial_id'];
+                        $datastart = date('Y-m-d', strtotime($report_date . ' 00:00:00'));
+                        $dataend = date('Y-m-d', strtotime($report_date . ' 23:59:59'));
 
-                    echo '
-                        <div id="status">
-                            <header>
-                                <div class="nav">
-                                    <a href="stat_cashbox.php" class="b">Касса</a>
-                                    <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
-                                    <a href="fl_createSchedulerReport.php?filial_id='.$filial_id.'" class="b">Добавить рабочие часы</a>
-                                </div>
-                                <h2>Редактировать ежедневный отчёт</h2>
-                            </header>';
+                        $filial_id = $dailyReports_j[0]['filial_id'];
 
-                    if (!empty($dailyReports_j)){
+                        //Данные по счётчикам (какие есть в филиале)
+                        //Основные данные
+                        $args = [
+                            'filial_id' => $filial_id
+                        ];
 
-                        echo '
-                             <div id="data">';
-                        echo '				
-                                <div id="errrror"></div>';
+                        $query = "SELECT * FROM `spr_lamps` WHERE `filial_id`=:filial_id";
 
-                        echo '
-                                <div style="">';
+                        $lamps_j = $db::getRows($query, $args);
+//                        var_dump($query);
+//                        var_dump($lamps_j);
 
-                        //начало левого блока
-                        echo '
-                                    <div style="display: inline-block; vertical-align: top; border: 2px dotted rgb(201, 206, 206);">';
+                        //Данные по счётчикам с показаниями
 
-                        
-                        echo '
-                                        <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%;">
-                                                Дата отчёта
-                                            </div>
-                                            <div class="cellRight">
-                                                ' . $report_date . '            
-                                            </div>
-                                        </div>';
+                        $args = [
+                            'filial_id' => $filial_id,
+                            'd' => $dailyReports_j[0]['day'],
+                            'm' => $dailyReports_j[0]['month'],
+                            'y' => $dailyReports_j[0]['year']
+                        ];
 
-                        echo '				
-                                        <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%;">
-                                                Филиал
-                                            </div>
-                                            <div class="cellRight">';
+                        $query = "SELECT `id`, `lamp_id`, `evening`, `count` FROM `fl_journal_lamp_report` WHERE `filial_id`=:filial_id AND `day`=:d AND `month`=:m AND `year`=:y";
 
-                        echo $filials_j[$filial_id]['name'].'<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $filial_id . '">';
+                        $lamp_report_j = $db::getRows($query, $args);
+//                        var_dump($query);
+//                        var_dump($lamp_report_j);
 
-                        echo '
-                                            </div>
-                                        </div>';
+                        //Соберем массив в норм виде, чтобы потом к нему обращаться
+                        $lamp_counts_arr = array();
 
-
-
-                        if (($finances['see_all'] == 1) || $god_mode) {
-                            echo '
-                                        <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">
-                                                Итоговая сумма<br>
-                                                <i style="color: rgb(127, 17, 3);">наличные</i>
-                                            </div>
-                                            <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
-                                                <span id="itogSummShow">'.$dailyReports_j[0]['itogSumm'].'</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
-                                                <span id="itogSummNalShow" style="color: rgb(127, 17, 3);">0</span> руб.
-                                            </div>
-                                        </div>';
-                        }
-
-                        echo '
-                                        <input type="hidden" id="itogSumm" value="'.$dailyReports_j[0]['itogSumm'].'">';
-
-                        echo '
-                                        <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%;">
-                                                Z-отчёт, руб.<br>
-                                                <span style="font-size:80%; color: #999; ">Сумма всех Z-отчётов за смену</span>
-                                            </div>
-                                            <div class="cellRight">
-                                                <input type="text" name="zreport" id="zreport" value="'.$dailyReports_j[0]['zreport'].'" style="font-size: 12px;">
-                                            </div>
-                                        </div>';
-
-//                        echo '
-//                                        <div class="cellsBlock400px">
-//                                            <div class="cellLeft" style="font-size: 90%;">Общая сумма</div>
-//                                            <div class="cellRight calculateOrder" style="font-size: 13px;">
-//                                                <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
-//                                            </div>
-//                                        </div>';
-
-                        echo '
-                                        <div class="cellsBlock400px">
-                                            <div class="cellLeft" style="font-size: 90%;">
-                                                Общая сумма<br>
-                                                <i style="color: rgb(127, 17, 3);">по кассе <span style="font-size: 80%">(Z-отчет)</span></i>
-                                            </div>
-                                            <div class="cellRight calculateOrder" style="font-size: 13px;">
-                                                <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
-                                                <span id="allsummKassa" style="font-weight: normal; color: rgb(127, 17, 3);">0</span> <span style="font-weight: normal; color: rgb(127, 17, 3);">руб.</span>
-                                            </div>
-                                        </div>';
-
-
-                        $SummNal = 0;
-                        $SummBeznal = 0;
-
-                        echo '
-                                <div class="cellsBlock400px">
-                                    <div class="cellLeft" style="font-size: 90%;">
-                                        Наличные<br>
-                                        <i style="color: rgb(127, 17, 3);">остаток</i>
-                                    </div>
-                                    <div class="cellRight calculateOrder" style="font-size: 13px; font-weight: normal;">
-                                        <span id="SummNal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
-                                        <span id="SummNalOstatok" style="color: rgb(127, 17, 3);">0</span> руб.
-                                    </div>
-                                </div>';
-
-                        echo '
-                                <div class="cellsBlock400px">
-                                    <div class="cellLeft" style="font-size: 90%;">Безнал.</div>
-                                    <div class="cellRight calculateOrder" style="font-size: 13px; font-weight: normal;">
-                                        <span id="SummBeznal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
-                                    </div>
-                                </div>';
-
-                        //Получаем данные по отчету касса
-                        //var_dump(ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1));
-
-                        $SummNalStomCosm = 0;
-                        $SummBeznalStomCosm = 0;
-
-                        $SummCertNal = 0;
-                        $SummCertBeznal = 0;
-                        $CertCount = 0;
-
-                        $SummGiveOutCash = 0;
-
-                        $SummAbonNal = 0;
-                        $SummAbonBeznal = 0;
-                        $AbonCount = 0;
-
-                        $SummSolarNal = 0;
-                        $SummSolarBeznal = 0;
-                        $SolarCount = 0;
-
-                        $SummRealizNal = 0;
-                        $SummRealizBeznal = 0;
-                        $RealizCount = 0;
-
-                        $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1, false);
-
-                        if (!empty($result)) {
-                            if (!empty($result['rezult'])) {
-                                foreach ($result['rezult'] as $item) {
-                                    if ($item['summ_type'] == 1) {
-                                        $SummNalStomCosm += $item['summ'];
-                                    }
-                                    if ($item['summ_type'] == 2) {
-                                        $SummBeznalStomCosm += $item['summ'];
-                                    }
+                        if (!empty($lamp_report_j)){
+                            foreach ($lamp_report_j as $count_data){
+                                if (!isset($lamp_counts_arr[$count_data['lamp_id']])){
+                                    $lamp_counts_arr[$count_data['lamp_id']] = array();
+                                    $lamp_counts_arr[$count_data['lamp_id']]['m'] = 0;
+                                    $lamp_counts_arr[$count_data['lamp_id']]['e'] = 0;
                                 }
-                            }
-                            //сертификаты
-                            if (!empty($result['rezult_cert'])) {
-
-                                $CertCount = count($result['rezult_cert']);
-
-                                foreach ($result['rezult_cert'] as $item) {
-                                    if ($item['summ_type'] == 1) {
-                                        $SummCertNal += $item['cell_price'];
-                                    }
-                                    if ($item['summ_type'] == 2) {
-                                        $SummCertBeznal += $item['cell_price'];
-                                    }
-                                }
-                            }
-                            //абонементы
-                            if (!empty($result['rezult_abon'])) {
-
-                                $AbonCount = count($result['rezult_abon']);
-
-                                foreach ($result['rezult_abon'] as $item) {
-                                    if ($item['summ_type'] == 1) {
-                                        $SummAbonNal += $item['cell_price'];
-                                    }
-                                    if ($item['summ_type'] == 2) {
-                                        $SummAbonBeznal += $item['cell_price'];
-                                    }
-                                }
-                            }
-                            //солярий
-                            if (!empty($result['rezult_solar'])) {
-
-                                $SolarCount = count($result['rezult_solar']);
-
-                                foreach ($result['rezult_solar'] as $item) {
-                                    if ($item['summ_type'] == 1) {
-                                        $SummSolarNal += $item['summ'];
-                                    }
-                                    if ($item['summ_type'] == 2) {
-                                        $SummSolarBeznal += $item['summ'];
-                                    }
-                                }
-                            }
-                            //реализация
-                            if (!empty($result['rezult_realiz'])) {
-
-                                $RealizCount = count($result['rezult_realiz']);
-
-                                foreach ($result['rezult_realiz'] as $item) {
-                                    if ($item['summ_type'] == 1) {
-                                        $SummRealizNal += $item['summ'];
-                                    }
-                                    if ($item['summ_type'] == 2) {
-                                        $SummRealizBeznal += $item['summ'];
-                                    }
-                                }
-                            }
-                            //Расходы
-                            if (!empty($result['rezult_give_out_cash'])){
-                                foreach ($result['rezult_give_out_cash'] as $item) {
-                                    $SummGiveOutCash += $item['summ'];
+                                if ($count_data['evening'] == 1){
+                                    $lamp_counts_arr[$count_data['lamp_id']]['e'] = $count_data['count'];
+                                }else{
+                                    $lamp_counts_arr[$count_data['lamp_id']]['m'] = $count_data['count'];
                                 }
                             }
                         }
+//                        var_dump($lamp_counts_arr);
 
                         echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
-                                    <div class="cellLeft">
-                                        Средства из отчёта "Касса"<br>
-                                        <span style="font-size:80%; color: #999; ">сумма из нарядов</span>
+                            <div id="status">
+                                <header>
+                                    <div class="nav">
+                                        <a href="stat_cashbox.php" class="b">Касса</a>
+                                        <a href="fl_consolidated_report_admin.php?filial_id=' . $filial_id . '&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'" class="b">Сводный отчёт по филиалу</a>
+                                        <a href="fl_createSchedulerReport.php?filial_id=' . $filial_id . '&d='.$dailyReports_j[0]['day'].'&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'" class="b">Добавить рабочие часы</a>
                                     </div>
-                                    <div class="cellRight" id="general">
-                                        <!--<div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNalStomCosm" class="allSummNal">' . $SummNalStomCosm . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznalStomCosm" class="allSummBeznal">' . $SummBeznalStomCosm . '</i></b> руб.</div>
-                                        <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> шт.</div>
-                                        <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>-->
-                                        
-                                                                                <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNalStomCosm" class="allSummNal">' . $SummNalStomCosm . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznalStomCosm" class="allSummBeznal">' . $SummBeznalStomCosm . '</i></b> руб.</div>
-                                        
-                                        <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> шт.</div>
-                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>
-                                        
-                                        <div style="margin: 6px 0 2px;">Продано абонементов: <b><i id="AbonCount" class="">' . $AbonCount . '</i></b> шт.</div>
-                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummAbonNal" class="allSummNal">' . $SummAbonNal . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummAbonBeznal" class="allSummBeznal">' . $SummAbonBeznal . '</i></b> руб.</div>
-                                        
-                                        <div style="margin: 6px 0 2px;">Посещения солярия: <b><i id="SolarCount" class="">' . $SolarCount . '</i></b> шт.</div>
-                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummSolarNal" class="allSummNal">' . $SummSolarNal . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummSolarBeznal" class="allSummBeznal">' . $SummSolarBeznal . '</i></b> руб.</div>
-                                        
-                                        <div style="margin: 6px 0 2px;">Реализация: <b><i id="RealizCount" class="">' . $RealizCount . '</i></b> шт.</div>
-                                        <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummRealizNal" class="allSummNal">' . $SummRealizNal . '</i></b> руб.</div>
-                                        <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummRealizBeznal" class="allSummBeznal">' . $SummRealizBeznal . '</i></b> руб.</div>
-                                    </div>
-                                </div>';
+                                    <h2>Редактировать ежедневный отчёт</h2>
+                                </header>';
 
-
-                        if (($finances['see_all'] == 1) || $god_mode) {
-                            echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
-                                    <div class="cellLeft">
-                                        Аренда
-                                        <span style="font-size:80%; color: #999; "></span>
-                                    </div>
-                                    <div class="cellRight">
-                                        <input type="text" id="arendaNal" class="itogSummInputNal" style="font-size: 12px; color: rgb(206, 0, 255);" value="'.$dailyReports_j[0]['arenda'].'"><span  style="font-size: 90%;"> руб.</span>
-                                    </div>
-                                </div>';
-                        }else {
+                        if (!empty($dailyReports_j)) {
 
                             echo '
-                                <input type="hidden" id="arendaNal" class="itogSummInput" value="' . $dailyReports_j[0]['arenda'] . '">';
-                        }
+                                 <div id="data">';
+                            echo '				
+                                    <div id="errrror"></div>';
 
-                        /*echo '
-                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
-                                    <div class="cellLeft">
-                                        Ортопантомограмма + КТ
-                                        <span style="font-size:80%; color: #999; "></span>
+                            echo '
+                                    <div style="">';
+
+                            //начало левого блока
+                            echo '
+                                        <div style="display: inline-block; vertical-align: top; border: 2px dotted rgb(201, 206, 206);">';
+
+
+                            echo '
+                                            <div class="cellsBlock400px">
+                                                <div class="cellLeft" style="font-size: 90%;">
+                                                    Дата отчёта
+                                                </div>
+                                                <div class="cellRight">
+                                                    ' . $report_date . '            
+                                                </div>
+                                            </div>';
+
+                            echo '				
+                                            <div class="cellsBlock400px">
+                                                <div class="cellLeft" style="font-size: 90%;">
+                                                    Филиал
+                                                </div>
+                                                <div class="cellRight">';
+
+                            echo $filials_j[$filial_id]['name'] . '<input type="hidden" id="SelectFilial" name="SelectFilial" value="' . $filial_id . '">';
+
+                            echo '
+                                                </div>
+                                            </div>';
+
+
+                            if (($finances['see_all'] == 1) || $god_mode) {
+                                echo '
+                                            <div class="cellsBlock400px">
+                                                <div class="cellLeft" style="font-size: 90%; border: 1px solid rgb(2, 108, 33);">
+                                                    Итоговая сумма<br>
+                                                    <i style="color: rgb(127, 17, 3);">наличные</i>
+                                                </div>
+                                                <div class="cellRight calculateOrder" style="border: 1px solid rgb(2, 108, 33);">
+                                                    <span id="itogSummShow">' . $dailyReports_j[0]['itogSumm'] . '</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
+                                                    <span id="itogSummNalShow" style="color: rgb(127, 17, 3);">0</span> руб.
+                                                </div>
+                                            </div>';
+                            }
+
+                            echo '
+                                            <input type="hidden" id="itogSumm" value="' . $dailyReports_j[0]['itogSumm'] . '">';
+
+                            echo '
+                                            <div class="cellsBlock400px">
+                                                <div class="cellLeft" style="font-size: 90%;">
+                                                    Z-отчёт, руб.<br>
+                                                    <span style="font-size:80%; color: #999; ">Сумма всех Z-отчётов за смену</span>
+                                                </div>
+                                                <div class="cellRight">
+                                                    <input type="text" name="zreport" id="zreport" value="' . $dailyReports_j[0]['zreport'] . '" style="font-size: 12px;">
+                                                </div>
+                                            </div>';
+
+                            //                        echo '
+                            //                                        <div class="cellsBlock400px">
+                            //                                            <div class="cellLeft" style="font-size: 90%;">Общая сумма</div>
+                            //                                            <div class="cellRight calculateOrder" style="font-size: 13px;">
+                            //                                                <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                            //                                            </div>
+                            //                                        </div>';
+
+                            echo '
+                                            <div class="cellsBlock400px">
+                                                <div class="cellLeft" style="font-size: 90%;">
+                                                    Общая сумма<br>
+                                                    <i style="color: rgb(127, 17, 3);">по кассе <span style="font-size: 80%">(Z-отчет)</span></i>
+                                                </div>
+                                                <div class="cellRight calculateOrder" style="font-size: 13px;">
+                                                    <span id="allsumm">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
+                                                    <span id="allsummKassa" style="font-weight: normal; color: rgb(127, 17, 3);">0</span> <span style="font-weight: normal; color: rgb(127, 17, 3);">руб.</span>
+                                                </div>
+                                            </div>';
+
+
+                            $SummNal = 0;
+                            $SummBeznal = 0;
+
+                            echo '
+                                    <div class="cellsBlock400px">
+                                        <div class="cellLeft" style="font-size: 90%;">
+                                            Наличные<br>
+                                            <i style="color: rgb(127, 17, 3);">остаток</i>
+                                        </div>
+                                        <div class="cellRight calculateOrder" style="font-size: 13px; font-weight: normal;">
+                                            <span id="SummNal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>--><br>
+                                            <span id="SummNalOstatok" style="color: rgb(127, 17, 3);">0</span> руб.
+                                        </div>
+                                    </div>';
+
+                            echo '
+                                    <div class="cellsBlock400px">
+                                        <div class="cellLeft" style="font-size: 90%;">Безнал.</div>
+                                        <div class="cellRight calculateOrder" style="font-size: 13px; font-weight: normal;">
+                                            <span id="SummBeznal">0</span> руб. <!--<i class="fa fa-refresh" aria-hidden="true" title="Обновить" style="color: red;" onclick="calculateDailyReportSumm();"></i>-->
+                                        </div>
+                                    </div>';
+
+                            //Получаем данные по отчету касса
+                            //var_dump(ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1));
+
+                            $SummNalStomCosm = 0;
+                            $SummBeznalStomCosm = 0;
+
+                            $SummCertNal = 0;
+                            $SummCertBeznal = 0;
+                            $CertCount = 0;
+
+                            $SummGiveOutCash = 0;
+
+                            $SummAbonNal = 0;
+                            $SummAbonBeznal = 0;
+                            $AbonCount = 0;
+
+                            $SummSolarNal = 0;
+                            $SummSolarBeznal = 0;
+                            $SolarCount = 0;
+
+                            $SummRealizNal = 0;
+                            $SummRealizBeznal = 0;
+                            $RealizCount = 0;
+
+                            $result = ajaxShowResultCashbox($datastart, $dataend, $filial_id, 0, 1, false);
+
+                            if (!empty($result)) {
+                                if (!empty($result['rezult'])) {
+                                    foreach ($result['rezult'] as $item) {
+                                        if ($item['summ_type'] == 1) {
+                                            $SummNalStomCosm += $item['summ'];
+                                        }
+                                        if ($item['summ_type'] == 2) {
+                                            $SummBeznalStomCosm += $item['summ'];
+                                        }
+                                    }
+                                }
+                                //сертификаты
+                                if (!empty($result['rezult_cert'])) {
+
+                                    $CertCount = count($result['rezult_cert']);
+
+                                    foreach ($result['rezult_cert'] as $item) {
+                                        if ($item['summ_type'] == 1) {
+                                            $SummCertNal += $item['cell_price'];
+                                        }
+                                        if ($item['summ_type'] == 2) {
+                                            $SummCertBeznal += $item['cell_price'];
+                                        }
+                                    }
+                                }
+                                //абонементы
+                                if (!empty($result['rezult_abon'])) {
+
+                                    $AbonCount = count($result['rezult_abon']);
+
+                                    foreach ($result['rezult_abon'] as $item) {
+                                        if ($item['summ_type'] == 1) {
+                                            $SummAbonNal += $item['cell_price'];
+                                        }
+                                        if ($item['summ_type'] == 2) {
+                                            $SummAbonBeznal += $item['cell_price'];
+                                        }
+                                    }
+                                }
+                                //солярий
+                                if (!empty($result['rezult_solar'])) {
+
+                                    $SolarCount = count($result['rezult_solar']);
+
+                                    foreach ($result['rezult_solar'] as $item) {
+                                        if ($item['summ_type'] == 1) {
+                                            $SummSolarNal += $item['summ'];
+                                        }
+                                        if ($item['summ_type'] == 2) {
+                                            $SummSolarBeznal += $item['summ'];
+                                        }
+                                    }
+                                }
+                                //реализация
+                                if (!empty($result['rezult_realiz'])) {
+
+                                    $RealizCount = count($result['rezult_realiz']);
+
+                                    foreach ($result['rezult_realiz'] as $item) {
+                                        if ($item['summ_type'] == 1) {
+                                            $SummRealizNal += $item['summ'];
+                                        }
+                                        if ($item['summ_type'] == 2) {
+                                            $SummRealizBeznal += $item['summ'];
+                                        }
+                                    }
+                                }
+                                //Расходы
+                                if (!empty($result['rezult_give_out_cash'])) {
+                                    foreach ($result['rezult_give_out_cash'] as $item) {
+                                        $SummGiveOutCash += $item['summ'];
+                                    }
+                                }
+                            }
+
+                            echo '
+                                    <div class="cellsBlock400px" style="font-size: 90%;">
+                                        <div class="cellLeft">
+                                            Средства из отчёта "Касса"<br>
+                                            <span style="font-size:80%; color: #999; ">сумма из нарядов</span>
+                                        </div>
+                                        <div class="cellRight" id="general">
+                                            <!--<div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNalStomCosm" class="allSummNal">' . $SummNalStomCosm . '</i></b> руб.</div>
+                                            <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznalStomCosm" class="allSummBeznal">' . $SummBeznalStomCosm . '</i></b> руб.</div>
+                                            <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> шт.</div>
+                                            <div style="margin: 2px 0;">- наличная оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
+                                            <div style="margin: 2px 0;">- безналичная оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>-->
+                                            
+                                                                                    <div style="margin: 2px 0;">Наличная оплата: <b><i id="SummNalStomCosm" class="allSummNal">' . $SummNalStomCosm . '</i></b> руб.</div>
+                                            <div style="margin: 2px 0;">Безналичная оплата: <b><i id="SummBeznalStomCosm" class="allSummBeznal">' . $SummBeznalStomCosm . '</i></b> руб.</div>
+                                            
+                                            <div style="margin: 6px 0 2px;">Продано сертификатов: <b><i id="CertCount" class="">' . $CertCount . '</i></b> шт.</div>
+                                            <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummCertNal" class="allSummNal">' . $SummCertNal . '</i></b> руб.</div>
+                                            <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummCertBeznal" class="allSummBeznal">' . $SummCertBeznal . '</i></b> руб.</div>
+                                            
+                                            <div style="margin: 6px 0 2px;">Продано абонементов: <b><i id="AbonCount" class="">' . $AbonCount . '</i></b> шт.</div>
+                                            <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummAbonNal" class="allSummNal">' . $SummAbonNal . '</i></b> руб.</div>
+                                            <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummAbonBeznal" class="allSummBeznal">' . $SummAbonBeznal . '</i></b> руб.</div>
+                                            
+                                            <div style="margin: 6px 0 2px;">Посещения солярия: <b><i id="SolarCount" class="">' . $SolarCount . '</i></b> шт.</div>
+                                            <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummSolarNal" class="allSummNal">' . $SummSolarNal . '</i></b> руб.</div>
+                                            <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummSolarBeznal" class="allSummBeznal">' . $SummSolarBeznal . '</i></b> руб.</div>
+                                            
+                                            <div style="margin: 6px 0 2px;">Реализация: <b><i id="RealizCount" class="">' . $RealizCount . '</i></b> шт.</div>
+                                            <div style="margin: 2px 0;">- нал. оплата: <b><i id="SummRealizNal" class="allSummNal">' . $SummRealizNal . '</i></b> руб.</div>
+                                            <div style="margin: 2px 0;">- безнал. оплата: <b><i id="SummRealizBeznal" class="allSummBeznal">' . $SummRealizBeznal . '</i></b> руб.</div>
+                                        </div>
+                                    </div>';
+
+
+                            if (($finances['see_all'] == 1) || $god_mode) {
+                                echo '
+                                    <div class="cellsBlock400px" style="font-size: 90%;">
+                                        <div class="cellLeft">
+                                            Аренда
+                                            <span style="font-size:80%; color: #999; "></span>
+                                        </div>
+                                        <div class="cellRight">
+                                            <input type="text" id="arendaNal" class="itogSummInputNal" style="font-size: 12px; color: rgb(206, 0, 255);" value="' . $dailyReports_j[0]['arenda'] . '"><span  style="font-size: 90%;"> руб.</span>
+                                        </div>
+                                    </div>';
+                            } else {
+
+                                echo '
+                                    <input type="hidden" id="arendaNal" class="itogSummInput" value="' . $dailyReports_j[0]['arenda'] . '">';
+                            }
+
+                            /*echo '
+                                    <div class="cellsBlock400px" style="font-size: 90%; display: none;">
+                                        <div class="cellLeft">
+                                            Ортопантомограмма + КТ
+                                            <span style="font-size:80%; color: #999; "></span>
+                                        </div>
+                                        <div class="cellRight">
+                                            <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="ortoSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_orto_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                            <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="ortoSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_orto_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                        </div>
+                                    </div>';
+
+                            echo '
+                                    <div class="cellsBlock400px" style="font-size: 90%; display: none;">
+                                        <div class="cellLeft">
+                                            Специалисты<br>
+                                            <span style="font-size:80%; color: #999; ">для ПР72</span>
+                                        </div>
+                                        <div class="cellRight">
+                                            <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_specialist_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                            <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                        </div>
+                                    </div>';*/
+
+                            echo '<input type="hidden" id="specialistSummNal" class="allSummInputNal" value="' . $dailyReports_j[0]['temp_specialist_nal'] . '">';
+                            echo '<input type="hidden" id="specialistSummBeznal" class="allSummInputBeznal" value="' . $dailyReports_j[0]['temp_specialist_beznal'] . '">';
+
+                            echo '<input type="hidden" id="ortoSummNal" class="allSummInputNal" value="' . $dailyReports_j[0]['temp_orto_nal'] . '">';
+                            echo '<input type="hidden" id="ortoSummBeznal" class="allSummInputBeznal" value="' . $dailyReports_j[0]['temp_orto_beznal'] . '">';
+
+                            /*                        echo '
+                                                            <div class="cellsBlock400px" style="font-size: 90%;">
+                                                                <div class="cellLeft">
+                                                                    Анализы<br>
+                                                                    <span style="font-size:80%; color: #999; ">для ПР72</span>
+                                                                </div>
+                                                                <div class="cellRight">
+                                                                    <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="analizSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_analiz_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                                                    <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="analizSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_analiz_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                                                </div>
+                                                            </div>';*/
+
+                            echo '<input type="hidden" id="analizSummNal" class="allSummInputNal" value="' . $dailyReports_j[0]['temp_analiz_nal'] . '">';
+                            echo '<input type="hidden" id="analizSummBeznal" class="allSummInputBeznal" value="' . $dailyReports_j[0]['temp_analiz_beznal'] . '">';
+
+                            /*                        echo '
+                                                            <div class="cellsBlock400px" style="font-size: 90%;">
+                                                                <div class="cellLeft">
+                                                                    Солярий<br>
+                                                                    <span style="font-size:80%; color: #999; "></span>
+                                                                </div>
+                                                                <div class="cellRight">
+                                                                    <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="solarSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_solar_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                                                                    <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_solar_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                                                </div>
+                                                            </div>';*/
+
+                            echo '<input type="hidden" id="solarSummNal" class="allSummInputNal" value="' . $dailyReports_j[0]['temp_solar_nal'] . '">';
+                            echo '<input type="hidden" id="solarSummBeznal" class="allSummInputBeznal" value="' . $dailyReports_j[0]['temp_solar_beznal'] . '">';
+
+                            //конец левого блока
+                            echo '
+                                </div>';
+
+                            //начало правого блока
+                            echo '
+                                <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
+
+                            echo '
+                                    <div class="cellsBlock400px" style="font-size: 90%;">
+                                        <div class="cellLeft">
+                                            Расход <!--<a href="giveout_cash_all.php?filial_id=' . $filial_id . '&d=01&m=' . $dailyReports_j[0]['month'] . '&y=' . $dailyReports_j[0]['year'] . '"><i class="fa fa-sign-in" aria-hidden="true" title="Перейти к расходам"></i></a>--><br>
+                                            <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
+                                        </div>
+                                        <div class="cellRight" style="color: red;">
+                                            <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="' . $dailyReports_j[0]['temp_giveoutcash'] . '"><span  style="font-size: 90%;"> руб.</span>-->
+                                            <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="$SummGiveOutCashNal"><span  style="font-size: 90%;"> руб.</span>-->
+                                            <span id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; ">' . $SummGiveOutCash . '</span><span  style="font-size: 90%;"> руб.</span>
+                                            <a href="giveout_cash_all.php?filial_id=' . $filial_id . '&d=' . $dailyReports_j[0]['day'] . '&m=' . $dailyReports_j[0]['month'] . '&y=' . $dailyReports_j[0]['year'] . '" class="ahref button_tiny" style="font-size: 80%; cursor: pointer; float: right;">Подробно</a>
+                                        </div>
+                                    </div>';
+
+                            //                        if (($finances['see_all'] == 1) || $god_mode) {
+                            //                            echo '
+                            //                                <div class="cellsBlock400px" style="font-size: 90%;">
+                            //                                    <div class="cellLeft">
+                            //                                        Банк<br>
+                            //                                        <span style="font-size:80%; color: #999; "></span>
+                            //                                    </div>
+                            //                                    <div class="cellRight">
+                            //                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="bankSummNal" class="summMinus" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                            //                                        <!--<span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>-->
+                            //                                    </div>
+                            //                                </div>';
+                            //
+                            //                            echo '
+                            //                                <div class="cellsBlock400px" style="font-size: 90%;">
+                            //                                    <div class="cellLeft">
+                            //                                        АН<br>
+                            //                                        <span style="font-size:80%; color: #999; "></span>
+                            //                                    </div>
+                            //                                    <div class="cellRight">
+                            //                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="directorSummNal" class="summMinus" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
+                            //                                        <!--<span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>-->
+                            //                                    </div>
+                            //                                </div>';
+                            //                        }else {
+                            //                            echo '
+                            //                                <input type="hidden" id="bankSummNal" value="' . $dailyReports_j[0]['bank_summ_nal'] . '">';
+                            //                            echo '
+                            //                                <input type="hidden" id="directorSummNal" value="' . $dailyReports_j[0]['director_summ_nal'] . '">';
+                            //                        }
+
+
+                            // Счётчики
+                            if (!empty($lamps_j)) {
+                                echo '
+                                <input type="hidden" id="haveLamps" value="1">
+                                <div class="cellsBlock400px" style="font-size: 90%; ">
+                                    
+                                    <div class="cellLeft" style="font-size: 90%; ">
+                                        Показания счётчика солярия/лазеров<br>
+                                        <!--<span style="font-size:80%; color: #999; "></span>-->
                                     </div>
-                                    <div class="cellRight">
-                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="ortoSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_orto_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="ortoSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_orto_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
+                                    <div class="cellRight" style="">';
+
+                                foreach ($lamps_j as $lamp) {
+                                    $descr_color = 'color: #404040;';;
+                                    //Если удалили эту лампу когда-то, выделим её красным
+                                    if ($lamp['status'] == 9){
+                                        $descr_color = 'color: red; text-shadow: 1px 1px 5px rgb(0 0 0 / 80%);';
+                                        $lamp['descr'] = $lamp['descr'].'<br> (удалён)';
+                                    }
+
+                                    //Показания счетчиков утро/вечер
+                                    $count_value_m = 0;
+                                    $count_value_e = 0;
+                                    if (isset($lamp_counts_arr[$lamp['id']])){
+                                        $count_value_m = $lamp_counts_arr[$lamp['id']]['m'];
+                                        $count_value_e = $lamp_counts_arr[$lamp['id']]['e'];
+                                    }
+
+
+                                    echo '
+                                        <table style="border: 1px dashed rgb(180 180 180); padding: 2px 5px 5px; margin-bottom: 2px;">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <span style="font-size: 90%; '.$descr_color.' ">'.$lamp['descr'].'</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="/*vertical-align: center;*/">
+                                                    <span style="font-size:80%; color: #999; ">утро</span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="lampCount_m_'.$lamp['id'].'" class="lampCount" style="width: 50px; font-size: 12px; color: rgb(0,0,0); /*text-align: right;*/" value="'.$count_value_m.'">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span style="font-size:80%; color: #999; ">вечер</span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="lampCount_e_'.$lamp['id'].'" class="lampCount" style="width: 50px; font-size: 12px; color: rgb(0,0,0); /*text-align: right;*/" value="'.$count_value_e.'">
+                                                </td>
+                                            </tr>
+                                        </table>';
+                                }
+
+                                echo '
                                     </div>
                                 </div>';
 
-                        echo '
-                                <div class="cellsBlock400px" style="font-size: 90%; display: none;">
-                                    <div class="cellLeft">
-                                        Специалисты<br>
-                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
-                                    </div>
-                                    <div class="cellRight">
-                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="specialistSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_specialist_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="specialistSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                    </div>
-                                </div>';*/
+                            }else{
+                                echo '
+                                <input type="hidden" id="haveLamps" value="1">';
+                            }
 
-                        echo '<input type="hidden" id="specialistSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_specialist_nal'].'">';
-                        echo '<input type="hidden" id="specialistSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_specialist_beznal'].'">';
 
-                        echo '<input type="hidden" id="ortoSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_orto_nal'].'">';
-                        echo '<input type="hidden" id="ortoSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_orto_beznal'].'">';
 
-/*                        echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
-                                    <div class="cellLeft">
-                                        Анализы<br>
-                                        <span style="font-size:80%; color: #999; ">для ПР72</span>
-                                    </div>
-                                    <div class="cellRight">
-                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="analizSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_analiz_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="analizSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_analiz_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                    </div>
-                                </div>';*/
+                            echo '
+                                </div>';
+                            //конец правого блока
 
-                        echo '<input type="hidden" id="analizSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_analiz_nal'].'">';
-                        echo '<input type="hidden" id="analizSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_analiz_beznal'].'">';
-
-/*                        echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
-                                    <div class="cellLeft">
-                                        Солярий<br>
-                                        <span style="font-size:80%; color: #999; "></span>
-                                    </div>
-                                    <div class="cellRight">
-                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="solarSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_solar_nal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-                                        <span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_solar_beznal'].'" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>
-                                    </div>
-                                </div>';*/
-
-                        echo '<input type="hidden" id="solarSummNal" class="allSummInputNal" value="'.$dailyReports_j[0]['temp_solar_nal'].'">';
-                        echo '<input type="hidden" id="solarSummBeznal" class="allSummInputBeznal" value="'.$dailyReports_j[0]['temp_solar_beznal'].'">';
-
-                        //конец левого блока
-                        echo '
+                            echo '
                             </div>';
 
-                        //начало правого блока
-                        echo '
-                            <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
+                            echo '
+                                <input type="button" class="b" value="Применить" onclick="fl_editDailyReport_add(' . $_GET['report_id'] . ', \'' . $dailyReports_j[0]['day'] . '\', \'' . $dailyReports_j[0]['month'] . '\', \'' . $dailyReports_j[0]['year'] . '\');">';
 
-                        echo '
-                                <div class="cellsBlock400px" style="font-size: 90%;">
-                                    <div class="cellLeft">
-                                        Расход <!--<a href="giveout_cash_all.php?filial_id='.$filial_id.'&d=01&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'"><i class="fa fa-sign-in" aria-hidden="true" title="Перейти к расходам"></i></a>--><br>
-                                        <span style="font-size:80%; color: #999; ">Выдано из кассы</span>
-                                    </div>
-                                    <div class="cellRight" style="color: red;">
-                                        <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="'.$dailyReports_j[0]['temp_giveoutcash'].'"><span  style="font-size: 90%;"> руб.</span>-->
-                                        <!--<input type="text" id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; " value="$SummGiveOutCashNal"><span  style="font-size: 90%;"> руб.</span>-->
-                                        <span id="summMinusNal" class="summMinus" style="font-size: 12px; color: red; ">'.$SummGiveOutCash.'</span><span  style="font-size: 90%;"> руб.</span>
-                                        <a href="giveout_cash_all.php?filial_id='.$filial_id.'&d='.$dailyReports_j[0]['day'].'&m='.$dailyReports_j[0]['month'].'&y='.$dailyReports_j[0]['year'].'" class="ahref button_tiny" style="font-size: 80%; cursor: pointer; float: right;">Подробно</a>
-                                    </div>
-                                </div>';
-
-//                        if (($finances['see_all'] == 1) || $god_mode) {
-//                            echo '
-//                                <div class="cellsBlock400px" style="font-size: 90%;">
-//                                    <div class="cellLeft">
-//                                        Банк<br>
-//                                        <span style="font-size:80%; color: #999; "></span>
-//                                    </div>
-//                                    <div class="cellRight">
-//                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="bankSummNal" class="summMinus" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-//                                        <!--<span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>-->
-//                                    </div>
-//                                </div>';
-//
-//                            echo '
-//                                <div class="cellsBlock400px" style="font-size: 90%;">
-//                                    <div class="cellLeft">
-//                                        АН<br>
-//                                        <span style="font-size:80%; color: #999; "></span>
-//                                    </div>
-//                                    <div class="cellRight">
-//                                        <span style="font-size:90%; color: #5f5f5f; ">Нал. </span><br><input type="text" id="directorSummNal" class="summMinus" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span><br>
-//                                        <!--<span style="font-size:90%; color: #5f5f5f; ">Безнал. </span><br><input type="text" id="solarSummBeznal" class="allSummInputBeznal" value="0" style="font-size: 12px;"><span  style="font-size: 90%;"> руб.</span>-->
-//                                    </div>
-//                                </div>';
-//                        }else {
-//                            echo '
-//                                <input type="hidden" id="bankSummNal" value="' . $dailyReports_j[0]['bank_summ_nal'] . '">';
-//                            echo '
-//                                <input type="hidden" id="directorSummNal" value="' . $dailyReports_j[0]['director_summ_nal'] . '">';
-//                        }
+                        } else {
+                            echo '<span style="color: red;">Ничего не найдено</span>';
+                        }
 
                         echo '
                             </div>';
-                        //конец правого блока
-
-                        echo '
-                        </div>';
-
-                        echo '
-                            <input type="button" class="b" value="Применить" onclick="fl_editDailyReport_add('.$_GET['report_id'].', \''.$dailyReports_j[0]['month'].'\', \''.$dailyReports_j[0]['year'].'\');">';
-
                     }else{
-                        echo '<span style="color: red;">Ничего не найдено</span>';
+                        echo '
+                            <div id="status">
+                                <header>
+                                    <div class="nav">
+                                        <a href="stat_cashbox.php" class="b">Касса</a>
+                                        <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>
+                                    </div>
+                                    <span style="color: red;">Ничего не найдено</span>
+                                </header>';
+                        echo '
+                            </div>';
                     }
-
-                    echo '
-                        </div>';
-
                 }else{
                     echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
                 }
@@ -583,6 +719,48 @@
                             }
                             if (!isNaN($(this).val())){
                                 calculateDailyReportSumm();
+                            }
+                        })
+                        
+						//Отдельный костыль для счетчиков
+                        $(".lampCount").blur(function() {
+                            //console.log($(this).val());
+                            
+                            var value = $(this).val();
+                            //Если не число
+                            if (isNaN(value)){
+                                $(this).val(0);
+                            }else{
+                                if (value < 0){
+                                    $(this).val(value * -1);
+                                }else{
+                                    if (value == ""){
+                                        $(this).val(0);
+                                    }else{
+                                        if (value === undefined){
+                                            $(this).val(0);
+                                        }else{
+                                            //Всё норм с типами данных
+                                            //console.log("Всё норм с типами данных")
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            //calculateDailyReportSumm();
+                            
+                        });
+						
+						$(".lampCount").bind("change keyup input click", function() {
+                            if($(this).val().length > 0){
+                                //console.log($(this).val().length);
+                                
+                                //меняем запятую на точку (разделитель)
+                                $(this).val($(this).val().replace(\',\', \'.\'));
+                                
+                                if ($(this).val() == 0){
+                                    $(this).val("")
+                                }
                             }
                         })
 						

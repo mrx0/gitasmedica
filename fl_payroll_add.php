@@ -418,7 +418,7 @@ if ($enter_ok){
                     echo '
                                         <div style="margin: 10px 0;">
                                             <!--<div style="font-size: 90%;  color: #555;">
-                                                <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (250 руб. за одну "пустую" смену)
+                                                <span style="color: rgba(10, 10, 10, 1);">Надбавка за "пустые смены".</span> (500 руб. за одну "пустую" смену)
                                             </div>-->';
 
                     if ($tabel_j[0]['empty_smena'] == 0) {

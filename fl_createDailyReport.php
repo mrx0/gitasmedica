@@ -10,11 +10,14 @@
 
         if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
 
+            include_once('DBWorkPDO.php');
             include_once 'DBWork.php';
             include_once 'functions.php';
 
             //!!! @@@
             include_once 'ffun.php';
+
+            $db = new DB();
 
             $have_target_filial = true;
 
@@ -59,8 +62,8 @@
                     <header>
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
-                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'" class="b">Сводный отчёт по филиалу</a>
-                            <a href="fl_createSchedulerReport.php?filial_id='.$filial_id.'" class="b">Добавить рабочие часы</a>
+                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'&m='.$m.'&y='.$y.'" class="b">Сводный отчёт по филиалу</a>
+                            <a href="fl_createSchedulerReport.php?filial_id='.$filial_id.'&d='.$d.'&m='.$m.'&y='.$y.'" class="b">Добавить рабочие часы</a>
                         </div>
                         <h2>Ежедневный отчёт</h2>
                     </header>';
@@ -75,23 +78,51 @@
                 //Смотрим не было ли уже отчета на этом филиале за этот день
                 $dailyReports_j = array();
 
-                $msql_cnnct = ConnectToDB ();
-
-                $query = "SELECT * FROM `fl_journal_daily_report` WHERE `filial_id`='{$filial_id}' AND `day`='{$d}' AND  `month`='$m' AND  `year`='$y'";
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
-
-                $number = mysqli_num_rows($res);
-
-                if ($number != 0) {
-                    while ($arr = mysqli_fetch_assoc($res)) {
-                        array_push($dailyReports_j, $arr);
-                    }
-                }
+//                $msql_cnnct = ConnectToDB ();
+//
+//                $query = "SELECT * FROM `fl_journal_daily_report` WHERE `filial_id`='{$filial_id}' AND `day`='{$d}' AND  `month`='$m' AND  `year`='$y'";
+//
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+//
+//                $number = mysqli_num_rows($res);
+//
+//                if ($number != 0) {
+//                    while ($arr = mysqli_fetch_assoc($res)) {
+//                        array_push($dailyReports_j, $arr);
+//                    }
+//                }
                 //var_dump($query);
                 //var_dump($dailyReports_j);
 
-                CloseDB ($msql_cnnct);
+//                CloseDB ($msql_cnnct);
+
+
+                //Основные данные
+                $args = [
+                    'filial_id' => $filial_id,
+                    'd' => $d,
+                    'm' => $m,
+                    'y' => $y
+                ];
+
+                $query = "SELECT * FROM `fl_journal_daily_report` WHERE `filial_id`=:filial_id AND `day`=:d AND  `month`=:m AND  `year`=:y";
+
+                $dailyReports_j = $db::getRows($query, $args);
+//                var_dump($query);
+//                var_dump($dailyReports_j);
+
+
+                //Данные по счётчикам (какие есть в филиале)
+                //Основные данные
+                $args = [
+                    'filial_id' => $filial_id
+                ];
+
+                $query = "SELECT * FROM `spr_lamps` WHERE `filial_id`=:filial_id AND `status` <> '9'";
+
+                $lamps_j = $db::getRows($query, $args);
+//                var_dump($query);
+//                var_dump($lamps_j);
 
                 //Если нет отчета в этом филиале за этот день
                 //Или отчёт есть, но мы имеем право смотреть тут
@@ -444,7 +475,6 @@
                             <div style="display: inline-block; vertical-align: top; /*border: 2px dotted rgb(201, 206, 206);*/">';
 
                     //Расход
-
                     echo '
                                 <div class="cellsBlock400px" style="font-size: 90%; ">
                                     
@@ -489,6 +519,56 @@
 //                        echo '
 //                                <input type="hidden" id="directorSummNal" value="0">';
 //                    }
+
+
+                    // Счётчики
+                    if (!empty($lamps_j)) {
+                        echo '
+                                <input type="hidden" id="haveLamps" value="1">
+                                <div class="cellsBlock400px" style="font-size: 90%; ">
+                                    
+                                    <div class="cellLeft" style="font-size: 90%; ">
+                                        Показания счётчика солярия/лазеров<br>
+                                        <!--<span style="font-size:80%; color: #999; "></span>-->
+                                    </div>
+                                    <div class="cellRight" style="">';
+
+                        foreach ($lamps_j as $lamp) {
+                            echo '
+                                        <table style="border: 1px dashed rgb(180 180 180); padding: 2px 5px 5px; margin-bottom: 2px;">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <span style="font-size: 90%; color: #404040; ">'.$lamp['descr'].'</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="/*vertical-align: center;*/">
+                                                    <span style="font-size:80%; color: #999; ">утро</span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="lampCount_m_'.$lamp['id'].'" class="lampCount" style="width: 50px; font-size: 12px; color: rgb(0,0,0); /*text-align: right;*/" value="0">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span style="font-size:80%; color: #999; ">вечер</span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="lampCount_e_'.$lamp['id'].'" class="lampCount" style="width: 50px; font-size: 12px; color: rgb(0,0,0); /*text-align: right;*/" value="0">
+                                                </td>
+                                            </tr>
+                                        </table>';
+                        }
+
+                        echo '
+                                    </div>
+                                </div>';
+
+                    }else{
+                        echo '
+                                <input type="hidden" id="haveLamps" value="1">';
+                    }
+
 
                     echo '
                             </div>';
@@ -619,6 +699,48 @@
                             }
                             if (!isNaN($(this).val())){
                                 calculateDailyReportSumm();
+                            }
+                        })
+						
+						//Отдельный костыль для счетчиков
+                        $(".lampCount").blur(function() {
+                            //console.log($(this).val());
+                            
+                            var value = $(this).val();
+                            //Если не число
+                            if (isNaN(value)){
+                                $(this).val(0);
+                            }else{
+                                if (value < 0){
+                                    $(this).val(value * -1);
+                                }else{
+                                    if (value == ""){
+                                        $(this).val(0);
+                                    }else{
+                                        if (value === undefined){
+                                            $(this).val(0);
+                                        }else{
+                                            //Всё норм с типами данных
+                                            //console.log("Всё норм с типами данных")
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            //calculateDailyReportSumm();
+                            
+                        });
+						
+						$(".lampCount").bind("change keyup input click", function() {
+                            if($(this).val().length > 0){
+                                //console.log($(this).val().length);
+                                
+                                //меняем запятую на точку (разделитель)
+                                $(this).val($(this).val().replace(\',\', \'.\'));
+                                
+                                if ($(this).val() == 0){
+                                    $(this).val("")
+                                }
                             }
                         })
 						

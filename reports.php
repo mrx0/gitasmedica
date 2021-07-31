@@ -115,6 +115,11 @@
 							</li>';
             }
 
+            echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="fl_mainReportCategory.php" class="b3" style="width: 270px;">Отчёт по категориям</a>
+							</li>';
+
 
             echo '
 						</ul>';
@@ -194,7 +199,7 @@
 						</ul>';
             }
 
-            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
+            if (($finances['see_all'] == 1) /*|| ($finances['see_own'] == 1)*/ || $god_mode) {
                 echo '
 						<ul class="reportBlock" style="">
                             <h1>Страховые</h1>';
@@ -247,10 +252,6 @@
                                 <a href="fl_tabels2.php" class="b3" style="width: 270px;">Отчёт по часам</a>
                             </li>';
 
-                echo '
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="fl_mainReportCategory.php" class="b3" style="width: 270px;">Отчёт по категориям</a>
-							</li>';
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_mainReportCategory2.php" class="b3" style="width: 270px;">Отчёт по категориям (общее соотношение)</a>
@@ -309,7 +310,13 @@
             if (($finances['see_all'] == 1) || $god_mode) {
                 echo '
 						<ul class="reportBlock" style="">
-								<h1>Складской учёт [ТЕСТ]</h1>';
+								<h1>Учёт</h1>';
+
+
+                echo '				
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="reportLamps.php" class="b3" style="width: 270px;">Отчет по лампам</a>
+							</li>';
 
                 echo '				
 							<li class="cellsBlock" style="margin: 1px;">

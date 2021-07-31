@@ -23,6 +23,9 @@
 				
 				$name = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricename']))));
 				$pricecode = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecode']))));
+				$pricecodemkb = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecodemkb']))));
+				$pricecode_u = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecode_u']))));
+				$pricecode_nom = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecode_nom']))));
 
 				//Проверяем есть ли такая услуга
 				$rezult = SelDataFromDB('spr_pricelist_template', addslashes($name), 'name');
@@ -40,14 +43,17 @@
 								
 								//if ($iWantThisDate2 >= $start_day){
 								    //Добавим в базу и вернем id
-									$PriceNameId = WriteToDB_EditPriceName (addslashes($name), $pricecode, $_POST['category_id'], $_SESSION['id']);
+									$PriceNameId = WriteToDB_EditPriceName (addslashes($name), $pricecode, $pricecodemkb, $pricecode_u, $pricecode_nom, $_POST['category_id'], $_SESSION['id']);
+
 									WriteToDB_EditPricePrice ($PriceNameId, $_POST['price'], $_POST['price2'], $_POST['price3'], $iWantThisDate2, $_SESSION['id']);
+
 									if ($_POST['group'] != 0){
 										WriteToDB_UpdatePriceItemInGroup($PriceNameId, $_POST['group'], $_SESSION['id']);
 									}
 									echo '
 										<div class="query_ok">
 											Позиция добавлена.<br><br>
+											<a href="pricelistitem.php?id='.$PriceNameId.'" class="b">Перейти к позиции</a> <a href="add_pricelist_item.php" class="b">Добавить ещё</a>
 										</div>';
 //								}else{
 //									echo '
@@ -76,7 +82,7 @@
 				}else{
 					echo '
 						<div class="query_neok">
-							Такая услуга уже есть.<br><br>
+							Такая позиция уже есть.<br><br>
 						</div>';
 				}
 

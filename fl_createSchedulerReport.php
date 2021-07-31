@@ -74,13 +74,13 @@
                     <header>
                         <div class="nav">
                             <a href="stat_cashbox.php" class="b">Касса</a>
-                            <a href="fl_consolidated_report_admin.php" class="b">Сводный отчёт по филиалу</a>';
+                            <a href="fl_consolidated_report_admin.php?filial_id='.$filial_id.'&m='.$m.'&y='.$y.'" class="b">Сводный отчёт по филиалу</a>';
             if ($have_target_filial) {
                 echo '
-                            <a href="scheduler3.php?filial=' . $filial_id . '&who=4" class="b">График</a>';
+                            <a href="scheduler3.php?filial=' . $filial_id . '&who=4&m='.$m.'&y='.$y.'" class="b">График</a>';
             }else{
                 echo '
-                            <a href="scheduler3.php?who=4" class="b">График</a>';
+                            <a href="scheduler3.php?who=4&m='.$m.'&y='.$y.'" class="b">График</a>';
             }
             echo '
                         </div>
@@ -211,7 +211,7 @@
                             sch.worker IN (
                                 SELECT s_w.id FROM `spr_workers` s_w 
                                 LEFT JOIN `options_worker_spec` opt_ws ON opt_ws.worker_id = s_w.id
-                                WHERE (opt_ws.oklad = '1') AND s_w.status = '0' 
+                                WHERE (opt_ws.oklad = '1' OR opt_ws.oklad_work = '1') AND s_w.status = '0' 
                             )
                         ) ";
 

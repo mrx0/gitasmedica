@@ -1208,11 +1208,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`  + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`  + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1375,7 +1375,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -1430,11 +1430,11 @@
 			$deleted_str = 'AND `status` <> 9';
 		}
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && (($type == 'list') || ($type == 'clear'))){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1557,12 +1557,12 @@
 		}*/
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		//var_dump ($query);
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'return')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1726,7 +1726,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -1796,11 +1796,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT `id`, `level`, `name`, `status` FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -1955,7 +1955,7 @@
 				}
 
 				
-				$query = "SELECT COUNT(`id`) AS total FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT COUNT(`id`) AS total FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
 				$total = $db::getValue($query, []);
@@ -2021,11 +2021,11 @@
 		}
 		
 		//Выбираем всё из этого уровня
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 		
 		//Если не из корня смотрим, то выбираем всё, что в этой группе
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ".$deleted_str." ORDER BY `name` + 0";
 			$first = FALSE;
 		}else{
 		}
@@ -2204,13 +2204,23 @@
                             }
                             echo '
 												<div class="priceitemDivname">
-													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter" target="_blank" rel="nofollow noopener">
-														<span style="font-size: 75%; font-weight: bold;">[#'.$items_j[$i]['id'].']</span> 
+													<a href="'.$link.'&id='.$items_j[$i]['id'].'" class="ahref" id="4filter" target="_blank" rel="nofollow noopener" style="position: relative;">
+														<span style="/*position: absolute;*/ font-size: 70%; /*font-weight: bold;*/ top: -13px; color: #555;">[#'.$items_j[$i]['id'].']</span> 
 														<i>'.$items_j[$i]['code'].'</i> 
 														'.$items_j[$i]['name'].' ';
 
-                            //Категория процентов
-                            echo '['.$items_j[$i]['category'].']';
+							if ((mb_strlen($items_j[$i]['code_u']) > 0) || (mb_strlen($items_j[$i]['code_nom']) > 0)) {
+								echo '<br>';
+
+								if (mb_strlen($items_j[$i]['code_u']) > 0) {
+									echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги">| ' . $items_j[$i]['code_u'] . ' |</span>';
+								}
+								if (mb_strlen($items_j[$i]['code_nom']) > 0) {
+									echo '<span style="background-color: #ffff75; color: #555;" title="Код услуги по номенклатуре">| ' . $items_j[$i]['code_nom'] . ' |</span>';
+								}
+							}
+                            //!!! Категория процентов - не доделано!!!
+                            //echo '['.$items_j[$i]['category'].']';
 
                             echo '							
 													</a>
@@ -2240,7 +2250,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ".$deleted_str." ORDER BY `name` + 0";
 				//var_dump($query);
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
@@ -2514,10 +2524,10 @@
 		);
 		$color_index = $last_level;
 		
-		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name`";
+		$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$level}' ORDER BY `name` + 0";
 		
 		if ($first && ($level != 0) && ($type == 'list')){
-			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ORDER BY `name`";
+			$query = "SELECT * FROM `spr_storagegroup` WHERE `id`='{$level}' ORDER BY `name` + 0";
 			$first = FALSE;
 		}
 		//var_dump ($query);
@@ -2638,7 +2648,7 @@
 				}
 				
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name`";
+				$query = "SELECT * FROM `spr_storagegroup` WHERE `level`='{$value['id']}' ORDER BY `name` + 0";
 				//var_dump($query);
 				
 				$res = mysql_query($query) or die($query);
@@ -3980,7 +3990,7 @@
     }
 
     //функция формирует и показывает наряды визуализация
-    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt){
+    function showInvoiceDivRezult($data, $minimal, $minimal_inline, $show_categories, $show_absent, $show_deleted, $only_debt, $show_client = false, $show_withFIO = false){
         //$show_absent - сообщение если ничего нет
 		//$only_debt - если полностью оплачены или оплата не требуется
     	//var_dump($data);
@@ -4264,7 +4274,22 @@
 							}
 
 							$itemTemp_str .= '
-													</div>
+													</div>';
+
+							if ($show_client){
+								$itemTemp_str .= '
+														<div class="cellName" style="width: 240px; min-width: 240px;">
+															<div style="border: 1px dotted #AAA; margin: 1px 0; padding: 1px 3px;">
+																<b>Пациент:</b><br>
+																<a href="client.php?id='.$items['client_id'].'" class="ahref calculateInvoice" target="_blank" rel="nofollow noopener" style="font-weight: normal; font-size: 13px; color: #333;">' . $items['full_name'] . '</a>
+															</div>';
+
+								$itemTemp_str .= '
+														</div>';
+
+							}
+
+							$itemTemp_str .= '
 												</li>';
 
 							if ($items['status'] != 9) {
@@ -4440,6 +4465,11 @@
 					}
 				}
 
+				//если оплата от организации
+				if ($items['org_pay'] == 1) {
+					$order_type_mark .= '<br><i style="font-size: 90%; color: #400086;">орг.</i>';
+				}
+
                 $itemTemp_str = '';
 
                 $itemTemp_str .= '
@@ -4463,6 +4493,11 @@
 					$itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
 				}
 
+				if (isset($items['org_name'])) {
+					if ($items['org_name'] != NULL) {
+						$itemTemp_str .= '<br>Юр.лицо: <i style="font-size: 105%;"><b>' . $items['org_name'] . '</b></i>';
+					}
+				}
 
                 $itemTemp_str .= '
                                                     </div>
@@ -6288,6 +6323,120 @@ function showTreePrice2 ($level, $space, $type, $sel_id, $first, $last_level, $d
 
 	return $rez_str;
 }
+
+
+//для Теста нового прайса
+function showTreeNewPrice2 ($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $msql_cnnct){
+	//var_dump($first);
+
+	$price_rez = array();
+
+	$rez_str = '';
+
+	//определяем уровень для запроса
+	if ($level == NULL){
+		$parent_str = "`parent_id` = '0'";
+	}else{
+		$parent_str = "`parent_id` = ".$level;
+	}
+
+	//берем верхний уровень
+	$query = "SELECT * FROM `$dbtable` WHERE ".$parent_str;
+	//var_dump($query);
+
+	$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+	$number = mysqli_num_rows($res);
+
+	if ($number != 0){
+		while ($arr = mysqli_fetch_assoc($res)){
+			array_push($price_rez, $arr);
+		}
+	}
+	//var_dump($price_rez);
+
+	//Если первый проход
+	if ($first){
+		//var_dump($price_rez);
+
+		if ($type == 'list') {
+			$rez_str .= '	
+						<ol class="tree">
+						<li>
+							<label id="catPrice_0" class="droppable hover" onclick="getPriceItems (0, 0, 1000, false, true, 0); return;" cat_name=""><b>#0</b> Вне категории</label> <input type="checkbox" id="folder0" checked /> 
+						</li>';
+		}
+
+
+	}else{
+		if ($type == 'list') {
+			$rez_str .= '<ol class="tree2">';
+		}
+	}
+
+	if (!empty($price_rez)){
+		foreach ($price_rez as $price_rez_value){
+
+			if ($type == 'list'){
+
+				if ($price_rez_value['node_count'] > 0) {
+					$rez_str .= '	
+							<li>
+								<label id="catPrice_'.$price_rez_value['id'].'" class="draggable droppable hover" onclick="getPriceItems ('.$price_rez_value['id'].', 0, 1000, false, true, '.$price_rez_value['id'].'); return;" cat_name="' . $price_rez_value['name'] . '"><b>#' . $price_rez_value['id'] . '</b> ' . $price_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$price_rez_value['id'].'" checked />';
+
+					$rez_str .= showTreeNewPrice2($price_rez_value['id'], '', 'list', 0, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+
+					$rez_str .= '	
+							</li>';
+
+				} else {
+					$rez_str .= '	
+							<li>
+								<label id="catPrice_'.$price_rez_value['id'].'" class="draggable droppable hover" onclick="getPriceItems ('.$price_rez_value['id'].', 0, 1000, false, true, '.$price_rez_value['id'].'); return;" cat_name="' . $price_rez_value['name'] . '"><b>#' . $price_rez_value['id'] . '</b> ' . $price_rez_value['name'] . '</label> <input type="checkbox" id="folder'.$price_rez_value['id'].'" checked />';
+					$rez_str .= '	
+							</li>';
+				}
+			}
+
+			if ($type == 'select'){
+				//echo $space.$value['name'].'<br>';
+
+				$selected = '';
+				if ($price_rez_value['id'] == $sel_id){
+					$selected = ' selected';
+				}
+				$rez_str .= '<option value="'.$price_rez_value['id'].'" '.$selected.'>'.$space.$price_rez_value['name'].'</option>';
+
+				$space2 = $space. '...';
+				//$last_level2 = $last_level+1;
+
+				$rez_str .= showTreeNewPrice2($price_rez_value['id'], $space2, 'select', $sel_id, FALSE, 0, FALSE, $dbtable, 0, 0, $msql_cnnct);
+			}
+		}
+
+		if ($type == 'list') {
+			$rez_str .= '	
+					</ol>';
+		}
+
+
+	}
+
+	if ($first){
+		if ($type == 'list') {
+			$rez_str .= '	
+					</ol>';
+		}
+	}
+
+
+
+	return $rez_str;
+}
+
+
+
+
 
 
 

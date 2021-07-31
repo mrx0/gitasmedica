@@ -99,7 +99,7 @@
         return sign + ch_first + ch_rest + ch_last;
     }
 
-	//
+	//Задаёт цвет в зависимости от заполнения от 0 до 100% данных (от красного к зеленому)
     function Colorize (data, alpha){
 		//console.log(data);
 		//console.log(typeof (data));
@@ -131,6 +131,61 @@
 
         return ' rgba('+red+', '+green+', 0, '+alpha+')';
     }
+
+    //Рандомный случайный цвет
+    function randColor() {
+        let r = Math.floor(Math.random() * (256)),
+            g = Math.floor(Math.random() * (256)),
+            b = Math.floor(Math.random() * (256)),
+            color = '#' + r.toString(16) + g.toString(16) + b.toString(16);
+
+        return color;
+    }
+
+    //Рандомный случайный цвет из списка
+    function randColor2() {
+        Colors = {};
+        Colors.names = {
+            aqua: "#00ffff",
+            blue: "#0000ff",
+            brown: "#a52a2a",
+            darkblue: "#00008b",
+            darkcyan: "#008b8b",
+            darkgrey: "#a9a9a9",
+            darkgreen: "#006400",
+            darkkhaki: "#bdb76b",
+            darkmagenta: "#8b008b",
+            darkolivegreen: "#556b2f",
+            darkorange: "#ff8c00",
+            darkorchid: "#9932cc",
+            darkred: "#8b0000",
+            darksalmon: "#e9967a",
+            darkviolet: "#9400d3",
+            fuchsia: "#ff00ff",
+            gold: "#ffd700",
+            green: "#008000",
+            indigo: "#4b0082",
+             lime: "#00ff00",
+            magenta: "#ff00ff",
+            maroon: "#800000",
+            navy: "#000080",
+            olive: "#808000",
+            orange: "#ffa500",
+            purple: "#800080",
+            violet: "#800080",
+            red: "#ff0000",
+            yellow: "#ffff00"
+        };
+
+        let color;
+        let count = 0;
+        for (let prop in Colors.names)
+            if (Math.random() < 1/++count)
+                color = prop;
+
+        return color;
+    }
+
 
     //Функция для создания бланка платежки с QR кодом в формате PDF
     function createPayBlankPdfQRCode(){
@@ -765,6 +820,10 @@
         if (spec_oklad === undefined){
             spec_oklad = 0;
         }
+        var spec_oklad_work = $("input[name=spec_oklad_work]:checked").val();
+        if (spec_oklad_work === undefined){
+            spec_oklad_work = 0;
+        }
 
         var spec_work_6days = $("input[name=spec_work_6days]:checked").val();
         if (spec_work_6days === undefined){
@@ -793,6 +852,7 @@
 
                     spec_prikaz8: spec_prikaz8,
                     spec_oklad: spec_oklad,
+                    spec_oklad_work: spec_oklad_work,
                     spec_work_6days: spec_work_6days
                 },
             cache: false,
@@ -1694,6 +1754,7 @@
 			})
 		}
 	};
+
 	//Перемещение записи другому
 	function Ajax_edit_zapis_change_client(zapis_id, client_id) {
 
@@ -1727,6 +1788,7 @@
 			})
 		}
 	};
+
 	//Редактировать ФИО пациента
 	function Ajax_edit_fio_client() {
 		// убираем класс ошибок с инпутов
@@ -1861,6 +1923,7 @@
 			}
 		})
 	};
+
 	//Добавить лабораторию
 	function Ajax_add_labor(session_id) {
 
@@ -2184,7 +2247,7 @@
                 personal_id: $('#personal_id').val(),
                 cat_id: id
             };
-            console.log(reqData);
+            // console.log(reqData);
 
             // убираем класс ошибок с инпутов
             $("input").each(function () {
@@ -2256,6 +2319,71 @@
         }
     }
 
+    //Редактируем норму часов
+    function Ajax_normahours_add(id, mode){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        let link = "fl_normahours_add_f.php";
+
+        if (mode == 'edit'){
+            link = "fl_normahours_edit_f.php";
+        }
+		//console.log(link);
+
+        if ($('#norma_hours').val() == 0) {
+            $("#norma_hours_error").html('<span style="color: red">В этом поле ошибка</span>');
+            $("#norma_hours_error").show();
+        }else{
+
+            let reqData = {
+                count: $('#norma_hours').val(),
+                norma_id: id
+            };
+            // console.log(reqData);
+
+
+            // убираем класс ошибок с инпутов
+            $("input").each(function () {
+                $(this).removeClass("error_input");
+            });
+            // прячем текст ошибок
+            $(".error").hide();
+
+            //проверка данных на валидность
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+
+                data: reqData,
+
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(data.data);
+
+                    if (res.result == 'success') {
+                        $('#data').html(res.data);
+
+                        setTimeout(function () {
+                            window.location.href = 'normahours_item.php?id='+id;
+                        }, 100);
+                    } else {
+                        //console.log('error');
+                        $('#errror').html(res.data);
+                        //$('#errrror').html('');
+                    }
+                }
+            });
+        }
+    }
+
 	//!!! тут очередная "правильная" ф-ция
     //Промежуточная функция добавления/редактирования сертификата
     function showCertAdd(id, mode){
@@ -2305,6 +2433,179 @@
                 }
             }
         })
+    }
+
+    //Добавим тип абонемента
+    function Ajax_abon_type_add(id, mode, reqData){
+
+        let link = "abon_type_add_f.php";
+
+        if (mode == 'edit'){
+            link = "abon_type_edit_f.php";
+        }
+
+        reqData['abon_type_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+                if(data.result == 'success') {
+                    //console.log('success');
+                    $('#data').html(data.data);
+
+                    setTimeout(function() {
+                        window.location.href = "abonement_add.php";
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Добавим персональную норму часов
+    function Ajax_personal_norma_hours_add(id, mode, reqData){
+
+        let link = "personal_norma_hours_add_f.php";
+
+        if (mode == 'edit'){
+            link = "personal_norma_hours_edit_f.php";
+        }
+
+        reqData['norma_hours_id'] = id;
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+
+            data:reqData,
+
+            cache: false,
+            beforeSend: function() {
+                $('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(data){
+                if(data.result == 'success') {
+                    //console.log('success');
+
+                    $('#data').html(data.data);
+
+                    setTimeout(function() {
+                        window.location.href = "fl_normahours_personal.php";
+                    }, 500);
+                }else{
+                    //console.log('error');
+                    $('#errror').html(data.data);
+                    $('#errrror').html('');
+                }
+            }
+        });
+    }
+
+    //Удаление персональной нормы часов
+    function Ajax_personal_norma_hours_delete(id) {
+
+        let rys = false;
+
+        rys = confirm("Вы собираетесь удалить норму часов. \nЭто невозможно будет исправить \n\nВы уверены?");
+
+        if (rys) {
+
+            $.ajax({
+                url: "personal_norma_hours_del_f.php",
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    id: id
+                },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success: function (res) {
+                    //console.log(res);
+
+                    $("#errrror").html(res.data);
+                    if (res.result == 'success') {
+                        setTimeout(function () {
+                            window.location.replace('fl_normahours_personal.php');
+                            //console.log('client.php?id='+id);
+                        }, 200);
+                    }
+                }
+            })
+        }
+    };
+
+	//!!! тут очередная "правильная" ф-ция
+    //Промежуточная функция добавления/редактирования типа абонемента
+    function showAbonTypeAdd(id, mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if (($('#name').val().length == 0) || ($('#min_count').val().length == 0) || ($('#exp_days').val().length == 0) || ($('#summ').val().length == 0)){
+            $('#errror').html('<div class="query_neok">Ошибка в одном из полей. Проверьте данные.</div>');
+        }else {
+            if (isNaN($('#min_count').val()) || isNaN($('#exp_days').val()) || isNaN($('#summ').val())){
+                $('#errror').html('<div class="query_neok">Ошибка в одном из полей. Проверьте данные.</div>');
+            }else {
+
+                let reqData = {
+                    name: $('#name').val(),
+                    min_count: $('#min_count').val(),
+                    exp_days: $('#exp_days').val(),
+                    summ: $('#summ').val()
+                };
+                //console.log(certData);
+
+                Ajax_abon_type_add(id, mode, reqData);
+            }
+        }
+    }
+
+    //!!! тут очередная "правильная" ф-ция
+    //Промежуточная функция добавления/редактирования персональной нормы часов
+    function showPersonalNormaHoursAdd(id, mode){
+        //console.log(mode);
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if (($('#search_client2').val().length == 0) || ($('#norma').val().length == 0)){
+            $('#errror').html('<div class="query_neok">Ошибка в одном из полей. Проверьте данные.</div>');
+        }else {
+            if (isNaN($('#norma').val())){
+                $('#errror').html('<div class="query_neok">Ошибка в одном из полей. Проверьте данные.</div>');
+            }else {
+
+                let reqData = {
+                    worker: $('#search_client2').val(),
+                    norma: $('#norma').val()
+                };
+                //console.log(certData);
+
+                Ajax_personal_norma_hours_add(id, mode, reqData);
+            }
+        }
     }
 
 	//!!! тут очередная "правильная" ф-ция
@@ -2594,8 +2895,10 @@
         let reqData = {
             id: id,
             name: $("#name").val(),
+            name2: $("#name2").val(),
             address: $("#address").val(),
-            contacts: $("#contacts").val()
+            contacts: $("#contacts").val(),
+            org: $("#org").val()
         };
 
         $.ajax({
@@ -2620,39 +2923,82 @@
 	// !!! правильный пример AJAX
 	function Ajax_add_priceitem(session_id) {
 
-		var pricename = $("#pricename").val();
-		var category_id = $("#category_id").val();
-		var pricecode = $("#pricecode").val();
-		var price = $("#price").val();
-		var price2 = $("#price2").val();
-		var price3 = $("#price3").val();
-		var group = $("#group").val();
-		var iWantThisDate2 = $("#iWantThisDate2").val();
+        let link = "add_priceitem_f.php";
 
-		$.ajax({
-			url:"add_priceitem_f.php",
-			global: false,
-			type: "POST",
-			data:
-			{
-				pricename:pricename,
-                category_id:category_id,
-                pricecode:pricecode,
-				price:price,
-				price2:price2,
-				price3:price3,
-				group:group,
-				iWantThisDate2:iWantThisDate2,
-				session_id:session_id,
-			},
-			cache: false,
-			beforeSend: function() {
-				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			success:function(data){
-				$('#errror').html(data);
-			}
-		})
+        // let pricename = $("#pricename").val();
+        // let category_id = $("#category_id").val();
+        // let pricecode = $("#pricecode").val();
+        // let pricecodemkb = $("#pricecodemkb").val();
+        // let price = $("#price").val();
+        // let price2 = $("#price2").val();
+        // let price3 = $("#price3").val();
+        // let group = $("#group").val();
+        // let iWantThisDate2 = $("#iWantThisDate2").val();
+
+        let reqData = {
+            pricename: $("#pricename").val(),
+            category_id: $("#category_id").val(),
+            pricecode: $("#pricecode").val(),
+            pricecodemkb: $("#pricecodemkb").val(),
+
+            pricecode_u: $("#pricecode_u").val(),
+            pricecode_nom: $("#pricecode_nom").val(),
+
+            price: $("#price").val(),
+            price2: $("#price2").val(),
+            price3: $("#price3").val(),
+            group: $("#group").val(),
+            iWantThisDate2: $("#iWantThisDate2").val(),
+            session_id:session_id,
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                //console.log(data);
+
+                // $('#errror').html(data);
+                $('#errror').html('');
+                $('#add_form_id').html(data);
+                // window.location.href = "";
+
+            }
+        })
+
+		// $.ajax({
+		// 	url:"add_priceitem_f.php",
+		// 	global: false,
+		// 	type: "POST",
+		// 	data:
+		// 	{
+		// 		pricename:pricename,
+        //         category_id:category_id,
+        //         pricecode:pricecode,
+        //         pricecodemkb:pricecodemkb,
+		// 		price:price,
+		// 		price2:price2,
+		// 		price3:price3,
+		// 		group:group,
+		// 		iWantThisDate2:iWantThisDate2,
+		// 		session_id:session_id,
+		// 	},
+		// 	cache: false,
+		// 	beforeSend: function() {
+		// 		$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+		// 	},
+		// 	success:function(data){
+		// 		$('#errror').html(data);
+		// 	}
+		// })
 	};
 
 	//Добавить в прайс страховой
@@ -2713,32 +3059,73 @@
 
 	function Ajax_edit_pricelistitem(id, session_id) {
 
-		var pricelistitemname = $("#pricelistitemname").val();
-		var pricelistitemcode = $("#pricelistitemcode").val();
-		var group = $("#group").val();
-		var category_id = $("#category_id").val();
+        let link = "pricelistitem_edit_f.php";
 
-		$.ajax({
-			url:"pricelistitem_edit_f.php",
-			global: false,
-			type: "POST",
-			data:
-			{
-				pricelistitemname:pricelistitemname,
-                pricelistitemcode:pricelistitemcode,
-				session_id:session_id,
-				group:group,
-                category_id:category_id,
-				id: id,
-			},
-			cache: false,
-			beforeSend: function() {
-				$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			success:function(data){
-				$('#errror').html(data);
-			}
-		})
+		// var pricelistitemname = $("#pricelistitemname").val();
+		// var pricelistitemcode = $("#pricelistitemcode").val();
+		// var pricelistitemcodemkb = $("#pricelistitemcodemkb").val();
+		// var group = $("#group").val();
+		// var category_id = $("#category_id").val();
+
+        let reqData = {
+            pricelistitemname: $("#pricelistitemname").val(),
+            pricelistitemcode: $("#pricelistitemcode").val(),
+            pricelistitemcodemkb: $("#pricelistitemcodemkb").val(),
+
+            pricelistitemcode_u: $("#pricelistitemcode_u").val(),
+            pricelistitemcode_nom: $("#pricelistitemcode_nom").val(),
+
+            group: $("#group").val(),
+            category_id: $("#category_id").val(),
+
+            session_id:session_id,
+            id: id
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            //dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                //console.log(data);
+
+                // $('#errror').html(data);
+                $('#errror').html('');
+                $('#edit_form_id').html(data);
+                // window.location.href = "";
+
+            }
+        })
+
+		// $.ajax({
+		// 	url:"pricelistitem_edit_f.php",
+		// 	global: false,
+		// 	type: "POST",
+		// 	data:
+		// 	{
+		// 		pricelistitemname: pricelistitemname,
+        //         pricelistitemcode: pricelistitemcode,
+        //         pricelistitemcodemkb: pricelistitemcodemkb,
+		// 		session_id:session_id,
+		// 		group:group,
+        //         category_id:category_id,
+		// 		id: id,
+		// 	},
+		// 	cache: false,
+		// 	beforeSend: function() {
+		// 		$('#errror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+		// 	},
+		// 	success:function(data){
+		// 		$('#errror').html(data);
+		// 	}
+		// })
 	};
 
 	function Ajax_edit_pricelistgroup(id, session_id) {
@@ -2838,10 +3225,11 @@
 	}
 
 	//Удаляем позицию в истории цен
-    function deletePriceHistory(id) {
+    function deletePriceHistory(id, insure = 0) {
 
         var Data = {
-            id:id
+            id: id,
+            insure: insure
         };
 
         var link = "deletePriceHistory.php";
@@ -2927,6 +3315,35 @@
 				$('#changeShedOptionsReq').html(data);
 			}
 		})
+	};
+
+	//Создаём пустую смену, чтобы открывался шаблона графика плана
+	function Ajax_add_empty_shed(type_id, filial_id) {
+
+        let link = "add_empty_shed_f.php";
+
+        let reqData = {
+            type_id: type_id,
+            filial_id: filial_id
+        };
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function (res) {
+                //console.log(res);
+
+                location.reload()
+            }
+        });
 	};
 
 	//
@@ -4343,6 +4760,11 @@
             patientUnic = 0;
         }
 
+        var withFIO = $("input[id=withFIO]:checked").val();
+        if (withFIO === undefined){
+            withFIO = 0;
+        }
+
         var reqData = {
             //all_time: all_time,
             all_time: 0,
@@ -4382,7 +4804,8 @@
             invoiceNotPaid: invoiceNotPaid,
             invoiceInsure: invoiceInsure,
 
-            patientUnic: patientUnic
+            patientUnic: patientUnic,
+            withFIO: withFIO
         };
 
         $.ajax({
@@ -9891,7 +10314,7 @@
             org_pay = 0;
         }
 
-        if (invoice_id != 0){
+        if ((mode == 'add') && (invoice_id != 0)){
             paymentStr = '<li style="font-size: 85%; color: #7D7D7D; margin-bottom: 5px;">'+
                 '<a href= "payment_add.php?invoice_id='+invoice_id+'" class="b">Оплатить наряд #'+invoice_id+'</a>'+
                 '</li>';
@@ -12874,6 +13297,7 @@
                         //Удаляем из документа, чтобы не перезагружать таблицу
                         $('#cl_data_main_'+client_id).remove();
                         $('#user_options_'+client_id).remove();
+                        $('#cl_data_user_'+client_id).css('backgroundColor', 'yellow');
                     }
                 }
             }
@@ -12911,8 +13335,11 @@
                         location.reload();
                     }else{
                         //Удаляем из документа, чтобы не перезагружать таблицу
-                        $('#cl_data_main_'+client_id).remove();
+                        //$('#cl_data_main_'+client_id).remove();
                         //$('#user_options_'+client_id).remove();
+                        $('#cl_data_user_'+client_id).css('backgroundColor', 'rgb(254 255 116 / 60%)');
+                        // $('#cl_data_main_'+client_id).css('backgroundColor', 'yellow');
+                        $('#changeInstallmentStatus2_btn_'+ invoice_id).html('Закрыто');
                     }
                 }
             }
@@ -15536,6 +15963,245 @@
         })
 
     }
+
+    //Функция получения данных по лампам
+    function reportLamps() {
+
+        let link = "reportLamps_f.php";
+
+        let reqData = {
+            month_start: $("#month_start").val(),
+            year_start: $("#year_start").val(),
+            month_end: $("#month_end").val(),
+            year_end: $("#year_end").val(),
+            filial_id: $("#SelectFilial").val(),
+        }
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+                $('#res_table_tmpl').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success: function (res) {
+                 // console.log(res);
+                // console.log(res.query);
+
+                if (res.result == "success") {
+                    // console.log(res.data_count);
+                    // console.log(res.spr_lamps_j);
+
+                    //очищаем
+                    $("#res_table_tmpl").html('');
+                    //помещаем
+                    $("#res_table_tmpl").append('<div style="padding: 2px; width: 75%; background-color: azure; border: 1px solid #CCC; margin-bottom: 5px;"><canvas id="canvas" height="300" width="700" style="background-color: white; border: 1px solid #CCC;"></canvas></div>');
+
+                    //заполняем данные
+                    let color, lamp_datas = [];
+
+                    for (lamp_id in res.data_count) {
+                        let temp_lamp_datas = {};
+
+                        color = randColor2();
+
+                        temp_lamp_datas['label'] = res.spr_lamps_j[lamp_id];
+                        // console.log(res.spr_lamps_j[lamp_id]);
+                        temp_lamp_datas['backgroundColor'] = color;
+                        temp_lamp_datas['borderColor'] = color;
+                        temp_lamp_datas['fill'] = false;
+                        temp_lamp_datas['data'] = [];
+
+                        res.data_count[lamp_id].forEach(function(data){
+                            // console.log(data['x']);
+                            // console.log(data['y']);
+
+                            temp_lamp_datas['data'].push({'x': data['x'], 'y': data['y']})
+                        })
+
+                        lamp_datas.push(temp_lamp_datas);
+                    }
+                    //console.log(lamp_datas);
+
+
+                    let config = {
+                        type: 'line',
+                        data: {
+                            // labels: [ // Date Objects
+                            //     '2021-03-01',
+                            //     '2021-03-05',
+                            //     '2021-03-10',
+                            //     '2021-03-12',
+                            //     '2021-03-15',
+                            //     '2021-03-25',
+                            //     '2021-03-30'
+                            // ],
+                            datasets: lamp_datas,
+                        },
+                        options: {
+                            title: {
+                                text: 'Отчёт'
+                            },
+                            scales: {
+                                xAxes: [{
+                                    type: 'time',
+                                    /*time: {
+                                        parser: timeFormat,
+                                        // round: 'day'
+                                        tooltipFormat: 'll HH:mm'
+                                    },*/
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Дата'
+                                    }
+                                }],
+                                yAxes: [{
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Значение'
+                                    }
+                                }]
+                            },
+                        }
+                    };
+                    //console.log(config);
+
+                    //Рисуем
+                    let ctx = document.getElementById('canvas').getContext('2d');
+                    window.myLine = new Chart(ctx, config);
+
+
+
+                } else {
+                    //--
+                    $('#res_table_tmpl').html(res.data);
+                }
+            }
+        })
+    }
+
+
+    //!!! Новый как бы прайс (тест)
+
+    //Загрузка категорий прайса
+    function getPriceCategories (){
+
+        var link = "get_price_categories_f.php";
+
+        var reqData = {
+            type: 5
+        };
+        //console.log(reqData);
+
+        //Если надо выделить группу
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res);
+
+                if (res.result == 'success') {
+
+                    $("#sclad_cat_rezult").html(res.data);
+
+
+                    //!!! Правильный пример контекстного меню (правильный? точно? ну пока работает)
+
+                    /*                    var menuArea = document.querySelector(".tree");
+
+                                        //if(menuArea){
+                                            menuArea.addEventListener( "contextmenu", event => {
+                                                event.preventDefault();
+
+                                                contextMenuShow(0, 0, event, "sclad_cat");
+
+                                            }, false);
+                                        //}*/
+
+                }
+            }
+        })
+    }
+
+    //Загрузка элементов прайса
+    function getPriceItems (cat_id, start, limit, free=true, pick=false, pick_id=-1, search_data=''){
+        //Для позиции ВООБЩЕ СОВСЕМ БЕЗ категории free == 'true'
+
+        var link = "get_price_items_f.php";
+
+        var reqData = {
+            cat_id: cat_id,
+            start: start,
+            limit: limit,
+            free: free,
+            search_data: search_data
+        };
+        // console.log(reqData);
+
+        //Если надо выделить группу c id == pick_id
+        if (pick){
+            //Сначала очищаем у всех окраску
+            $(".droppable").css({"background-color": ""});
+
+            //Теперь покрасим
+            $("#cat_"+pick_id).css({"background-color": "rgba(131, 219, 83, 0.5)"});
+        }
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function () {
+
+            },
+            success: function (res) {
+                //console.log (res.q);
+
+                if (res.result == 'success') {
+
+                    if (cat_id == 0){
+                        if (free){
+                            //Если поиск по фразе делаем
+                            if (search_data.length > 0){
+                                $("#cat_name_show").html("Результат поиска");
+                                $("#cat_name_show").show();
+                            }
+                        }else {
+                            $("#cat_name_show").html("Вне категории");
+                            $("#cat_name_show").show();
+                        }
+                    }else {
+                        //console.log(cat_id);
+                        $("#cat_name_show").html($("#cat_" + cat_id).attr("cat_name"));
+                        $("#cat_name_show").show();
+                    }
+
+                    if (res.count > 0) {
+                        $("#sclad_items_rezult").html(res.data);
+                    }else{
+                        $("#sclad_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего не найдено</span>');
+                    }
+
+                }
+            }
+        })
+    }
+
 
 
 

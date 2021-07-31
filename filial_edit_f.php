@@ -21,7 +21,7 @@
 					</div>';
 			}else{
 
-                WriteFilialToDB_Update ($_SESSION['id'], $_POST['id'], $_POST['name'], $_POST['address'], $_POST['contacts']);
+                WriteFilialToDB_Update ($_SESSION['id'], $_POST['id'], $_POST['name'], $_POST['name2'], $_POST['address'], $_POST['contacts'], $_POST['org']);
 				
 				echo '
 					<div class="query_ok">

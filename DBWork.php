@@ -227,15 +227,15 @@
 	}
 
 	//Добавление услуги.
-	function WriteToDB_EditPriceName ($name, $pricecode, $category_id, $session_id){
+	function WriteToDB_EditPriceName ($name, $pricecode, $pricecodemkb, $pricecode_u, $pricecode_nom, $category_id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		$query = "INSERT INTO `spr_pricelist_template` (
-			`name`, `category`, `code`, `create_time`, `create_person`) 
+			`name`, `category`, `code`, `code_u`, `code_nom`, `create_time`, `create_person`) 
 			VALUES (
-			'{$name}', '{$category_id}', '{$pricecode}', '{$time}', '{$session_id}')";
+			'{$name}', '{$category_id}', '{$pricecode}', '{$pricecode_u}', '{$pricecode_nom}', '{$time}', '{$session_id}')";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -250,13 +250,13 @@
 	}
 	
 	//
-	function WriteToDB_UpdatePriceItem ($name, $code, $category_id, $id, $session_id){
+	function WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $code_u, $code_nom, $category_id, $id, $session_id){
 
         $msql_cnnct = ConnectToDB ();
 
 		$time = time();
 		
-		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `category`='{$category_id}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_pricelist_template` SET `last_edit_time`='{$time}', `last_edit_person`='{$session_id}', `name`='{$name}', `code`='{$code}', `code_u`='{$code_u}', `code_nom`='{$code_nom}', `category`='{$category_id}' WHERE `id`='{$id}'";
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -944,7 +944,7 @@
 	}
 	
 	//Обновление карточки пользователя из-под Web
-	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_prikaz8, $spec_work_6days){
+	function WriteWorkerToDB_Update($session_id, $worker_id, $sel_date, $sel_month, $sel_year, $org, $permissions, $specializations, $category, $filial_id, $contacts, $status, $spec_oklad, $spec_oklad_work, $spec_prikaz8, $spec_work_6days){
 
         $msql_cnnct = ConnectToDB ();
 
@@ -998,11 +998,12 @@
 
         //Приказ8 и Оклад
         $query = "INSERT INTO `options_worker_spec` (
-					`worker_id`, `oklad`, `prikaz8`, `work6days`)
+					`worker_id`, `oklad`, `oklad_work`, `prikaz8`, `work6days`)
 					VALUES (
-						'{$worker_id}', '{$spec_oklad}', '{$spec_prikaz8}', '{$spec_work_6days}')
+						'{$worker_id}', '{$spec_oklad}', '{$spec_oklad_work}', '{$spec_prikaz8}', '{$spec_work_6days}')
 					ON DUPLICATE KEY UPDATE
 					`oklad` = '{$spec_oklad}',
+					`oklad_work` = '{$spec_oklad_work}',
 					`prikaz8` = '{$spec_prikaz8}',
 					`work6days` = '{$spec_work_6days}'
 					";
@@ -1166,7 +1167,7 @@
 	}
 
 	//Редактирование карточки филиала из-под Web
-	function WriteFilialToDB_Update ($session_id, $id, $name, $address, $contacts){
+	function WriteFilialToDB_Update ($session_id, $id, $name, $name2, $address, $contacts, $org){
 		$old = '';
 
         $msql_cnnct = ConnectToDB ();
@@ -1186,7 +1187,7 @@
 		}
 		$time = time();
 
-		$query = "UPDATE `spr_filials` SET `name`='{$name}', `address`='{$address}', `contacts`='{$contacts}' WHERE `id`='{$id}'";
+		$query = "UPDATE `spr_filials` SET `name`='{$name}', `name2`='{$name2}', `address`='{$address}', `contacts`='{$contacts}', `org`='{$org}' WHERE `id`='{$id}'";
 
 		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -1675,18 +1676,24 @@
 		$search_data = trim(strip_tags(stripcslashes(htmlspecialchars($search_data))));
 		$datatable = trim(strip_tags(stripcslashes(htmlspecialchars($datatable))));
 
+        $str_tel = preg_replace("/[^0-9]/", '', $search_data);
+        //костыль
+        if (mb_strlen($str_tel) == 0){
+            $str_tel = '_x_';
+        }
+
 		$query = "SELECT * FROM `$datatable` WHERE (
                   LOWER(`full_name`) RLIKE LOWER('^$search_data') 
                   OR
                   UPPER(`card`) LIKE UPPER('%$search_data%') 
                   OR
-                  `telephone` LIKE '%$search_data%'
+                  (REPLACE(REPLACE(REPLACE(`telephone`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`telephone`) > 4)
                   OR
-                  `htelephone` LIKE '%$search_data%'
+                  (REPLACE(REPLACE(REPLACE(`htelephone`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`htelephone`) > 4)
                   OR
-                  `telephoneo` LIKE '%$search_data%'
+                  (REPLACE(REPLACE(REPLACE(`telephoneo`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`telephoneo`) > 4)
                   OR
-                  `htelephoneo` LIKE '%$search_data%'
+                  (REPLACE(REPLACE(REPLACE(`htelephoneo`, '-', '' ), '(', ''), ')', '') LIKE '%$str_tel%' AND LENGTH(`htelephoneo`) > 4)
                   OR
                   `passport` RLIKE '^$search_data'
                   OR
@@ -1695,6 +1702,8 @@
 
 	//	$query = "SELECT * FROM `$datatable` WHERE `full_name` LIKE '%$search_data%' ORDER BY `full_name` ASC LIMIT 10";
 	//	$query = "SELECT * FROM `$datatable` WHERE `name` LIKE '%$search_data%' LIMIT 10";
+
+//        return $query;
 
         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 

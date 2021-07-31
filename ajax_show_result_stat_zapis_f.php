@@ -106,7 +106,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
         if ($creatorExist && $workerExist) {
             if ($clientExist) {
-                $query .= "SELECT z.*, s_c.name, s_c.full_name, s_c.telephone, s_c.htelephone, s_c.telephoneo, s_c.htelephoneo FROM `zapis` z
+                $query .= "SELECT z.*, s_c.name, s_c.full_name, s_c.telephone, s_c.htelephone, s_c.telephoneo, s_c.htelephoneo, s_c.no_sms FROM `zapis` z
                                 LEFT JOIN `spr_clients` s_c ON s_c.id = z.patient";
 
                 /*require 'config.php';
@@ -380,7 +380,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
 
                         echo '
-                                    <li class="cellsBlock" style="margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
+                                    <li class="cellsBlock" style="display: none; margin-top: 20px; border: 1px dotted green; width: 300px; font-weight: bold; background-color: rgba(129, 246, 129, 0.5); padding: 5px;">
                                         Всего : ' . count($journal) . '<br>
                                     </li>
                                     
