@@ -20,6 +20,17 @@
             //Опция доступа к филиалам конкретных сотрудников
             $optionsWF = getOptionsWorkerFilial($_SESSION['id']);
             //var_dump($optionsWF);
+
+            //Для доступа по специализациям (костыль?)
+            $specialization_j = SelDataFromDB('spr_specialization', $_SESSION['permissions'], 'permission');
+            //var_dump($specialization_j);
+            $specializations = array();
+
+            foreach ($specialization_j as $spec_data){
+                array_push($specializations, $spec_data['id']);
+            }
+            //var_dump($specializations);
+            //var_dump(in_array(11, $specializations));
 			
 			echo '
 				<header style="margin-bottom: 5px;">
@@ -123,37 +134,44 @@
 
             echo '
 						</ul>';
-            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode) {
+            if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || in_array(11, $specializations) || $god_mode) {
+
 
                 echo '
 						<ul class="reportBlock" style="">
 								<h1>Финансы</h1>';
 
-                echo '				
+                if (!in_array(11, $specializations)) {
+                    echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="report_zapis_daily.php" class="b3" style="width: 270px;">Ведомость</a>
 							</li>';
 
-                echo '				
+                    echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_cashbox.php" class="b3" style="width: 270px;">Касса</a>
 							</li>';
+                }
 
-                if (($finances['see_all'] == 1) || $god_mode){
-                    echo '				
+                if (($finances['see_all'] == 1) || in_array(11, $specializations) || $god_mode){
+                    if (!in_array(11, $specializations)) {
+                        echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_installments.php" class="b3" style="width: 270px;">Открытые рассрочки (старое)</a>
 							</li>';
+                    }
                     echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_installments2.php" class="b3" style="width: 270px;">Открытые рассрочки (новое)</a>
 							</li>';
                 }
 
-                echo '				
+                if (!in_array(11, $specializations)) {
+                    echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="giveout_cash_all.php" class="b3" style="width: 270px;">Расходные ордеры</a>
 							</li>';
+                }
 
                 if (($finances['see_all'] == 1) || $god_mode){
                     echo '				
@@ -162,10 +180,12 @@
 							</li>';
                 }
 
-                echo '				
+                if (!in_array(11, $specializations)) {
+                    echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="fl_consolidated_report_admin.php" class="b3" style="width: 270px;">Сводный отчёт по филиалу</a>
 							</li>';
+                }
 
                 if (($_SESSION['permissions'] == 3) || $god_mode){
                     echo '				
@@ -174,17 +194,18 @@
 							</li>';
                 }
 
-                echo '				
+                if (!in_array(11, $specializations)) {
+                    echo '				
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_client_finance2.php" class="b3" style="width: 270px;">Открытые наряды</a>
 							</li>';
 
-                /*echo '
-                                <li class="cellsBlock" style="margin: 1px;">
-                                    <a href="stat_client_finance3.php" class="b3">Свободные средства на счетах пациентов</a>
-                                </li>';*/
+                    /*echo '
+                                    <li class="cellsBlock" style="margin: 1px;">
+                                        <a href="stat_client_finance3.php" class="b3">Свободные средства на счетах пациентов</a>
+                                    </li>';*/
 
-                echo '
+                    echo '
 							<li class="cellsBlock" style="margin: 1px;">
 								<a href="stat_invoice.php" class="b3" style="width: 270px;">Наряды</a>
 							</li>';
@@ -195,6 +216,7 @@
 //								<a href="fl_in_bank_add.php" class="b3" style="width: 270px;">В банк</a>
 //							</li>';
 //                }
+                }
                 echo '
 						</ul>';
             }
