@@ -1433,7 +1433,7 @@
                                 }
                                 //Пересчёт ботокса
                                 echo '
-                                                <button id="botoksButton" class="b" style="display: none; font-size: 80%; background: rgb(252 255 54);" onclick="prikazNomerBotoks(' . $tabel_j[0]['worker_id'] . ', ' . $_GET['id'] . ');">Применить пересчёт ботокса</button>';
+                                                <button id="botoksButton" class="b" style="/*display: none; */font-size: 80%; background: rgb(252 255 54);" onclick="prikazNomerBotoks(' . $tabel_j[0]['worker_id'] . ', ' . $_GET['id'] . ');">Посчитать кол-во ботокса</button>';
 
                             }
                             echo '

@@ -4784,99 +4784,100 @@
 
     //Приказ по Ботоксу перерасчёт - этап 1 подготовка
     function prikazNomerBotoks(worker_id, tabel_id){
-        alert ('Я еще не готов');
+        // alert ('Я еще не готов');
 
-        // let rys = true;
-        //
-        // rys = confirm("Внимание\nВсе расчётные листы в табеле и общая сумма\nбудут пересчитаны\n\nВы уверены?");
-        //
-        // if (rys) {
-        //     //console.log(worker_id);
-        //
-        //     let link = "fl_prikazNomerBotoks.php";
-        //
-        //     let reqData = {
-        //         worker_id: worker_id,
-        //         tabel_id: tabel_id
-        //     };
-        //
-        //     $.ajax({
-        //         url: link,
-        //         global: false,
-        //         type: "POST",
-        //         dataType: "JSON",
-        //         data: reqData,
-        //         cache: false,
-        //         beforeSend: function() {
-        //             //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-        //         },
-        //         // действие, при ответе с сервера
-        //         success: function(res){
-        //             //console.log(res);
-        //
-        //             //$("#prikazNomerVosem").html(res);
-        //
-        //             if(res.result == "success"){
-        //                 //console.log(JSON.stringify(res.controlCategories));
-        //
-        //                 $('#overlay').show();
-        //
-        //                 let buttonsStr = '<input type="button" class="b" value="Применить" onclick="fl_prikazNomerBotoks_JustDoIt('+tabel_id+', '+JSON.stringify(res.controlCategories)+');">';
-        //
-        //                 // Создаем меню:
-        //                 let menu = $('<div/>', {
-        //                     class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
-        //                 }).css({"height": "200px"})
-        //                     .appendTo('#overlay')
-        //                     .append(
-        //                         $('<div/>')
-        //                             .css({
-        //                                 "height": "100%",
-        //                                 "border": "1px solid #AAA",
-        //                                 "position": "relative"
-        //                             })
-        //                             .append('<span style="margin: 5px;"><i>Проверьте и нажмите применить</i></span>')
-        //                             .append(
-        //                                 $('<div/>')
-        //                                     .css({
-        //                                         "position": "absolute",
-        //                                         "width": "100%",
-        //                                         "margin": "auto",
-        //                                         "top": "40px",
-        //                                         "left": "0",
-        //                                         "bottom": "0",
-        //                                         "right": "0",
-        //                                         "height": "80%"
-        //                                     })
-        //                                     .append('<div id="waitProcess">' +
-        //                                         // '<div style="margin: 5px; font-size: 90%;">Общая сумма выручки: <span class="calculateInsInvoice">'+res.allSumm+'</span> руб.</div>' +
-        //                                         // '<div style="margin: 5px; font-size: 90%;">Сумма за эпиляции: <span class="calculateInvoice">'+res.controlCategoriesSumm+'</span> руб. (<span class="calculateInvoice">'+res.controlPercent+'%</span>)</div>' +
-        //                                         // '<div style="margin: 20px; font-size: 90%;">Новый процент за эпиляции: <span class="calculateOrder">'+res.newPaymentPercent+' %</span> </div>' +
-        //                                         '</div>' +
-        //                                         '<div id="prikazNomerVosem" style="margin: 10px;"></div>')
-        //                             )
-        //                             .append(
-        //                                 $('<div/ id="prikazButtons">')
-        //                                     .css({
-        //                                         "position": "absolute",
-        //                                         "bottom": "2px",
-        //                                         "width": "100%"
-        //                                     })
-        //                                     .append(buttonsStr+
-        //                                         '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
-        //                                     )
-        //                             )
-        //                     );
-        //
-        //                 menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
-        //
-        //             }else{
-        //                 console.log(res);
-        //
-        //             }
-        //         }
-        //     });
-        // }
+        let rys = true;
+
+        rys = confirm("Внимание\nВсе расчётные листы в табеле и общая сумма\nбудут пересчитаны\n\nВы уверены?");
+
+        if (rys) {
+            //console.log(worker_id);
+
+            let link = "fl_prikazNomerBotoks.php";
+
+            let reqData = {
+                worker_id: worker_id,
+                tabel_id: tabel_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    //console.log(res);
+
+                    $("#prikazNomerVosem").html(res);
+
+                    if(res.result == "success"){
+                        console.log(JSON.stringify(res.controlCategories));
+
+                        $('#overlay').show();
+
+                        //let buttonsStr = '<input type="button" class="b" value="Применить" onclick="fl_prikazNomerBotoks_JustDoIt('+tabel_id+', '+JSON.stringify(res.controlCategories)+');">';
+                        let buttonsStr = '';
+
+                        // Создаем меню:
+                        let menu = $('<div/>', {
+                            class: 'center_block' // Присваиваем блоку наш css класс контекстного меню:
+                        }).css({"height": "200px"})
+                            .appendTo('#overlay')
+                            .append(
+                                $('<div/>')
+                                    .css({
+                                        "height": "100%",
+                                        "border": "1px solid #AAA",
+                                        "position": "relative"
+                                    })
+                                    .append('<span style="margin: 5px;"><i>Проверьте и нажмите применить</i></span>')
+                                    .append(
+                                        $('<div/>')
+                                            .css({
+                                                "position": "absolute",
+                                                "width": "100%",
+                                                "margin": "auto",
+                                                "top": "40px",
+                                                "left": "0",
+                                                "bottom": "0",
+                                                "right": "0",
+                                                "height": "80%"
+                                            })
+                                            .append('<div id="waitProcess">' +
+                                                '<div style="margin: 5px; font-size: 90%;">Всего сделано ботокса: <span class="calculateInsInvoice">'+res.controlCategoriesSummCount+'</span> </div>' +
+                                                // '<div style="margin: 5px; font-size: 90%;">Сумма за эпиляции: <span class="calculateInvoice">'+res.controlCategoriesSumm+'</span> руб. (<span class="calculateInvoice">'+res.controlPercent+'%</span>)</div>' +
+                                                // '<div style="margin: 20px; font-size: 90%;">Новый процент за эпиляции: <span class="calculateOrder">'+res.newPaymentPercent+' %</span> </div>' +
+                                                '</div>' +
+                                                '<div id="prikazNomerVosem" style="margin: 10px;"></div>')
+                                    )
+                                    .append(
+                                        $('<div/ id="prikazButtons">')
+                                            .css({
+                                                "position": "absolute",
+                                                "bottom": "2px",
+                                                "width": "100%"
+                                            })
+                                            .append(buttonsStr+
+                                                '<input type="button" class="b" value="Отмена" onclick="$(\'#overlay\').hide(); $(\'.center_block\').remove()">'
+                                            )
+                                    )
+                            );
+
+                        menu.show(); // Показываем меню с небольшим стандартным эффектом jQuery. Как раз очень хорошо подходит для меню
+
+                    }else{
+                        console.log(res);
+
+                    }
+                }
+            });
+        }
     }
 
     //!!!!тест разбор
