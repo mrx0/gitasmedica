@@ -4788,7 +4788,7 @@
 
         let rys = true;
 
-        rys = confirm("Внимание\nВсе расчётные листы в табеле и общая сумма\nбудут пересчитаны\n\nВы уверены?");
+        //rys = confirm("Внимание\nВсе расчётные листы в табеле и общая сумма\nбудут пересчитаны\n\nВы уверены?");
 
         if (rys) {
             //console.log(worker_id);
@@ -4817,7 +4817,7 @@
                     $("#prikazNomerVosem").html(res);
 
                     if(res.result == "success"){
-                        console.log(JSON.stringify(res.controlCategories));
+                        // console.log(JSON.stringify(res.controlCategories));
 
                         $('#overlay').show();
 
@@ -4850,7 +4850,7 @@
                                                 "height": "80%"
                                             })
                                             .append('<div id="waitProcess">' +
-                                                '<div style="margin: 5px; font-size: 90%;">Всего сделано ботокса: <span class="calculateInsInvoice">'+res.controlCategoriesSummCount+'</span> </div>' +
+                                                '<div style="margin: 5px; font-size: 90%;">Всего сделано ботокса (на всех филиалах): <span class="calculateInvoice">'+res.controlCategoriesSummCount+'</span> шт.<br> на сумму: <span class="calculateInsInvoice">'+res.controlCategoriesSumm+'</span> руб.</div>' +
                                                 // '<div style="margin: 5px; font-size: 90%;">Сумма за эпиляции: <span class="calculateInvoice">'+res.controlCategoriesSumm+'</span> руб. (<span class="calculateInvoice">'+res.controlPercent+'%</span>)</div>' +
                                                 // '<div style="margin: 20px; font-size: 90%;">Новый процент за эпиляции: <span class="calculateOrder">'+res.newPaymentPercent+' %</span> </div>' +
                                                 '</div>' +
