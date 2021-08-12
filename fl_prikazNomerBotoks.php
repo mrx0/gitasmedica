@@ -26,7 +26,7 @@
 
                 $msql_cnnct = ConnectToDB();
 
-                //Получим месяц и год табеля, из которого инициировала приказ (!!!2021-01-12 данные этого запроса нигде далее не используются)
+                //Получим месяц и год табеля, из которого инициировала приказ
                 $query = "SELECT `month`, `year` FROM `fl_journal_tabels` WHERE `id`='{$_POST['tabel_id']}';";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
@@ -43,23 +43,24 @@
                 //var_dump ($month);
                 //var_dump ($year);
 
-                //Получение данных только по указанному табелю
-                $query = "
-                      SELECT * FROM `fl_journal_calculate_ex` jcalcex WHERE jcalcex.calculate_id IN (
-                      SELECT jcalc.id FROM `fl_journal_calculate` jcalc
-                      LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$_POST['tabel_id']."' AND jtabex.noch = '0'
-                      WHERE jtabex.calculate_id = jcalc.id)";
+                //Получение данных только по указанному табелю  (!!!2021-01-12 данные этого запроса нигде далее не используются)
+//                $query = "
+//                      SELECT * FROM `fl_journal_calculate_ex` jcalcex WHERE jcalcex.calculate_id IN (
+//                      SELECT jcalc.id FROM `fl_journal_calculate` jcalc
+//                      LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.tabel_id = '".$_POST['tabel_id']."' AND jtabex.noch = '0'
+//                      WHERE jtabex.calculate_id = jcalc.id)";
 
                 //Если все хорошо и нашли нужные данные
                 if (($month != 0) && ($year != 0)){
 
 
                     //Получение данных по всем табелям сотрудника со всех филиалов месяца и года,
-                    //указанного в табеле, из которого инициировали
+                    //указанных в табеле, из которого инициировали
                     $query = "
                       SELECT * FROM `fl_journal_calculate_ex` jcalcex WHERE jcalcex.calculate_id IN (
                         SELECT jcalc.id FROM `fl_journal_calculate` jcalc 
-                        LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.calculate_id = jcalc.id WHERE jtabex.tabel_id IN (
+                        LEFT JOIN `fl_journal_tabels_ex` jtabex ON jtabex.calculate_id = jcalc.id 
+                        WHERE jtabex.tabel_id IN (
                           SELECT jtab.id FROM `fl_journal_tabels` jtab WHERE jtab.worker_id='{$_POST['worker_id']}' AND jtab.month='{$month}' AND jtab.year='{$year}'
                         )
                       )";
@@ -89,22 +90,25 @@
                     $controlCategoriesMinusSumm = 0;
                     $allSumm = 0;
 
+                    $test_arr = array();
+
                     foreach ($tabel_ex_calculates_j as $item){
                         if (in_array((int)$item['percent_cats'], $controlCategories)) {
-                            //$controlCategoriesSumm += (int)$item['price'];
+                            $controlCategoriesSumm += (int)$item['price'];
                             $controlCategoriesSummCount++;
+                            array_push($test_arr, $item['calculate_id']);
                         }
 
-                        if (!in_array((int)$item['percent_cats'], $controlCategoriesMinus)) {
-                            $allSumm += (int)$item['price'];
-                        }
+//                        if (!in_array((int)$item['percent_cats'], $controlCategoriesMinus)) {
+//                            $allSumm += (int)$item['price'];
+//                        }
                     }
 
                     //var_dump($controlCategoriesSumm);
                     //var_dump($allSumm);
 
                     //Вычисляем процент от общего %
-                    $controlPercent = $controlCategoriesSumm * 100 / $allSumm;
+//                    $controlPercent = $controlCategoriesSumm * 100 / $allSumm;
                     //var_dump($controlPercent);
                     //Тестовая проверка
                     //$controlPercent = 0;
@@ -118,15 +122,15 @@
                     //$newPaymentSumm = 0;
 
                     //Вычисляем % премии
-                    if ($controlPercent < 40){
-                        $newPaymentPercent = 25;
-                    }elseif(($controlPercent >= 40) && ($controlPercent < 60)){
-                        $newPaymentPercent = 20;
-                    }elseif(($controlPercent >= 60) && ($controlPercent < 70)){
-                        $newPaymentPercent = 15;
-                    }elseif($controlPercent >= 70){
-                        $newPaymentPercent = 10;
-                    }
+//                    if ($controlPercent < 40){
+//                        $newPaymentPercent = 25;
+//                    }elseif(($controlPercent >= 40) && ($controlPercent < 60)){
+//                        $newPaymentPercent = 20;
+//                    }elseif(($controlPercent >= 60) && ($controlPercent < 70)){
+//                        $newPaymentPercent = 15;
+//                    }elseif($controlPercent >= 70){
+//                        $newPaymentPercent = 10;
+//                    }
                     //var_dump($newPaymentPercent);
 
                     //Вычисляем сумму премии (убрал это 2018-09-18, так как изменились вводные.
@@ -135,7 +139,7 @@
                     //var_dump($bonusPaymentSumm);
 
 //                    echo json_encode(array('result' => 'success', 'allSumm' => $allSumm, 'controlCategoriesSumm' => $controlCategoriesSumm, 'controlPercent' => number_format($controlPercent, 2, ',', ''), 'newPaymentPercent' => $newPaymentPercent, 'controlCategories' => $controlCategories));
-                    echo json_encode(array('result' => 'success', 'controlCategoriesSummCount' => $controlCategoriesSummCount));
+                    echo json_encode(array('result' => 'success', 'controlCategoriesSumm' => $controlCategoriesSumm, 'controlCategoriesSummCount' => $controlCategoriesSummCount, 'calc_S' => $test_arr));
                 }
 
 
