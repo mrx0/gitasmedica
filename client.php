@@ -346,8 +346,16 @@ ORDER BY `name`;
 									<div class="cellLeft">Паспорт</div>
 									<div class="cellRight">
 										<div>
-											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
-											'.$client_j['passport'].'
+											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>';
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['passport'];
+                    }
+                }else {
+                    echo $client_j['passport'];
+                }
+
+                echo '
 										</div>';
 				if (($client_j['alienpassportser'] != NULL) && ($client_j['alienpassportnom'] != NULL)){
 					echo '
@@ -359,12 +367,29 @@ ORDER BY `name`;
 				}
 				echo '
 										<div>
-											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
-											'.$client_j['passportvidandata'].'
+											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>';
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['passport'];
+                    }
+                }else {
+                    echo $client_j['passportvidandata'];
+                }
+
+
+				echo '
 										</div>
 										<div>
-											<span style="font-size: 70%; color: #AAA">Кем</span><br>
-											'.$client_j['passportvidankem'].'
+											<span style="font-size: 70%; color: #AAA">Кем</span><br>';
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['passport'];
+                    }
+                }else {
+                    echo $client_j['passportvidankem'];
+                }
+
+                echo '
 										</div>
 									</div>
 								</div>';
@@ -372,8 +397,17 @@ ORDER BY `name`;
 				echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Адрес</div>
-									<div class="cellRight">
-										'.$client_j['address'].'
+									<div class="cellRight">';
+
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['passport'];
+                    }
+                }else {
+                    echo $client_j['address'];
+                }
+
+                echo '
 									</div>
 								</div>';
 				if ($client_j['polis'] != ''){
