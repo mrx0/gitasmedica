@@ -370,7 +370,7 @@ ORDER BY `name`;
 											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>';
                 if ($client_j['id'] == 3459){
                     if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
-                        echo $client_j['passport'];
+                        echo $client_j['passportvidandata'];
                     }
                 }else {
                     echo $client_j['passportvidandata'];
@@ -383,7 +383,7 @@ ORDER BY `name`;
 											<span style="font-size: 70%; color: #AAA">Кем</span><br>';
                 if ($client_j['id'] == 3459){
                     if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
-                        echo $client_j['passport'];
+                        echo $client_j['passportvidankem'];
                     }
                 }else {
                     echo $client_j['passportvidankem'];
@@ -401,7 +401,7 @@ ORDER BY `name`;
 
                 if ($client_j['id'] == 3459){
                     if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
-                        echo $client_j['passport'];
+                        echo $client_j['address'];
                     }
                 }else {
                     echo $client_j['address'];
