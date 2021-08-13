@@ -129,27 +129,86 @@
 											<div class="cellLeft">Паспорт</div>
 											<div class="cellRight">
 												<div>
-													<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
-													<input type="text" name="passport" id="passport" value="'.$client[0]['passport'].'" size="10"><br>
+													<span style="font-size: 70%; color: #AAA">Серия номер</span><br>';
+
+                    if ($client[0]['id'] == 3459){
+                        if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                            echo '
+                                                    <input type="text" name="passport" id="passport" value="'.$client[0]['passport'].'" size="10"><br>';
+                        }
+                    }else {
+                        echo '
+                                                    <input type="text" name="passport" id="passport" value="'.$client[0]['passport'].'" size="10"><br>';
+                    }
+
+
+                    echo '
 												</div>
 												<div>
-													<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>
-													<input type="text" name="alienpassportser" id="alienpassportser" value="'.$client[0]['alienpassportser'].'" size="5">
-													<input type="text" name="alienpassportnom" id="alienpassportnom" value="'.$client[0]['alienpassportnom'].'" size="10"><br>
+													<span style="font-size: 70%; color: #AAA">Серия номер (иностр.)</span><br>';
+
+                    if ($client[0]['id'] == 3459){
+                        if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                            echo '
+                                                    <input type="text" name="alienpassportser" id="alienpassportser" value="'.$client[0]['alienpassportser'].'" size="5">
+													<input type="text" name="alienpassportnom" id="alienpassportnom" value="'.$client[0]['alienpassportnom'].'" size="10"><br>';
+                        }
+                    }else {
+                        echo '
+                                                    <input type="text" name="alienpassportser" id="alienpassportser" value="'.$client[0]['alienpassportser'].'" size="5">
+													<input type="text" name="alienpassportnom" id="alienpassportnom" value="'.$client[0]['alienpassportnom'].'" size="10"><br>';
+                    }
+
+
+                    echo '
 												</div>
 												<div>
-													<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
-													<input type="text" name="passportvidandata" id="passportvidandata" value="'.$client[0]['passportvidandata'].'" size="10">
+													<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>';
+
+                    if ($client[0]['id'] == 3459){
+                        if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                            echo '
+											<input type="text" name="passportvidandata" id="passportvidandata" value="'.$client[0]['passportvidandata'].'" size="10">';
+                        }
+                    }else {
+                        echo '
+											<input type="text" name="passportvidandata" id="passportvidandata" value="'.$client[0]['passportvidandata'].'" size="10">';
+                    }
+
+                    echo '
 												</div>
 												<div>
-													<span style="font-size: 70%; color: #AAA">Кем</span><br>
-													<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2">'.$client[0]['passportvidankem'].'</textarea>
+													<span style="font-size: 70%; color: #AAA">Кем</span><br>';
+
+                    if ($client[0]['id'] == 3459){
+                        if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                            echo '
+											<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2">'.$client[0]['passportvidankem'].'</textarea>';
+                        }
+                    }else {
+                        echo '
+											<textarea name="passportvidankem" id="passportvidankem" cols="25" rows="2">'.$client[0]['passportvidankem'].'</textarea>';
+                    }
+
+                    echo '
+													
 												</div>
 											</div>
 										</div>
 										<div class="cellsBlock2">
-											<div class="cellLeft">Адрес</div>
-											<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2">'.$client[0]['address'].'</textarea></div>
+											<div class="cellLeft">Адрес</div>';
+
+                    if ($client[0]['id'] == 3459){
+                        if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                            echo '
+											<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2">'.$client[0]['address'].'</textarea></div>';
+                        }
+                    }else {
+                        echo '
+											<div class="cellRight"><textarea name="address" id="address" cols="35" rows="2">'.$client[0]['address'].'</textarea></div>';
+                    }
+
+                    echo '
 										</div>
 									</div>';
 					echo '
