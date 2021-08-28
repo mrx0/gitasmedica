@@ -14,7 +14,7 @@
         <script type="text/javascript">
             function upload_video() 
             {
-              var bar = $(\'#bar\');
+              var bar = $("#bar");
               var percent = $(\'#percent\');
               $(\'#myForm\').ajaxForm({
                 beforeSubmit: function() {
@@ -26,6 +26,8 @@
             
                 uploadProgress: function(event, position, total, percentComplete) {
                   var percentVal = percentComplete + \'%\';
+                  console.log(percentVal);
+                  
                   bar.width(percentVal)
                   percent.html(percentVal);
                 },
@@ -93,7 +95,7 @@ form
   <input type="submit" name=\'submit_video\' value="Submit Comment" onclick=\'upload_video();\'/>
 </form>
 <div class=\'progress\' id="progress_div">
-<div class=\'bar\' id=\'bar1\'></div>
+<div class=\'bar\' id=\'bar\'></div>
 <div class=\'percent\' id=\'percent1\'>0%</div>
 </div>
 <div id=\'output_video\'>
