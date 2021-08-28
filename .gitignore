@@ -19,3 +19,5 @@
 *.orig
 /web.config
 /vh/*
+/video/*
+/video2/*
