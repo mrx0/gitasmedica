@@ -9,8 +9,46 @@
 		require_once 'header_tags.php';
 
         echo '
+
         
-<video width="640" height="480" controls poster="" preload="auto">
+<style type="text/css">
+
+#my-video {
+    width: 100%;
+}
+ 
+.buffered {
+    height: 20px;
+    position: relative;
+    background: #555;
+    width: 300px;
+}
+ 
+#buffered-amount {
+    display: block;
+    height: 100%;
+    background-color: #FFEB3B;
+    width: 0;
+}
+ 
+.progress {
+    margin-top: -20px;
+    height: 20px;  
+    position: relative;
+    width: 300px;
+}
+ 
+#progress-amount {
+    display: block;
+    height: 100%;
+    background-color: #595;
+    width: 0;
+}
+</style>';
+
+        echo '
+        
+<video id="my-video" width="640" height="480" controls poster="" preload="auto">
    <!--<source src="video/nubex.ogv" type=\'video/ogg; codecs="theora, vorbis"\'>
    <source src="video/nubex.mp4" type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\'>-->
    <source src="video2/01.mp4" <!--type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\'-->>
@@ -18,8 +56,41 @@
    <!--<source src="video/nubex.webm" type=\'video/webm; codecs="vp8, vorbis"\'>-->
    Ваш браузер не поддерживает тег video.
 </video>
-        ';
 
+<div class="buffered">
+    <span id="buffered-amount"></span>
+</div>
+<div class="progress">
+    <span id="progress-amount"></span>
+</div>
+';
+
+        echo '
+<script type="text/javascript">
+window.onload = function(){
+    var video = document.getElementById(\'my-video\');
+ 
+    video.addEventListener(\'progress\', function() {
+        var duration =  video.duration;
+        if (duration > 0) {
+            for (var i = 0; i < video.buffered.length; i++) {
+                if (video.buffered.start(video.buffered.length - 1 - i) < video.currentTime) {
+                    document.getElementById("buffered-amount").style.width = (video.buffered.end(video.buffered.length - 1 - i) / duration) * 100 + "%";
+                    break;
+                }
+            }
+        }
+    });
+ 
+    video.addEventListener(\'timeupdate\', function() {
+        var duration =  video.duration;
+        if (duration > 0) {
+            document.getElementById(\'progress-amount\').style.width = ((video.currentTime / duration)*100) + "%";
+        }
+    });
+}
+</script>
+        ';
 
 //		if (($spravka['see_all'] == 1) || $god_mode){
 //			if ($_GET){
