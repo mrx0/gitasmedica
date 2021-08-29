@@ -21,12 +21,6 @@
                 data-setup="{}"
             >
                  <source src="video2/01.mp4" type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\'>
-                <source src="video2/01.webm" type="video/webm" />
-                <p class="vjs-no-js">
-                    To view this video please enable JavaScript, and consider upgrading to a
-                    web browser that
-                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                </p>
             </video>
         ';
 
