@@ -12,38 +12,39 @@
 
         echo '
         <script type="text/javascript">
-            function upload_video() 
-            {
-              var bar = $(\'#bar\');
-              var percent = $(\'#percent\');
-              $(\'#myForm\').ajaxForm({
-                beforeSubmit: function() {
-                  document.getElementById("progress_div").style.display="block";
-                  var percentVal = \'0%\';
-                  bar.width(percentVal)
-                  percent.html(percentVal);
-                },
+            function upload_video(){
+                let bar = $("#bar");
+                let percent = $("#percent");
+                $("#myForm").ajaxForm({
+                    beforeSubmit: function() {
+                        document.getElementById("progress_div").style.display="block";
+                        let percentVal = "0%";
+                        bar.width(percentVal)
+                        percent.html(percentVal);
+                    },
             
-                uploadProgress: function(event, position, total, percentComplete) {
-                  var percentVal = percentComplete + \'%\';
-                  bar.width(percentVal)
-                  percent.html(percentVal);
-                },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        let percentVal = percentComplete + "%";
+                        console.log(percentVal);
+                      
+                        bar.width(percentVal)
+                        percent.html(percentVal);
+                    },
                 
-                success: function() {
-                  var percentVal = \'100%\';
-                  bar.width(percentVal)
-                  percent.html(percentVal);
-                },
-            
-                complete: function(xhr) {
-                  if(xhr.responseText)
-                  {
-                    document.getElementById("output_video").innerHTML=xhr.responseText;
-                    console.log(xhr);
-                  }
-                }
-              }); 
+                    success: function() {
+                        let percentVal = "100%";
+                        bar.width(percentVal)
+                        percent.html(percentVal);
+                    },
+                
+                    complete: function(xhr) {
+                        if(xhr.responseText)
+                        {
+                            document.getElementById("output_video").innerHTML=xhr.responseText;
+                            console.log(xhr);
+                        }
+                    }
+                }); 
             }
         </script>
         ';
@@ -89,16 +90,16 @@ form
         
         
 <form action="upload_video.php" id="myForm" name="frmupload" method="post" enctype="multipart/form-data">
-  <input type="file" id="upload_file" name="upload_file" />
-  <input type="submit" name=\'submit_video\' value="Submit Comment" onclick=\'upload_video();\'/>
+    <input type="file" id="upload_file" name="upload_file">
+    <input type="submit" name="submit_video" value="Submit Comment" onclick="upload_video();">
 </form>
-<div class=\'progress\' id="progress_div">
-<div class=\'bar\' id=\'bar1\'></div>
-<div class=\'percent\' id=\'percent1\'>0%</div>
+
+<div class="progress" id="progress_div">
+    <div class="bar" id="bar"></div>
+    <div class="percent" id="percent">0%</div>
 </div>
-<div id=\'output_video\'>
-    
-</div>
+
+<div id="output_video"></div>
         ';
 
 

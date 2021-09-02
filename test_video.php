@@ -9,17 +9,234 @@
 		require_once 'header_tags.php';
 
         echo '
-        
-<video width="640" height="480" controls poster="">
-   <!--<source src="video/nubex.ogv" type=\'video/ogg; codecs="theora, vorbis"\'>
-   <source src="video/nubex.mp4" type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\'>-->
-   <source src="video/Сергей Мельников _Кураторы лечения в стоматологии_.mp4" <!--type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\'-->>
-   <!--<source src="video/Сергей Мельников Кураторы лечения в стоматологии-master.m3u8" type="application/x-mpegURL">-->
-   <!--<source src="video/nubex.webm" type=\'video/webm; codecs="vp8, vorbis"\'>-->
-   Ваш браузер не поддерживает тег video.
-</video>
-        ';
 
+        
+            <style type="text/css">
+            
+            /*#my-video {
+                width: 100%;
+            }*/
+             
+            .buffered {
+                height: 20px;
+                position: relative;
+                background: #555;
+                width: 300px;
+            }
+             
+            #buffered-amount {
+                display: block;
+                height: 100%;
+                background-color: #FFEB3B;
+                width: 0;
+            }
+             
+            .progress {
+                margin-top: -20px;
+                height: 20px;  
+                position: relative;
+                width: 300px;
+            }
+             
+            #progress-amount {
+                display: block;
+                height: 100%;
+                background-color: #595;
+                width: 0;
+            }
+            </style>';
+
+        echo '
+        
+            <video id="my-video" width="640" height="480" controls poster="" preload="metadata">
+               <!--<source src="video/nubex.ogv" type=\'video/ogg; codecs="theora, vorbis"\'>
+               <source src="video/nubex.mp4" type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\'>-->
+               <source src="video2/01.mp4" type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\'>
+               <!--<source src="video/Сергей Мельников Кураторы лечения в стоматологии-master.m3u8" type="application/x-mpegURL">-->
+               <!--<source src="video/nubex.webm" type=\'video/webm; codecs="vp8, vorbis"\'>-->
+               Ваш браузер не поддерживает тег video.
+            </video>
+            
+            <!--<a href="video2/01.mp4">here</a>-->
+            
+            <!--<div class="buffered">
+                <span id="buffered-amount"></span>
+            </div>
+            <div class="progress">
+                <span id="progress-amount"></span>
+            </div>-->
+            
+            <div>
+                <button onclick="myVideo.play()">Play</button>
+                <button onclick="myVideo.pause()">Pause</button>
+                <!--<button onclick="myVideo.stop()">Stop</button>-->
+                <!--<button onclick="myVideo.speedUp()">Быстрей</button>
+                <button onclick="myVideo.slowDown()">Медленее</button>
+                <button onclick="myVideo.normalSpeed()">Нормальная скорость</button>-->
+            </div>
+            ';
+
+//        echo '
+//            <script type="text/javascript">
+//
+//                //получение медиа элемента video в переменную myVideo
+//                var myVideo = document.getElementById("my-video");
+//
+//                //массив с отслеживаемыми событиями для медиа элемента
+//                var media_events = new Array();
+//                media_events["loadstart"] = 0;
+//                media_events["progress"] = 0;
+//                media_events["suspend"] = 0;
+//                media_events["abort"] = 0;
+//                media_events["error"] = 0;
+//                media_events["emptied"] = 0;
+//                media_events["stalled"] = 0;
+//                media_events["loadedmetadata"] = 0;
+//                media_events["loadeddata"] = 0;
+//                media_events["canplay"] = 0;
+//                media_events["canplaythrough"] = 0;
+//                media_events["playing"] = 0;
+//                media_events["waiting"] = 0;
+//                media_events["seeking"] = 0;
+//                media_events["seeked"] = 0;
+//                media_events["ended"] = 0;
+//                media_events["durationchange"] = 0;
+//                media_events["timeupdate"] = 0;
+//                media_events["play"] = 0;
+//                media_events["pause"] = 0;
+//                media_events["ratechange"] = 0;
+//                media_events["resize"] = 0;
+//                media_events["volumechange"] = 0;
+//
+//                //массив с отслеживаемыми событиями для tracklist объекта
+//                var media_tracklist_events = new Array();
+//                media_tracklist_events["change"] = 0;
+//                media_tracklist_events["addtrack"] = 0;
+//                media_tracklist_events["removetrack"] = 0;
+//
+//                //массив с обновляемыми свойствами для медиа объекта video
+//                var media_properties = [ "error", "src", "currentSrc",
+//                "crossOrigin", "networkState", "preload", "buffered",
+//                "readyState", "seeking", "currentTime", "duration",
+//                "paused", "defaultPlaybackRate", "playbackRate", "played",
+//                "seekable", "ended", "autoplay", "loop", "mediaGroup",
+//                "controller", "controls", "volume", "muted", "defaultMuted",
+//                "audioTracks", "videoTracks", "textTracks", "width",
+//                "height", "videoWidth", "videoHeight", "poster" ];
+//
+//                //функция обновление значений свойств медиа элемента в таблице
+//                function update_properties() {
+//
+//                    var val = null;
+//
+//                    for (key in media_properties) {
+//
+//                        var e = document.getElementById("td-property-" + media_properties[key]);
+//
+//                        if (e) {
+//
+//                            val = eval("myVideo." + media_properties[key]);
+//
+//                            if( val === undefined ) {
+//                                e.textContent = "undefined"
+//                            } else if ( val === null ) {
+//                                e.textContent = "null"
+//                            } else if(val === "") {
+//                                e.textContent = "пустая строка"
+//                            } else {
+//                                e.textContent = eval("myVideo." + media_properties[key]);
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                //функция задания обработчиков для отслеживаемых событий
+//                function init_events() {
+//
+//                    for (key in media_events) {
+//                        myVideo.addEventListener(key, update_data, false);
+//                    }
+//
+//                    if (myVideo.audioTracks !== undefined) {
+//                        try {
+//                                 for (key in media_tracklist_events) {
+//                                    myVideo.audioTracks.addEventListener(key, update_track_data, false);
+//                                }
+//                        } catch (e) {}
+//                    }
+//                    if (myVideo.videoTracks !== undefined) {
+//                        try {
+//                                for (key in media_tracklist_events) {
+//                                    myVideo.videoTracks.addEventListener(key, update_track_data, false);
+//                                }
+//                        } catch (e) {}
+//                    }
+//                    if (myVideo.textTracks !== undefined) {
+//                        try {
+//                                for (key in media_tracklist_events) {
+//                                    myVideo.textTracks.addEventListener(key, update_track_data, false);
+//                                }
+//                        } catch (e) {}
+//                    }
+//                }
+//
+//                //функция обработчик событий медиа элемента
+//                function update_data(event) {
+//
+//                    media_events[event.type]++;
+//
+//                    var e = document.getElementById("td-events-" + event.type);
+//
+//                    if (e) {
+//                        e.textContent = media_events[event.type];
+//                    }
+//
+//                    update_properties();
+//                }
+//
+//                //функция обработчик событий для объектов TrackList
+//                //media.audioTracks,media.videoTracks, media.textTracks
+//                function update_track_data(event) {
+//
+//                    media_tracklist_events[event.type]++;
+//
+//                    var e = document.getElementById("td-tracklist-events-" + event.type);
+//
+//                    if (e) {
+//                        e.textContent = media_tracklist_events[event.type];
+//                    }
+//
+//                    update_properties();
+//                }
+//
+//                //инициализация обработчиков событий
+//                init_events();
+//
+//
+//            //window.onload = function(){
+//            //    var video = document.getElementById(\'my-video\');
+//            //
+//            //    video.addEventListener(\'progress\', function() {
+//            //        var duration =  video.duration;
+//            //        if (duration > 0) {
+//            //            for (var i = 0; i < video.buffered.length; i++) {
+//            //                if (video.buffered.start(video.buffered.length - 1 - i) < video.currentTime) {
+//            //                    document.getElementById("buffered-amount").style.width = (video.buffered.end(video.buffered.length - 1 - i) / duration) * 100 + "%";
+//            //                    break;
+//            //                }
+//            //            }
+//            //        }
+//            //    });
+//            //
+//            //    video.addEventListener(\'timeupdate\', function() {
+//            //        var duration =  video.duration;
+//            //        if (duration > 0) {
+//            //            document.getElementById(\'progress-amount\').style.width = ((video.currentTime / duration)*100) + "%";
+//            //        }
+//            //    });
+//            //}
+//            </script>
+//        ';
 
 //		if (($spravka['see_all'] == 1) || $god_mode){
 //			if ($_GET){
