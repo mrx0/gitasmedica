@@ -283,6 +283,67 @@
         });
 	}
 
+	/*Скрываем все элементы кроме нужного*/
+    /*Для затемнения вокруг элемента блока*/
+    /*Работает при клике!!! 20210910 - Тут только для примера, как делать*/
+    function hide_all_except_one() {
+        let divs = $(".visible_div"),
+            layer = $("#layer");
+        divs.click(function () {
+            divs.css("z-index", 0);
+            $(this).css("z-index", 106);
+            layer.fadeIn("fast");
+        });
+
+        layer.click(function () {
+            $(this).fadeOut("fast");
+        });
+    }
+
+    /*Загрузка видео*/
+    function upload_video(){
+        let bar = $("#bar_video_upload");
+        let percent = $("#percent_video_upload");
+
+        $("#form_video_upload").ajaxForm({
+            beforeSubmit: function() {
+                document.getElementById("progress_div").style.display="block";
+                let percentVal = "0%";
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+
+            uploadProgress: function(event, position, total, percentComplete) {
+                // Затемняем всё остальное
+                $(".visible_div").css("z-index", 106);
+                $("#layer").fadeIn("fast");
+
+                let percentVal = percentComplete + "%";
+                console.log(percentVal);
+
+                bar.width(percentVal)
+                percent.html(percentVal);
+
+            },
+
+            success: function() {
+                let percentVal = "100%";
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+
+            complete: function(xhr) {
+                if(xhr.responseText){
+                    $("#layer").fadeOut("fast");
+
+                    //Выводим видео или файл, которое только что загрузили
+                    //document.getElementById("output_video").innerHTML=xhr.responseText;
+                    //console.log(xhr);
+                }
+            }
+        });
+    }
+
 	//Расчет возврата средств
 	function calculateRefundSumm(){
 
@@ -2026,7 +2087,7 @@
             workers: $("#postCategory").val(),
             workers_type: $("#workers_type").val(),
             filial: $("#filial").val(),
-            ticket_id: $("#filial").val()
+            ticket_id: ticket_id
         };
 
 		$.ajax({
@@ -16201,6 +16262,54 @@
             }
         })
     }
+
+    //Добавление тестовых заданий в UNIVER
+    function Ajax_add_test(mode) {
+
+        let test_id = 0;
+
+        let link = "test_add_f.php";
+
+        if (mode == 'edit'){
+            link = "test_edit_f.php";
+            test_id = $("#test_id").val();
+        }
+
+        let reqData = {
+            theme: $("#theme").val(),
+            descr: $("#descr").val(),
+            workers: $("#postCategory").val(),
+            workers_type: $("#workers_type").val(),
+            filial: $("#filial").val(),
+            test_id: test_id
+        };
+        console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('univer.php');
+                    }, 800)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    };
 
 
 
