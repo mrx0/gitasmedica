@@ -300,7 +300,7 @@
         });
     }
 
-    /*Загрузка видео*/
+    /*Загрузка видео UNIVER*/
     function upload_video(){
         let bar = $("#bar_video_upload");
         let percent = $("#percent_video_upload");
@@ -319,7 +319,7 @@
                 $("#layer").fadeIn("fast");
 
                 let percentVal = percentComplete + "%";
-                console.log(percentVal);
+                //console.log(percentVal);
 
                 bar.width(percentVal)
                 percent.html(percentVal);
@@ -327,18 +327,43 @@
             },
 
             success: function() {
-                let percentVal = "100%";
+                let percentVal = "Готово";
                 bar.width(percentVal)
                 percent.html(percentVal);
             },
 
             complete: function(xhr) {
                 if(xhr.responseText){
+                    //console.log(xhr);
+                    //console.log(JSON.parse(xhr.responseText));
+                    // $("#output_video_result").html(xhr.responseText);
+
+                    let res = JSON.parse(xhr.responseText);
+                    //console.log(res);
+
+                    //Открываем остальной вид, который был затемнён
                     $("#layer").fadeOut("fast");
 
-                    //Выводим видео или файл, которое только что загрузили
-                    //document.getElementById("output_video").innerHTML=xhr.responseText;
-                    //console.log(xhr);
+                    if (res.status == "Ok"){
+
+                        //Выводим результат загрузки
+                        //document.getElementById("output_video").innerHTML = xhr.responseText;
+                        //$("#output_video_result").html(xhr.responseText);
+                        $("#output_video_result").html(res.data);
+                        //Показываем
+                        toggleSomething($('#output_video_result'));
+
+                        //Скрываем кнопку
+                        toggleSomething('#upload_file_button');
+                    }else{
+                        $('#progress_div').hide();
+
+                        $('#upload_file_error').html(res.data);
+                        $('#upload_file_error').show();
+
+                        //Скрываем кнопку
+                        toggleSomething('#upload_file_button');
+                    }
                 }
             }
         });
@@ -12029,7 +12054,7 @@
 
 
 
-    //Функция открыть скрытый див по его id спрятать блок показать блок скрыть блок свернуть развернуть сворачиваем разворачиваем прятать
+    //Функция полказать/скрыть открыть скрытый див по его id спрятать блок показать блок скрыть блок свернуть развернуть сворачиваем разворачиваем прятать
 	function toggleSomething (divID){
         $(divID).toggle('normal');
 	}
