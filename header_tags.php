@@ -397,7 +397,8 @@
 			echo '<li><a href="directory.php">Справочники</a></li>';
 		}
         if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
-            echo '<li><a href="univer.php">UNIVER</a></li>';
+            //echo '<li><a href="univer.php" >UNIVER</a></li>';
+            echo '<li><a href="" >UNIVER</a></li>';
         }
 
 		//echo '<li><a href="search.php"><i class="fa fa-search"></i></a></li>';

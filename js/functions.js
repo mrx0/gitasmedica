@@ -278,7 +278,7 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
             }
         });
 	}
@@ -335,6 +335,7 @@
             complete: function(xhr) {
                 if(xhr.responseText){
                     //console.log(xhr);
+                    // console.log(xhr.responseText);
                     //console.log(JSON.parse(xhr.responseText));
                     // $("#output_video_result").html(xhr.responseText);
 
@@ -352,6 +353,9 @@
                         $("#output_video_result").html(res.data);
                         //Показываем
                         toggleSomething($('#output_video_result'));
+
+                        //Если было сообщение, что файл уже подгружен, скрываем его
+                        $("#exist_file").hide();
 
                         //Скрываем кнопку
                         toggleSomething('#upload_file_button');
@@ -16288,17 +16292,17 @@
         })
     }
 
-    //Добавление тестовых заданий в UNIVER
-    function Ajax_add_test(mode) {
+    //Добавление тестовых заданий для UNIVER в сессию и переход на подтвержедние
+    function Ajax_univer_add_fin(mode) {
 
-        let test_id = 0;
+        let task_id = 0;
 
-        let link = "test_add_f.php";
+        let link = "univer_add_in_session_f.php";
 
-        if (mode == 'edit'){
-            link = "test_edit_f.php";
-            test_id = $("#test_id").val();
-        }
+        // if (mode == 'edit'){
+        //     link = "test_edit_f.php";
+        //     task_id = $("#task_id").val();
+        // }
 
         let reqData = {
             theme: $("#theme").val(),
@@ -16306,9 +16310,9 @@
             workers: $("#postCategory").val(),
             workers_type: $("#workers_type").val(),
             filial: $("#filial").val(),
-            test_id: test_id
+            task_id: task_id
         };
-        console.log(reqData);
+        // console.log(reqData);
 
         $.ajax({
             url: link,
@@ -16324,7 +16328,108 @@
                 //console.log (res);
 
                 if(res.result == "success") {
+                    // fromSessionInConsole();
+
                     $('#data').html(res.data);
+
+                    setTimeout(function () {
+                        window.location.replace('univer_add_fin.php');
+                    }, 300)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    };
+
+    //Добавление файла текущего задания для UNIVER в сессию
+    function addFileInThisUniverAddSession(id, orig_name, new_name, extension) {
+
+        let task_id = 0;
+
+        let link = "add_file_univer_add_in_session_f.php";
+
+        // if (mode == 'edit'){
+        //     link = "test_edit_f.php";
+        //     task_id = $("#task_id").val();
+        // }
+
+        let reqData = {
+            id: id,
+            orig_name: orig_name,
+            new_name: new_name,
+            extension: extension
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    // fromSessionInConsole();
+
+                    location.reload();
+
+                    // $('#data').html(res.data);
+                    //
+                    // setTimeout(function () {
+                    //     window.location.replace('univer_add_fin.php');
+                    // }, 300)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    };
+
+    //Добавление тестовых заданий в UNIVER
+    function Ajax_univer_task_add(mode, status) {
+        console.log();
+
+        let task_id = 0;
+
+        let link = "univer_add_in_db_f.php";
+
+        if (mode == 'edit'){
+            link = "univer_edit_f.php";
+            task_id = $("#task_id").val();
+        }
+
+        let reqData = {
+            task_id: task_id,
+            status: status
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+                //console.log (res.data);
+
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+
                     setTimeout(function () {
                         window.location.replace('univer.php');
                     }, 800)

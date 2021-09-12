@@ -17,7 +17,7 @@
 
 require_once('configPDO2.php');
 
-class DB
+class DB2
 {
     /**
      * Настройки подключения
@@ -50,13 +50,13 @@ class DB
         if (self::$instance === null){
             try {
                 self::$db = new PDO(
-                    'mysql:host='.Config::DB_HOST.';dbname='.Config::DB_NAME,
-                    Config::DB_USER,
-                    Config::DB_PASSWORD,
+                    'mysql:host='.Config2::DB_HOST.';dbname='.Config2::DB_NAME,
+                    Config2::DB_USER,
+                    Config2::DB_PASSWORD,
                     $options = [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES ".Config::CHARSET
+                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES ".Config2::CHARSET
                     ]
                 );
             } catch (PDOException $e) {

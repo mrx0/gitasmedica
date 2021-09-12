@@ -38,7 +38,7 @@
 			<div id="data">';
 
         if (($it['add_own'] == 1) || ($it['add_new'] == 1) || $god_mode){
-            echo '<a href="test_add.php" class="b">Добавить объявление</a><br>';
+            echo '<a href="univer_add.php" class="b">Добавить задание</a><br>';
         }
 
 
