@@ -58,7 +58,9 @@
                 $task_filial = $_SESSION['univer']['filial'];
                 $task_status = $_SESSION['univer']['status'];
 
-                $univer_exist_data['file_data'] = '<div style="width: 60%; margin: 0 10px 10px; font-size: 85%; color: #333; border: 1px dashed rgb(255 0 0); padding: 7px;">Уже подгружен файл <b>'.$file_data['name'].'</b>. Загрузите новый файл и он будем заменён.</div>';
+                if (!empty($univer_exist_data['file_data'])){
+                    $univer_exist_data['file_data'] = '<div style="width: 60%; margin: 0 10px 10px; font-size: 85%; color: #333; border: 1px dashed rgb(255 0 0); padding: 7px;">Уже подгружен файл <b>'.$file_data['name'].'</b>. Загрузите новый файл и он будем заменён.</div>';
+                }
             }
 
 //            if (!isset($_SESSION['univer']['data'])) {

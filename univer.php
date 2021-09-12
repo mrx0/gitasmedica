@@ -566,7 +566,7 @@
         /*echo '<a href="history2.php" class="b3">История изменений и обновлений</a><br>';*/
         echo '	
 			
-			    <div id="doc_title">Главная - Асмедика</div>
+			    <div id="doc_title">Univer - Асмедика</div>
 				</div>';
 		
 	}else{
