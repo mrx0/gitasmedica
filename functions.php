@@ -61,6 +61,31 @@
 		return $login;
 	}
 
+	//Транслитерация для ЧПУ
+	function Translit($value){
+		$converter = array(
+			'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',
+			'е' => 'e',    'ё' => 'e',    'ж' => 'zh',   'з' => 'z',    'и' => 'i',
+			'й' => 'y',    'к' => 'k',    'л' => 'l',    'м' => 'm',    'н' => 'n',
+			'о' => 'o',    'п' => 'p',    'р' => 'r',    'с' => 's',    'т' => 't',
+			'у' => 'u',    'ф' => 'f',    'х' => 'h',    'ц' => 'c',    'ч' => 'ch',
+			'ш' => 'sh',   'щ' => 'sch',  'ь' => '',     'ы' => 'y',    'ъ' => '',
+			'э' => 'e',    'ю' => 'yu',   'я' => 'ya',
+		);
+
+		//$value = iconv("UTF-8","UTF-8//IGNORE", $value);
+		//var_dump($value);
+		$value = mb_strtolower($value, "UTF-8");
+		//var_dump($value);
+		$value = strtr($value, $converter);
+		//$value = strtr(mb_substr($value, 0, 1, "UTF-8"), $converter);
+		$value = mb_ereg_replace('[^-0-9a-z]', '-', $value);
+		$value = mb_ereg_replace('[-]+', '-', $value);
+		$value = trim($value, '-');
+
+		return $value;
+	}
+
 	//Проверка на существование пользователя такими фио
 	function isSameFullName($datatable, $name, $id){
 		$rezult = array();

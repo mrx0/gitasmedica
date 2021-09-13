@@ -67,6 +67,18 @@
             
             
         </script>
+        
+                        
+        <script>
+            //Запрет контекстного меню  
+            const Video = document.getElementsByTagName("video")[0];
+            //console.log(Video)
+            
+            if (Video !== undefined){
+                Video.oncontextmenu = function() {return false;};
+            }
+            
+        </script>
 
         <!--<script type="text/javascript">
             var total = 0;
