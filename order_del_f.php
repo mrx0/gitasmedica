@@ -21,12 +21,12 @@
             $order_j = SelDataFromDB('journal_order', $_POST['id'], 'id');
 
             //Если заднее число
-            if ((strtotime($order_j[0]['create_time']) + 12*60*60 < time()) && (($finances['see_all'] != 1) && !$god_mode)){
-                echo '
-                    <div class="query_neok" style="padding-bottom: 10px;">
-                        <h3>Нельзя удалять задним числом.</h3>
-                    </div>';
-            }else {
+//            if ((strtotime($order_j[0]['create_time']) + 12*60*60 < time()) && (($finances['see_all'] != 1) && !$god_mode)){
+//                echo '
+//                    <div class="query_neok" style="padding-bottom: 10px;">
+//                        <h3>Нельзя удалять задним числом.</h3>
+//                    </div>';
+//            }else {
 
                 $msql_cnnct = ConnectToDB();
 
@@ -61,7 +61,7 @@
                         <h3>Ордер удален (заблокирован).</h3>
                     </div>';
                 }
-            }
+//            }
 		}
 	}
 	
