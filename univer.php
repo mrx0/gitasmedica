@@ -534,7 +534,7 @@
                             <i>Задания на выполнение</i>
                         </div>
                         <div style="height: 350px; max-height: 350px; overflow-y: scroll; text-align: center; border:1px solid #BFBCB5;">
-                            '.$stocks_str.'
+                            <!--'.$stocks_str.'-->
                         </div>
                     </td>
                     <td style="text-align: center; width: 50%; border:1px solid #BFBCB5; vertical-align: top;">
@@ -542,8 +542,8 @@
                             <i>Выполненные задания</i>
                         </div>
                         <div style="height: 350px; max-height: 350px; overflow-y: scroll; text-align: center; position: relative;">
-                            '.$today_birth_str.'
-                            '.$births_str.'
+                            <!--'.$today_birth_str.'
+                            '.$births_str.'-->
                         </div>
                     </td>
                 </tr>
