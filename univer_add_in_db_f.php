@@ -41,7 +41,11 @@
 
                     //Что будем добавлять
                     $task_id = $_SESSION['univer']['id'];
-                    $file_id = $_SESSION['univer']['file_data']['id'];
+                    if (isset($_SESSION['univer']['file_data']['id'])) {
+                        $file_id = $_SESSION['univer']['file_data']['id'];
+                    }else{
+                        $file_id = 0;
+                    }
                     $task_theme = trim(strip_tags(stripcslashes(htmlspecialchars(($_SESSION['univer']['theme'])))));
                     $task_descr = trim(strip_tags(stripcslashes(htmlspecialchars(($_SESSION['univer']['descr'])))));
                     $task_workers = $_SESSION['univer']['workers'];

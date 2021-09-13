@@ -16396,7 +16396,7 @@
 
     //Добавление тестовых заданий в UNIVER
     function Ajax_univer_task_add(mode, status) {
-        console.log();
+        //console.log();
 
         let task_id = 0;
 

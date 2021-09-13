@@ -19,8 +19,10 @@
             //$offices = SelDataFromDB('spr_filials', '', '');
             $filials_j = getAllFilials(false, false, false);
             //Получили список прав
-            $permissions_j = SelDataFromDB('spr_permissions', '', '');
+            //$permissions_j = SelDataFromDB('spr_permissions', '', '');
             //var_dump($permissions_j);
+            //Получили список прав
+            $permissions_j = getAllPermissions(false, true);
 
             //!!!Массив тех, кому видно заявку по умолчанию, потому надо будет вывести это в базу или в другой файл
             $permissionsWhoCanSee_arr = array(2, 3, 8, 9);
@@ -58,8 +60,9 @@
                 $task_filial = $_SESSION['univer']['filial'];
                 $task_status = $_SESSION['univer']['status'];
 
-                if (!empty($univer_exist_data['file_data'])){
-                    $univer_exist_data['file_data'] = '<div style="width: 60%; margin: 0 10px 10px; font-size: 85%; color: #333; border: 1px dashed rgb(255 0 0); padding: 7px;">Уже подгружен файл <b>'.$file_data['name'].'</b>. Загрузите новый файл и он будем заменён.</div>';
+                //!!! переделать, тут всегда всё пусто.
+                if (!empty($file_data)){
+                    $univer_exist_data['file_data'] = '<div style="width: 60%; margin: 0 10px 10px; font-size: 85%; color: #333; border: 1px dashed rgb(255 0 0); padding: 7px;">Уже подгружен файл <b>'.$file_data['name'].'</b>. Загрузите новый файл и он будет заменён.</div>';
                 }
             }
 
@@ -72,7 +75,7 @@
             echo '
 				<div id="status">
 					<header>
-						<h2>Добавить задание</h2>
+						<h2>Добавить задание (тестовый режим)</h2>
 						Заполните поля и нажмите <b>Далее</b>
 					</header>';
             echo '
@@ -224,28 +227,28 @@
                 $FilialinSession = 0;
             }
 
-            if (!empty($filials_j)) {
-                foreach ($filials_j as $f_id => $filials_j_data) {
-                    $filialSelected = '';
-                    if (in_array($filials_j_data['id'], $task_filial)) {
-                        $filialSelected = 'selected';
-                    }
-
-                    echo "<option value='" . $filials_j_data['id'] . "' " . $filialSelected . ">" . $filials_j_data['name'] . "</option>";
-                }
-            }else{
+//            if (!empty($filials_j)) {
+//                foreach ($filials_j as $f_id => $filials_j_data) {
+//                    $filialSelected = '';
+//                    if (in_array($filials_j_data['id'], $task_filial)) {
+//                        $filialSelected = 'selected';
+//                    }
+//
+//                    echo "<option value='" . $filials_j_data['id'] . "' " . $filialSelected . ">" . $filials_j_data['name'] . "</option>";
+//                }
+//            }else{
                 foreach ($filials_j as $f_id => $filials_j_data) {
                     //Если в сессии указан филиал, выберем его как одного по умолчанию
                     $filialSelected = '';
-                    if ($haveFilialinSession){
-                        if ($FilialinSession == $filials_j_data['id']){
+//                    if ($haveFilialinSession){
+//                        if ($FilialinSession == $filials_j_data['id']){
                             $filialSelected = 'selected';
-                        }
-                    }
+//                        }
+//                    }
 
-                    echo "<option value='" . $filials_j_data['id'] . "' ".$filialSelected.">" . $filials_j_data['name'] . "</option>";
+                    echo "<option value='" . $filials_j_data['id'] . "' selected>" . $filials_j_data['name'] . "</option>";
                 }
-            }
+//            }
 
 //            if (!empty($filials_j)){
 //                foreach ($filials_j as $f_id => $filial_data){
