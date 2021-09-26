@@ -9,7 +9,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
-        if (($ticket['see_all'] == 1) || ($ticket['see_own'] == 1) || $god_mode){
+        //if (($ticket['see_all'] == 1) || ($ticket['see_own'] == 1) || $god_mode){
 			if ($_GET){
 //				include_once 'DBWork.php';
 				include_once 'functions.php';
@@ -724,9 +724,9 @@
 			}else{
 				echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 			}
-		}else{
-			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
-		}
+		// }else{
+			// echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
+		// }
 	}else{
 		header("location: enter.php");
 	}
