@@ -23,7 +23,7 @@
 		//$offices = SelDataFromDB('spr_filials', '', '');
 
         //!!!Массив тех, кому видно по умолчанию, потому надо будет вывести это в базу или в другой файл
-        $permissionsWhoCanSee_arr = array(2, 3, 8, 9, 16);
+        $permissionsWhoCanSee_arr = array(2, 3, 8, 9);
 
 
         echo '
@@ -90,8 +90,8 @@
 
         $announcing_arr = $db::getRows($query, $args);
 
-        var_dump($announcing_arr);
-        var_dump($query);
+        //var_dump($announcing_arr);
+        //var_dump($query);
 
         $stocks_str = '';
         $news_str = '';
