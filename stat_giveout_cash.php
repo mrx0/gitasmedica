@@ -359,7 +359,7 @@
                                         
                                         //var tempSumm = typeSumm + Number($(this).html());
                                         
-                                        $("#typeSumm_"+type).html(number_format(typeSumm + Number($(this).html()), 2, ".", " "));
+                                        $("#typeSumm_"+type).html(number_format(typeSumm + Number($(this).html()), 2, ".", ""));
         
 //                                        if (type == 0){
 //                                            console.log(typeSumm + " + " + Number($(this).html()) + " = " + tempSumm);
