@@ -174,7 +174,7 @@
 						</li>';
 
             $query = "
-            SELECT j_pc.*, s_c.full_name, s_c.telephone, s_c.htelephone, s_c.telephoneo, s_c.htelephoneo, s_w.name AS worker_name
+            SELECT j_pc.*, s_c.full_name, s_c.telephone, s_c.htelephone, s_c.telephoneo, s_c.htelephoneo, s_w.name AS worker_name, s_w.full_name AS worker_full_name
             FROM `journal_phone_calling` j_pc 
             LEFT JOIN `spr_clients` s_c ON s_c.id = j_pc.client_id
             LEFT JOIN `spr_workers` s_w ON s_w.id = j_pc.create_person
@@ -256,7 +256,8 @@
 
 					echo '
 							<li class="cellsBlock3 cellsBlockHover" style="">
-								<div class="cellTime" style="text-align: left; font-size: 70%; font-style: italic;">'.$call_mark.'</div>
+								<!--<div class="cellTime" style="text-align: left; font-size: 70%; font-style: italic;">'.$call_mark.'</div>-->
+								<a href="phone_calls.php?client_id='.$calls_j[$i]['client_id'].'" class="cellTime ahref" style="text-align: left; font-size: 70%; font-style: italic;">'.$call_mark.'</a>
 								<div class="cellOffice" style="text-align: center; width: 100px; min-width: 100px; font-size: 80%;">'.date('d.m.Y', strtotime($calls_j[$i]['call_time'])).'</div>
 								<a href="client.php?id='.$calls_j[$i]['client_id'].'" class="cellFullName ahref" style="text-align: left; font-size: 80%;" target="_blank" rel="nofollow noopener">'.$calls_j[$i]['full_name'].'</a>
 								<div class="cellTime" style="text-align: left; font-size: 80%;">';
@@ -273,7 +274,8 @@
 					echo $calls_j[$i]['comment'];
                     echo '
                                 </div>
-                                <div class="cellTime" style="font-size: 80%; text-align: center; width: 150px; min-width: 150px;">'.$calls_j[$i]['worker_name'].'</div>
+                                <!--<div class="cellTime" style="font-size: 80%; text-align: center; width: 150px; min-width: 150px;">'.$calls_j[$i]['worker_name'].'</div>-->
+                                <a href="phone_calls.php?create_person='.$calls_j[$i]['worker_full_name'].'" class="cellTime ahref" style="font-size: 80%; text-align: center; width: 150px; min-width: 150px;">'.$calls_j[$i]['worker_name'].'</a>
                                 <div class="cellTime" style="font-size: 70%; text-align: center;">'.date('d.m.Y H:i', strtotime($calls_j[$i]['create_time'])).'</div>
 							</li>';
 				}
