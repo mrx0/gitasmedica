@@ -211,7 +211,10 @@
 
 				for ($i = 0; $i < count($calls_j); $i++) {
 
+				    //Метка
                     $call_mark = '';
+                    //Массив для подсчёта
+//                    $res =
 
 					if ($calls_j[$i]['status'] == 8) {
                         $call_mark = '<i class="fa fa-phone-square" style="color: red; font-size: 160%;" title="Не звонить"></i> Не звонить';

@@ -3637,6 +3637,7 @@
 		}
 
         if ($total_ids > 0) {
+        	//var_dump($total_ids);
 
             $pages = (int)ceil($total_ids/$count_on_page);
             //var_dump($pages);
@@ -3764,6 +3765,7 @@
 
         if ($pages > 1) {
             $rezult_str = '<div style="margin: 2px 6px 3px;">
+								<span style="font-size: 80%; color: rgb(0, 172, 237);">Всего записей: <b>'.$total_ids.'</b></span><br>
 						        <span style="font-size: 80%; color: rgb(0, 172, 237);">Перейти на страницу: </span>' . $paginator_str . '
 						   </div>';
         }
