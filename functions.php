@@ -3605,7 +3605,7 @@
     }
 
     //Пагинатор
-    function paginationCreate2 ($count_on_page, $page_number, $database, $file_name, $db, $dop){
+    function paginationCreate2 ($count_on_page, $page_number, $database, $file_name, $db, $dop, $dop_link_str=''){
         $paginator_str = '';
         $pages = 0;
 
@@ -3614,6 +3614,7 @@
 
         //Хочу получить общее количество
         $query = "SELECT COUNT(*) AS total_ids FROM `$database` $dop;";
+        //var_dump($query);
 
         //$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
@@ -3645,12 +3646,12 @@
 
                 //next
                 if ($page_number != 1) {
-                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '" class="paginator_btn" style=""><i class="fa fa-caret-left" aria-hidden="true"></i></a> ';
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '&'.$dop_link_str.'" class="paginator_btn" style=""><i class="fa fa-caret-left" aria-hidden="true"></i></a> ';
                 }
 
                 if (($page_number == 1) || ($page_number == 2) || ($page_number == $pages) || ($page_number == $pages-1)){
                     //1я
-                    $paginator_str .= '<a href="'.$file_name.'?page=1" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=1&'.$dop_link_str.'" class="paginator_btn" style="';
 
                     if ($page_number == 1){
                         $paginator_str .= $pg_btn_bgcolor;
@@ -3659,7 +3660,7 @@
                     $paginator_str .= '">1</a> ';
 
                     //2я
-                    $paginator_str .= '<a href="'.$file_name.'?page=2" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=2&'.$dop_link_str.'" class="paginator_btn" style="';
 
                     if ($page_number == 2){
                         $paginator_str .= $pg_btn_bgcolor;
@@ -3668,7 +3669,7 @@
                     $paginator_str .= '">2</a> ';
 
                     //3я
-                    $paginator_str .= '<a href="'.$file_name.'?page=3" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=3&'.$dop_link_str.'" class="paginator_btn" style="';
 
                     if ($page_number == 3){
                         $paginator_str .= $pg_btn_bgcolor;
@@ -3677,7 +3678,7 @@
                     $paginator_str .= '">3</a> ... ';
 
                     //Препредпоследняя
-                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-2) . '" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-2) . '&'.$dop_link_str.'" class="paginator_btn" style="';
 
                     if ($page_number == $pages-2){
                         $paginator_str .= $pg_btn_bgcolor;
@@ -3687,7 +3688,7 @@
                     $paginator_str .= '</a> ';
 
                     //Предпоследняя
-                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-1) . '" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages-1) . '&'.$dop_link_str.'" class="paginator_btn" style="';
 
                     if ($page_number == $pages-1){
                         $paginator_str .= $pg_btn_bgcolor;
@@ -3697,7 +3698,7 @@
                     $paginator_str .= '</a> ';
 
                     //Последняя
-                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '&'.$dop_link_str.'" class="paginator_btn" style="';
 
                     if ($page_number == $pages){
                         $paginator_str .= $pg_btn_bgcolor;
@@ -3708,7 +3709,7 @@
                 }else {
 
                     //1я
-                    $paginator_str .= '<a href="' . $file_name . '?page=1" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="' . $file_name . '?page=1&'.$dop_link_str.'" class="paginator_btn" style="';
                     $paginator_str .= '">1</a> ';
 
                     if ($page_number - 1 != 2){
@@ -3716,16 +3717,16 @@
                     }
 
                     //
-                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number - 1) . '&'.$dop_link_str.'" class="paginator_btn" style="';
                     $paginator_str .= '">' . ($page_number - 1) . '</a> ';
 
                     //
-                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($page_number) . '" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($page_number) . '&'.$dop_link_str.'" class="paginator_btn" style="';
                     $paginator_str .= $pg_btn_bgcolor;
                     $paginator_str .= '">' . ($page_number) . '</a> ';
 
                     //
-                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '&'.$dop_link_str.'" class="paginator_btn" style="';
                     $paginator_str .= '">' . ($page_number + 1) . '</a> ';
 
                     if ($page_number+1 != $pages-1){
@@ -3733,13 +3734,13 @@
                     }
 
                     //Последняя
-                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '" class="paginator_btn" style="';
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($pages) . '&'.$dop_link_str.'" class="paginator_btn" style="';
                     $paginator_str .= '">' . ($pages) . '</a> ';
 
                 }
                 //next
                 if ($page_number != $pages) {
-                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '" class="paginator_btn" style=""><i class="fa fa-caret-right" aria-hidden="true"></i></a> ';
+                    $paginator_str .= '<a href="' . $file_name . '?page=' . ($page_number + 1) . '&'.$dop_link_str.'" class="paginator_btn" style=""><i class="fa fa-caret-right" aria-hidden="true"></i></a> ';
                 }
 
             }else {
@@ -3756,7 +3757,7 @@
                             }
                         }
                     }
-                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($i) . '" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($i) . '</a> ';
+                    $paginator_str .= '<a href="'.$file_name.'?page=' . ($i) . '&'.$dop_link_str.'" class="paginator_btn" style="' . $pg_btn_bgcolor . '">' . ($i) . '</a> ';
                 }
             }
         }

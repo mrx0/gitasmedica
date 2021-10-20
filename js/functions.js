@@ -22,9 +22,9 @@
 	//Функция для работы с GET
 	function urlGetWork(addIt, deleteIt){
 
-        var get_data_str = "";
+        let get_data_str = "";
 
-		var params = window
+        let params = window
             .location
             .search
             .replace("?","")
@@ -45,17 +45,17 @@
 			//Если ключ есть и он не undef
             if (key.length > 0) {
             	if (deleteIt.indexOf(key) == -1){
+            	    // console.log(key);
+
                 	get_data_str = get_data_str + "&" + key + "=" + params[key];
                 }
             }
         }
-
-        //!!! Дописать про добавление параметров
-
-        //console.log(get_data_str);
+        // console.log(document.location.pathname);
+        // console.log(get_data_str);
 
 		//Переходим по новой ссылке, удалив перед этим первый символ, который у нас "&"
-        document.location.href = "?"+get_data_str.slice(1);
+        document.location.href = "?"+get_data_str.slice(1) + addIt;
 	}
 
 	//Сегодняшняя дата (сегодня)
@@ -6288,7 +6288,8 @@
 
                             //location.reload();
 
-                            urlGetWork([], ["client_id"]);
+                            //urlGetWork([], ["client_id"]);
+                            urlGetWork("", ["client_id"]);
 
                         }, 50);
                     } else {
@@ -11727,6 +11728,36 @@
 			}
 		});
 
+		 //Запрос есть ли новые задания в UNIVER
+		$.ajax({
+			url:"get_univer_new.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+
+			data:reqData,
+
+			cache: false,
+			beforeSend: function() {
+			},
+			success:function(res){
+				//console.log(res);
+
+				if(res.result == 'success'){
+					console.log(res);
+
+					// if (res.data > 0) {
+					// 	//console.log(res.data);
+                    //
+					// 	$(".have_new-univer").show();
+					// 	$(".have_new-univer").html(res.data);
+					// }
+				}else{
+
+				}
+			}
+		});
+
 	});
 
 	//Для фильтра в косметологии для подсчета элементов
@@ -16440,6 +16471,30 @@
             }
         })
     };
+    
+    //Для фильтра статистики звонков
+    function Ajax_show_result_stat_phone_calls() {
+        //console.log($("input[name=all_time]:checked").val());
+
+        let add_url = '';
+
+        let last_month = $("input[name=all_time]:checked").val()
+        // if (last_month === undefined){
+        //     last_month = 0;
+        // }
+	    if (last_month == 1){
+            add_url += '&date='+getTodayDate();
+        }
+
+	    let worker_full_name =  $("#search_client4").val()
+        if (worker_full_name.length > 0) {
+            add_url += '&create_person='+worker_full_name;
+        }
+
+	    // console.log(add_url)
+
+        urlGetWork(add_url, ['date','create_person']);
+    }
 
 
 
