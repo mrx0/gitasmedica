@@ -11744,7 +11744,7 @@
 				//console.log(res);
 
 				if(res.result == 'success'){
-					console.log(res);
+					//console.log(res);
 
 					// if (res.data > 0) {
 					// 	//console.log(res.data);
@@ -16494,6 +16494,56 @@
 	    // console.log(add_url)
 
         urlGetWork(add_url, ['date','create_person']);
+    }
+
+    //Добавление нового занятия
+    function Ajax_individual_add(mode){
+        //console.log();
+
+        hideAllErrors();
+
+        let task_id = 0;
+
+        let link = "individual_add_f.php";
+
+        if (mode == 'edit'){
+            link = "individual_edit_f.php";
+            task_id = $("#task_id").val();
+        }
+
+        let reqData = {
+            theme: $("#descr").val(),
+            worker: $("#search_client2").val(),
+            date: $("#iWantThisDate2").val()
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+                //console.log (res.data);
+
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+
+                    setTimeout(function () {
+                        window.location.replace('individuals.php');
+                    }, 800)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
     }
 
 

@@ -160,7 +160,10 @@
         $filials_j = getAllFilials(false, true, true);
 
         echo '
-			<header style="margin-bottom: 5px;">
+			<header style="margin-bottom: 5px;">       
+                 <div class="nav">
+                    <a href="individuals.php" class="b">Индивидуальные занятия</a>
+                </div>
 				<h1>UNIVER</h1>'. '(тестовый режим)';
 			echo '
 			</header>
