@@ -21,8 +21,10 @@
 //            var_dump($filials_j);
 
             //Получили список прав
-            $permissions = SelDataFromDB('spr_permissions', '', '');
+//            $permissions = SelDataFromDB('spr_permissions', '', '');
 //            var_dump($permissions);
+            //Получили список прав
+            $permissions = getAllPermissions(false, true);
 
             //!!! для теста
             //unset($_SESSION['univer']);
@@ -155,7 +157,7 @@
                                         Для какого филиала
                                     </div>
                                     <div class="cellRight">';
-                    if (!empty($task_workers_type)) {
+                    if (!empty($task_filial)) {
                         foreach ($task_filial as $f_id) {
                             echo '<span style="display: block; font-style: italic; font-size: 90%;">' . $filials_j[$f_id]['name'] . '</span>';
                         }

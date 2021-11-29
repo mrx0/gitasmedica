@@ -9,7 +9,7 @@
 		require_once 'header_tags.php';
 		//var_dump($_SESSION);
 
-		if (($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode){
+		if ((($finances['add_new'] == 1) || ($finances['add_own'] == 1) || $god_mode) && $_SESSION['id'] != 773){
 			include_once 'DBWork.php';
 			include_once 'functions.php';
             include_once 'widget_calendar.php';
