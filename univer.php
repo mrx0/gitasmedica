@@ -679,10 +679,10 @@
                     </td>
                     <td style="text-align: center; width: 50%; border:1px solid #BFBCB5; vertical-align: top;">
                         <div style="height: 20px; max-height: 20px; text-align: center; background-color: rgb(133 133 133); color: rgb(255 255 255); margin-bottom: 5px; border-bottom: 1px solid #BFBCB5;">
-                            <i>Выполненные задания</i>
+                            <!--<i>Выполненные задания</i>-->
                         </div>
                         <div style="height: 700px; max-height: 700px; overflow-y: scroll; text-align: center; position: relative;">
-                            тут пока ничего не будет отображаться
+                            <!--тут пока ничего не будет отображаться-->
                         </div>
                     </td>
                 </tr>
