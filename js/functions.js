@@ -22,9 +22,9 @@
 	//Функция для работы с GET
 	function urlGetWork(addIt, deleteIt){
 
-        var get_data_str = "";
+        let get_data_str = "";
 
-		var params = window
+        let params = window
             .location
             .search
             .replace("?","")
@@ -45,17 +45,17 @@
 			//Если ключ есть и он не undef
             if (key.length > 0) {
             	if (deleteIt.indexOf(key) == -1){
+            	    // console.log(key);
+
                 	get_data_str = get_data_str + "&" + key + "=" + params[key];
                 }
             }
         }
-
-        //!!! Дописать про добавление параметров
-
-        //console.log(get_data_str);
+        // console.log(document.location.pathname);
+        // console.log(get_data_str);
 
 		//Переходим по новой ссылке, удалив перед этим первый символ, который у нас "&"
-        document.location.href = "?"+get_data_str.slice(1);
+        document.location.href = "?"+get_data_str.slice(1) + addIt;
 	}
 
 	//Сегодняшняя дата (сегодня)
@@ -278,10 +278,100 @@
             },
             // действие, при ответе с сервера
             success: function(res){
-                //console.log(res);
+                console.log(res);
             }
         });
 	}
+
+	/*Скрываем все элементы кроме нужного*/
+    /*Для затемнения вокруг элемента блока*/
+    /*Работает при клике!!! 20210910 - Тут только для примера, как делать*/
+    function hide_all_except_one() {
+        let divs = $(".visible_div"),
+            layer = $("#layer");
+        divs.click(function () {
+            divs.css("z-index", 0);
+            $(this).css("z-index", 106);
+            layer.fadeIn("fast");
+        });
+
+        layer.click(function () {
+            $(this).fadeOut("fast");
+        });
+    }
+
+    /*Загрузка видео UNIVER*/
+    function upload_video(){
+        let bar = $("#bar_video_upload");
+        let percent = $("#percent_video_upload");
+
+        $("#form_video_upload").ajaxForm({
+            beforeSubmit: function() {
+                document.getElementById("progress_div").style.display="block";
+                let percentVal = "0%";
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+
+            uploadProgress: function(event, position, total, percentComplete) {
+                // Затемняем всё остальное
+                $(".visible_div").css("z-index", 106);
+                $("#layer").fadeIn("fast");
+
+                let percentVal = percentComplete + "%";
+                //console.log(percentVal);
+
+                bar.width(percentVal)
+                percent.html(percentVal);
+
+            },
+
+            success: function() {
+                let percentVal = "Готово";
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+
+            complete: function(xhr) {
+                if(xhr.responseText){
+                    //console.log(xhr);
+                    // console.log(xhr.responseText);
+                    //console.log(JSON.parse(xhr.responseText));
+                    // $("#output_video_result").html(xhr.responseText);
+
+                    let res = JSON.parse(xhr.responseText);
+                    //console.log(res);
+
+                    //Открываем остальной вид, который был затемнён
+                    $("#layer").fadeOut("fast");
+
+                    if (res.status == "Ok"){
+
+                        //Выводим результат загрузки
+                        //document.getElementById("output_video").innerHTML = xhr.responseText;
+                        //$("#output_video_result").html(xhr.responseText);
+                        $("#output_video_result").html(res.data);
+                        //Показываем
+                        toggleSomething($('#output_video_result'));
+
+                        //Если было сообщение, что файл уже подгружен, скрываем его
+                        $("#exist_file").hide();
+
+                        //Скрываем кнопку
+                        toggleSomething('#upload_file_button');
+                    }else{
+                        $('#progress_div').hide();
+
+                        $('#upload_file_error').html(res.data);
+                        $('#upload_file_error').show();
+
+                        //Скрываем кнопку
+                        toggleSomething('#upload_file_button');
+                    }
+                }
+            }
+        });
+    }
 
 	//Расчет возврата средств
 	function calculateRefundSumm(){
@@ -2026,7 +2116,7 @@
             workers: $("#postCategory").val(),
             workers_type: $("#workers_type").val(),
             filial: $("#filial").val(),
-            ticket_id: $("#filial").val()
+            ticket_id: ticket_id
         };
 
 		$.ajax({
@@ -6198,7 +6288,8 @@
 
                             //location.reload();
 
-                            urlGetWork([], ["client_id"]);
+                            //urlGetWork([], ["client_id"]);
+                            urlGetWork("", ["client_id"]);
 
                         }, 50);
                     } else {
@@ -11637,6 +11728,36 @@
 			}
 		});
 
+		 //Запрос есть ли новые задания в UNIVER
+		$.ajax({
+			url:"get_univer_new.php",
+			global: false,
+			type: "POST",
+			dataType: "JSON",
+
+			data:reqData,
+
+			cache: false,
+			beforeSend: function() {
+			},
+			success:function(res){
+				//console.log(res);
+
+				if(res.result == 'success'){
+					//console.log(res);
+
+					// if (res.data > 0) {
+					// 	//console.log(res.data);
+                    //
+					// 	$(".have_new-univer").show();
+					// 	$(".have_new-univer").html(res.data);
+					// }
+				}else{
+
+				}
+			}
+		});
+
 	});
 
 	//Для фильтра в косметологии для подсчета элементов
@@ -11968,7 +12089,7 @@
 
 
 
-    //Функция открыть скрытый див по его id спрятать блок показать блок скрыть блок свернуть развернуть сворачиваем разворачиваем прятать
+    //Функция полказать/скрыть открыть скрытый див по его id спрятать блок показать блок скрыть блок свернуть развернуть сворачиваем разворачиваем прятать
 	function toggleSomething (divID){
         $(divID).toggle('normal');
 	}
@@ -16197,6 +16318,229 @@
                         $("#sclad_items_rezult").html('<span style="color: red; font-weight: bold; font-size: 80%; margin-left: 20px;">Ничего не найдено</span>');
                     }
 
+                }
+            }
+        })
+    }
+
+    //Добавление тестовых заданий для UNIVER в сессию и переход на подтвержедние
+    function Ajax_univer_add_fin(mode) {
+
+        let task_id = 0;
+
+        let link = "univer_add_in_session_f.php";
+
+        // if (mode == 'edit'){
+        //     link = "test_edit_f.php";
+        //     task_id = $("#task_id").val();
+        // }
+
+        let reqData = {
+            theme: $("#theme").val(),
+            descr: $("#descr").val(),
+            workers: $("#postCategory").val(),
+            workers_type: $("#workers_type").val(),
+            filial: $("#filial").val(),
+            task_id: task_id
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    // fromSessionInConsole();
+
+                    $('#data').html(res.data);
+
+                    setTimeout(function () {
+                        window.location.replace('univer_add_fin.php');
+                    }, 300)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    };
+
+    //Добавление файла текущего задания для UNIVER в сессию
+    function addFileInThisUniverAddSession(id, orig_name, new_name, extension) {
+
+        let task_id = 0;
+
+        let link = "add_file_univer_add_in_session_f.php";
+
+        // if (mode == 'edit'){
+        //     link = "test_edit_f.php";
+        //     task_id = $("#task_id").val();
+        // }
+
+        let reqData = {
+            id: id,
+            orig_name: orig_name,
+            new_name: new_name,
+            extension: extension
+        };
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+
+                if(res.result == "success") {
+                    // fromSessionInConsole();
+
+                    location.reload();
+
+                    // $('#data').html(res.data);
+                    //
+                    // setTimeout(function () {
+                    //     window.location.replace('univer_add_fin.php');
+                    // }, 300)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    };
+
+    //Добавление тестовых заданий в UNIVER
+    function Ajax_univer_task_add(mode, status) {
+        //console.log();
+
+        let task_id = 0;
+
+        let link = "univer_add_in_db_f.php";
+
+        if (mode == 'edit'){
+            link = "univer_edit_f.php";
+            task_id = $("#task_id").val();
+        }
+
+        let reqData = {
+            task_id: task_id,
+            status: status
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+                //console.log (res.data);
+
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+
+                    setTimeout(function () {
+                        window.location.replace('univer.php');
+                    }, 800)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    };
+    
+    //Для фильтра статистики звонков
+    function Ajax_show_result_stat_phone_calls() {
+        //console.log($("input[name=all_time]:checked").val());
+
+        let add_url = '';
+
+        let last_month = $("input[name=all_time]:checked").val()
+        // if (last_month === undefined){
+        //     last_month = 0;
+        // }
+	    if (last_month == 1){
+            add_url += '&date='+getTodayDate();
+        }
+
+	    let worker_full_name =  $("#search_client4").val()
+        if (worker_full_name.length > 0) {
+            add_url += '&create_person='+worker_full_name;
+        }
+
+	    // console.log(add_url)
+
+        urlGetWork(add_url, ['date','create_person']);
+    }
+
+    //Добавление нового занятия
+    function Ajax_individual_add(mode){
+        //console.log();
+
+        hideAllErrors();
+
+        let task_id = 0;
+
+        let link = "individual_add_f.php";
+
+        if (mode == 'edit'){
+            link = "individual_edit_f.php";
+            task_id = $("#task_id").val();
+        }
+
+        let reqData = {
+            theme: $("#descr").val(),
+            worker: $("#search_client2").val(),
+            date: $("#iWantThisDate2").val()
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log (res);
+                //console.log (res.data);
+
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+
+                    setTimeout(function () {
+                        window.location.replace('individuals.php');
+                    }, 800)
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
                 }
             }
         })

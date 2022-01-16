@@ -31,6 +31,8 @@
 
 			//переменная для просроченных
 			$allPayed = true;
+			//переменная для именных серотификатов и прочего
+			$haveСertName = false;
 
             //доступный остаток
             $dostOstatok = 0;
@@ -117,6 +119,25 @@ ORDER BY `name`;
             }
 //            var_dump($have_installment);
 //            var_dump($was_installment);
+
+
+            //именные сертификаты, выданные пациенту
+            $cert_name_j = array();
+
+            $args = [
+                'client_id' => $client_j['id']
+            ];
+
+            $query = "SELECT j_cn.* FROM `journal_cert_name` j_cn
+                            WHERE j_cn.client_id = :client_id";
+
+            //Выбрать все
+            $cert_name_j = $db::getRows($query, $args);
+            //var_dump($cert_name_j);
+
+            if (!empty($cert_name_j)) {
+                $haveСertName = true;
+            }
 
 
 			//var_dump($client_j);
@@ -346,8 +367,16 @@ ORDER BY `name`;
 									<div class="cellLeft">Паспорт</div>
 									<div class="cellRight">
 										<div>
-											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>
-											'.$client_j['passport'].'
+											<span style="font-size: 70%; color: #AAA">Серия номер</span><br>';
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['passport'];
+                    }
+                }else {
+                    echo $client_j['passport'];
+                }
+
+                echo '
 										</div>';
 				if (($client_j['alienpassportser'] != NULL) && ($client_j['alienpassportnom'] != NULL)){
 					echo '
@@ -359,12 +388,29 @@ ORDER BY `name`;
 				}
 				echo '
 										<div>
-											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>
-											'.$client_j['passportvidandata'].'
+											<span style="font-size: 70%; color: #AAA">Выдан когда</span><br>';
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['passportvidandata'];
+                    }
+                }else {
+                    echo $client_j['passportvidandata'];
+                }
+
+
+				echo '
 										</div>
 										<div>
-											<span style="font-size: 70%; color: #AAA">Кем</span><br>
-											'.$client_j['passportvidankem'].'
+											<span style="font-size: 70%; color: #AAA">Кем</span><br>';
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['passportvidankem'];
+                    }
+                }else {
+                    echo $client_j['passportvidankem'];
+                }
+
+                echo '
 										</div>
 									</div>
 								</div>';
@@ -372,8 +418,17 @@ ORDER BY `name`;
 				echo '
 								<div class="cellsBlock2">
 									<div class="cellLeft">Адрес</div>
-									<div class="cellRight">
-										'.$client_j['address'].'
+									<div class="cellRight">';
+
+                if ($client_j['id'] == 3459){
+                    if (($_SESSION['id'] == 270) || ($_SESSION['id'] == 1)){
+                        echo $client_j['address'];
+                    }
+                }else {
+                    echo $client_j['address'];
+                }
+
+                echo '
 									</div>
 								</div>';
 				if ($client_j['polis'] != ''){
@@ -552,7 +607,16 @@ ORDER BY `name`;
 					}
 
                     echo '
-								<li><a href="#tabs-5">Прочее</a></li>';
+								<li>
+								    <a href="#tabs-5">Именные сертификаты</a>';
+                    if ($haveСertName){
+                        echo '
+									<div class="notes_count2" style="position: absolute; right: -2px; top: -4px;">
+										<i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть именные сертификаты"></i>
+									</div>';
+                    }
+					echo '
+                                </li>';
 					echo '
 							</ul>';
 
@@ -1861,19 +1925,6 @@ ORDER BY `name`;
 							<div id="tabs-5">';
 
                     //именные сертификаты, выданные пациенту
-                    $cert_name_j = array();
-
-                    $args = [
-                        'client_id' => $client_j['id']
-                    ];
-
-                    $query = "SELECT j_cn.* FROM `journal_cert_name` j_cn
-                            WHERE j_cn.client_id = :client_id";
-
-                    //Выбрать все
-                    $cert_name_j = $db::getRows($query, $args);
-                    //var_dump($cert_name_j);
-
                     //Вывод всего
                     if (!empty($cert_name_j)){
                         echo 'Выданные сертификаты<br><br>';

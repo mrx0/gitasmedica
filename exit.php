@@ -29,6 +29,8 @@
     unset($_SESSION['subtraction_data']);
     //!!! Для склада
     unset($_SESSION['sclad']);
+    //!!! Для UNIVER
+    unset($_SESSION['univer']);
 
 	//Переадресовываем на главную
 	//header("location: index.php");

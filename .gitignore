@@ -1,5 +1,6 @@
 /config.php
 /configPDO.php
+/configPDO2.php
 /config_ticket.php
 /fl_config.php
 /config_zapis_online.php
@@ -19,3 +20,6 @@
 *.orig
 /web.config
 /vh/*
+/video/*
+/video2/*
+/univerFiles/*

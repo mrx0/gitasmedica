@@ -8,9 +8,20 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 
+        //Для доступа по специализациям (костыль?)
+        $specialization_j = SelDataFromDB('spr_specialization', $_SESSION['permissions'], 'permission');
+        //var_dump($specialization_j);
+        $specializations = array();
+
+        foreach ($specialization_j as $spec_data){
+            array_push($specializations, $spec_data['id']);
+        }
+        //var_dump($specializations);
+        //var_dump(in_array(11, $specializations));
+
 		//var_dump($_SESSION);
         //if (($_SESSION['permissions'] == 3) || ($_SESSION['id'] == 364) || $god_mode){
-        if (($finances['see_all'] == 1) || $god_mode){
+        if (($finances['see_all'] == 1) || in_array(11, $specializations) || $god_mode){
 			//include_once 'DBWork.php';
 
             /*!!!Тест PDO*/
@@ -174,13 +185,15 @@
                             echo '
                                             </div>';
 
-                            if ($payment_data[0]['invoice_summ'] - $payment_data[0]['invoice_paid'] <= 0) {
-                                echo '
-                                            <div id="changeInstallmentStatus2_btn_'.$invoice_id.'" class="" style="font-size: 80%; text-align: left; float: right; font-weight: normal;">
+                            if (!in_array(11, $specializations)) {
+                                if ($payment_data[0]['invoice_summ'] - $payment_data[0]['invoice_paid'] <= 0) {
+                                    echo '
+                                            <div id="changeInstallmentStatus2_btn_' . $invoice_id . '" class="" style="font-size: 80%; text-align: left; float: right; font-weight: normal;">
                                                 <span class="info ahref  b4"  style="display: inline; color: red; margin-left: 0px; font-size: 100%; padding: 2px 5px; cursor: pointer;" onclick="changeInstallmentStatus2(' . $payment_data[0]['id'] . ', ' . $payment_data[0]['client_id'] . ', ' . $invoice_id . ', ' . $payment_data[0]['status'] . ', false);">
                                                     <i class="fa fa-database" aria-hidden="true" style=" font-size: 120%;" title="Есть незакрытая рассрочка"></i> Закрыть рассрочку
                                                 </span>
                                             </div>';
+                                }
                             }
 
                             echo '
