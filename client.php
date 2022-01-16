@@ -31,6 +31,8 @@
 
 			//переменная для просроченных
 			$allPayed = true;
+			//переменная для именных серотификатов и прочего
+			$haveСertName = false;
 
             //доступный остаток
             $dostOstatok = 0;
@@ -117,6 +119,25 @@ ORDER BY `name`;
             }
 //            var_dump($have_installment);
 //            var_dump($was_installment);
+
+
+            //именные сертификаты, выданные пациенту
+            $cert_name_j = array();
+
+            $args = [
+                'client_id' => $client_j['id']
+            ];
+
+            $query = "SELECT j_cn.* FROM `journal_cert_name` j_cn
+                            WHERE j_cn.client_id = :client_id";
+
+            //Выбрать все
+            $cert_name_j = $db::getRows($query, $args);
+            //var_dump($cert_name_j);
+
+            if (!empty($cert_name_j)) {
+                $haveСertName = true;
+            }
 
 
 			//var_dump($client_j);
@@ -586,7 +607,16 @@ ORDER BY `name`;
 					}
 
                     echo '
-								<li><a href="#tabs-5">Прочее</a></li>';
+								<li>
+								    <a href="#tabs-5">Именные сертификаты</a>';
+                    if ($haveСertName){
+                        echo '
+									<div class="notes_count2" style="position: absolute; right: -2px; top: -4px;">
+										<i class="fa fa-exclamation-circle" aria-hidden="true" title="Есть именные сертификаты"></i>
+									</div>';
+                    }
+					echo '
+                                </li>';
 					echo '
 							</ul>';
 
@@ -1895,19 +1925,6 @@ ORDER BY `name`;
 							<div id="tabs-5">';
 
                     //именные сертификаты, выданные пациенту
-                    $cert_name_j = array();
-
-                    $args = [
-                        'client_id' => $client_j['id']
-                    ];
-
-                    $query = "SELECT j_cn.* FROM `journal_cert_name` j_cn
-                            WHERE j_cn.client_id = :client_id";
-
-                    //Выбрать все
-                    $cert_name_j = $db::getRows($query, $args);
-                    //var_dump($cert_name_j);
-
                     //Вывод всего
                     if (!empty($cert_name_j)){
                         echo 'Выданные сертификаты<br><br>';
