@@ -723,7 +723,7 @@
                 //var_dump($arr);
                 //array_push($subtractions_j_temp, $arr);
                 if ($arr['noch'] != 1) {
-                    //if ($arr['type'] != 4) {
+                    if ($arr['type'] != 4) {
                         if (!isset($subtractions_j_temp[$arr['permissions']])) {
                             $subtractions_j_temp[$arr['permissions']] = array();
                         }
@@ -739,7 +739,7 @@
                         array_push($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
 
                         $subtractions_summ += $arr['summ'];
-                    //}
+                    }
                     //На карту
                     if ($arr['type'] == 4) {
                         $subtractions_summ_beznal += $arr['summ'];
