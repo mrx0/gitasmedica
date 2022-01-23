@@ -689,11 +689,18 @@
 
         //Получаем данные по выданным деньгам на филилале (зп, авансы и тд.)
         $subtractions_j_temp = array();
+        $subtractions_j_beznal_temp = array();
+        $subtractions_j_all_temp = array();
         $subtractions_j = array();
-        //Общая сумма
+        $subtractions_j_beznal = array();
+        $subtractions_j_all = array();
+
+        //Сумма выданного на руки
         $subtractions_summ = 0;
         //Выдано на карту (безнал)
         $subtractions_summ_beznal = 0;
+        //Выдано всё вместе
+        $subtractions_summ_all = 0;
 
         //По филиально в зависимости от оплат
         //            $query = "SELECT flj_sub.*, sw.	permissions, sw.name
@@ -723,7 +730,7 @@
                 //var_dump($arr);
                 //array_push($subtractions_j_temp, $arr);
                 if ($arr['noch'] != 1) {
-                    //if ($arr['type'] != 4) {
+//                    if ($arr['type'] != 4) {
                         if (!isset($subtractions_j_temp[$arr['permissions']])) {
                             $subtractions_j_temp[$arr['permissions']] = array();
                         }
@@ -735,14 +742,96 @@
                         }
                         if (!isset($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
                             $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
+
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']]['nal'] = array();
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']]['beznal'] = array();
                         }
                         array_push($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
+//                        array_push($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']]['nal'], $arr);
 
                         $subtractions_summ += $arr['summ'];
-                    //}
+//                        $subtractions_summ_all += $arr['summ'];
+
+
+                        //Всё вместе
+//                        if (!isset($subtractions_j_all_temp[$arr['permissions']])) {
+//                            $subtractions_j_all_temp[$arr['permissions']] = array();
+//                        }
+//                        if (!isset($subtractions_j_all_temp[$arr['permissions']][$arr['worker_id']])) {
+//                            $subtractions_j_all_temp[$arr['permissions']][$arr['worker_id']] = array();
+//
+//                            $subtractions_j_all_temp[$arr['permissions']][$arr['worker_id']]['data'] = array();
+//                            $subtractions_j_all_temp[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
+//                        }
+//                        if (!isset($subtractions_j_all_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
+//                            $subtractions_j_all_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
+//                        }
+//                        array_push($subtractions_j_all_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
+//
+//                        $subtractions_summ += $arr['summ'];
+
+
+//                    }
                     //На карту
                     if ($arr['type'] == 4) {
+//                        if (!isset($subtractions_j_beznal_temp[$arr['permissions']])) {
+//                            $subtractions_j_beznal_temp[$arr['permissions']] = array();
+//                        }
+//                        if (!isset($subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']])) {
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']] = array();
+//
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'] = array();
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
+//                        }
+//                        if (!isset($subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
+//                        }
+//                        array_push($subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
+//
                         $subtractions_summ_beznal += $arr['summ'];
+
+
+//                        if (!isset($subtractions_j_temp[$arr['permissions']])) {
+//                            $subtractions_j_temp[$arr['permissions']] = array();
+//                        }
+//                        if (!isset($subtractions_j_temp[$arr['permissions']][$arr['worker_id']])) {
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']] = array();
+//
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'] = array();
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
+//                        }
+//                        if (!isset($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
+//
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']]['nal'] = array();
+//                            $subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']]['beznal'] = array();
+//                        }
+////                        array_push($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
+//                        array_push($subtractions_j_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']]['beznal'], $arr);
+//
+////                        $subtractions_summ += $arr['summ'];
+//                        $subtractions_summ_all += $arr['summ'];
+
+
+
+                        //Всё вместе
+//                        if (!isset($subtractions_j_beznal_temp[$arr['permissions']])) {
+//                            $subtractions_j_beznal_temp[$arr['permissions']] = array();
+//                        }
+//                        if (!isset($subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']])) {
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']] = array();
+//
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'] = array();
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['name'] = $arr['name'];
+//                        }
+//                        if (!isset($subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']])) {
+//                            $subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']] = array();
+//                        }
+//                        array_push($subtractions_j_beznal_temp[$arr['permissions']][$arr['worker_id']]['data'][$arr['type']], $arr);
+//
+//                        $subtractions_summ_beznal += $arr['summ'];
+
+
                     }
                 }
 
@@ -750,7 +839,7 @@
         }
         //var_dump($query);
         //var_dump($subtractions_j_temp);
-        //var_dump($subtractions_j_temp[5]);
+        //var_dump($subtractions_j_temp[5][267]['data'][4]);
 
 
         //Сколько еще осталось выплатить (!!! тут неправильно, не учитывается коэффициент, ассистенты и так далее. Если будет использоваться, переделать правильно рассчет надо)
@@ -790,6 +879,10 @@
 
             if (isset($subtractions_j_temp[$key])) {
                 $subtractions_j[$key] = $subtractions_j_temp[$key];
+            }
+
+            if (isset($subtractions_j_beznal_temp[$key])) {
+                $subtractions_j_beznal[$key] = $subtractions_j_beznal_temp[$key];
             }
         }
         //var_dump($subtractions_j);
@@ -884,7 +977,11 @@
             'beznal' => $beznal,
             'giveoutcash_summ' => $giveoutcash_summ,
             'subtractions_j' => $subtractions_j,
+            'subtractions_j_beznal' => $subtractions_j_beznal,
+            'subtractions_j_all' => $subtractions_j_all,
             'subtractions_summ' => $subtractions_summ,
+            'subtractions_summ_beznal' => $subtractions_summ_beznal,
+            'subtractions_summ_all' => $subtractions_summ_all,
             'paidouts_temp_j' => $paidouts_temp_j,
             'paidouts_temp_summ' => $paidouts_temp_summ,
             'giveoutcash_ex_j' => $giveoutcash_ex_j,
