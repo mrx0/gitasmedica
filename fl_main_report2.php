@@ -89,7 +89,11 @@
             $beznal = $datas['beznal'];
             $giveoutcash_summ = $datas['giveoutcash_summ'];
             $subtractions_j = $datas['subtractions_j'];
+            $subtractions_j_beznal = $datas['subtractions_j_beznal'];
+//            $subtractions_j_all = $datas['subtractions_j_all'];
             $subtractions_summ = $datas['subtractions_summ'];
+            $subtractions_summ_beznal = $datas['subtractions_summ_beznal'];
+//            $subtractions_summ_all = $datas['subtractions_summ_all'];
             $paidouts_temp_j = $datas['paidouts_temp_j'];
             $paidouts_temp_summ = $datas['paidouts_temp_summ'];
             $giveoutcash_ex_j = $datas['giveoutcash_ex_j'];
@@ -103,8 +107,10 @@
             $prev_month_filial_summ_arr = $datas['prev_month_filial_summ_arr'];
             $zapis_j = $datas['zapis_j'];
             $pervich_summ_arr_new = $datas['pervich_summ_arr_new'];
+//            var_dump($subtractions_summ_beznal);
 
             //var_dump($datas['error_invoices']);
+
             if (!empty($datas['error_invoices'])){
                 echo '<div class="query_neok" style="padding: 10px 4px 2px; margin-left: 10px; width: 50vw;">Наряды с ошибками в категориях (анализы):';
 
@@ -502,11 +508,13 @@
                             </tr>
                             <tr style="background-color: rgba(252, 237, 199, 0.77);">
                                 <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
-                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">всего</i></td>
+                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на руки</i></td>
+                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на карту</i></td>
                             </tr>';
 
                 //Пошли по типам/должностям
-                //var_dump($subtractions_j);
+//                var_dump($subtractions_j);
+//                var_dump($subtractions_j_beznal);
 
                 foreach ($subtractions_j as $permissions => $subtractions_data) {
                     //var_dump($subtractions_data);
@@ -549,11 +557,13 @@
                             <tr style="background-color: rgba(225, 248, 220, 0.77);">
                                 <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: left;"><b style="color: rgb(0, 36, 255); font-size: 90%;">' . $permissions_j[$permissions]['name'] . '</b></td>
                                 <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
+                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
                             </tr>';
 
                     //foreach ($subtractions_data as $type => $type_data){
                     //var_dump($typ);
                     //var_dump($type_data);
+
                     //Пошли по сотрудникам
                     foreach ($subtractions_data as $worker_id => $worker_data) {
                         //var_dump($worker_data);
@@ -569,6 +579,7 @@
 
                         //Массив для распределения сумм по типам
                         $temp_summ_arr = array(1 => 0, 7 => 0, 2 => 0, 3 => 0, 4 => 0);
+                        $temp_summ_arr_karta = array(1 => 0, 7 => 0, 2 => 0, 3 => 0, 4 => 0);
 
                         foreach ($worker_data['data'] as $type => $type_data) {
                             //                        var_dump($type);
@@ -590,13 +601,18 @@
                             //                        }
 
                             foreach ($type_data as $data) {
-                                //var_dump($data);
+//                                var_dump($data);
+
                                 //$w_name = $data['name'];
                                 $fin_summ_w += $data['summ'];
                                 $permission_summ += $data['summ'];
 
                                 //
-                                $temp_summ_arr[$type] += $data['summ'];
+                                if ($type != 4) {
+                                    $temp_summ_arr[$type] += $data['summ'];
+                                }else{
+                                    $temp_summ_arr_karta[$type] += $data['summ'];
+                                }
                             }
                         }
                         //var_dump($temp_summ_arr);
@@ -612,6 +628,9 @@
                         $personal_zp_str .= '
                                 <td style="outline: 1px solid rgb(233, 233, 233); text-align: right;">
                                     ' . array_sum($temp_summ_arr) . '
+                                </td>
+                                <td style="outline: 1px solid rgb(233, 233, 233); text-align: right;">
+                                    ' . array_sum($temp_summ_arr_karta) . '
                                 </td>
                                 ';
 
@@ -756,7 +775,7 @@
                 //);
                 //var_dump($subtractions_summ_beznal);
 
-                $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ + $money_from_outside;
+                $ostatok = $cashbox_nal + $arenda - $giveoutcash_summ - $subtractions_summ + $subtractions_summ_beznal - $paidouts_temp_summ - $bank_summ - $director_summ + $prev_month_filial_summ + $money_from_outside;
 
                 $ostatok = number_format($ostatok, 0, '.', ' ');
 
@@ -1588,7 +1607,7 @@
             echo '
                             <div class="no_print" style="position: fixed; top: 45px; right: 10px; border: 1px solid #0C0C0C; border-radius: 5px; padding: 5px 5px; background-color: #FFFFFF">
                                 <div class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;"
-                                onclick="window.print();">
+                                onclick="window.print(); ">
                                     <i class="fa fa-print" aria-hidden="true"></i>
                                 </div>
                             </div>';
@@ -1609,6 +1628,7 @@
 //            var_dump($material_costs_summ_p_10);
 
 			echo '
+
 
 				<script type="text/javascript">
 				
@@ -1874,6 +1894,8 @@
                     });				
                 
 				</script>';
+
+
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
