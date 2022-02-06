@@ -280,123 +280,123 @@
 				
 				//Удаленные группы
 				
-				$query = "SELECT * FROM `spr_storagegroup` WHERE `status` = '9'";			
-				//var_dump($query);
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-				//var_dump($res);
-				
-				$number = mysqli_num_rows($res);
-				if ($number != 0){
-					while ($arr3 = mysqli_fetch_assoc($res)){
-						array_push($rez3, $arr3);
-					}
-					$items_j = $rez3;
-				}else{
-					$items_j = 0;
-				}
-				
-				//var_dump($items_j);
-				
-				if ($items_j != 0){
-					echo '
-					<li class="cellsBlock" style="width: auto; margin-top: 10px;">
-						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые группы</span>
-						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
-					</li>';
-					for ($i = 0; $i < count($items_j); $i++) {
-						$price = 0;
-						
-						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-						/*$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-											
-						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
-
-						$number = mysql_num_rows($res);
-						if ($number != 0){
-							$arr4 = mysql_fetch_assoc($res);
-							$price = $arr4['price'];
-						}else{
-							$price = 0;
-						}*/
-				
-						echo '
-									<li class="cellsBlock" style="width: auto;">
-										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-										<a href="pricelistgroup.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(223, 128, 252, 0.23);" id="4filter" target="_blank" rel="nofollow noopener">'.$items_j[$i]['name'].'</a>
-										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(223, 128, 252, 0.23);">
-											<div class="managePriceList" style="font-style: normal; font-size: 13px;">';
-						/*echo '
-												<a href="pricelistgroup_edit.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
-												<a href="add_pricelist_item.php?addinid='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
-												<!--<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
-												<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>';*/
-						echo '
-											</div>
-										</div>
-									</li>';
-					}
-				}			
-				
-				$arr = array();
-				$rez = array();
-				$arr4 = array();
-				$rez4 = array();
-				$arr3 = array();
-				$rez3 = array();
-				
-				//Удалённые позиции
-					
-				$query = "SELECT * FROM `spr_pricelist_template` WHERE `status` = '9'";
-
-                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-				$number = mysqli_num_rows($res);
-				if ($number != 0){
-					while ($arr3 = mysqli_fetch_assoc($res)){
-						array_push($rez3, $arr3);
-					}
-					$items_j = $rez3;
-				}else{
-					$items_j = 0;
-				}
-				
-				//var_dump($items_j);
-				
-				if ($items_j != 0){
-
-					echo '
-					<li class="cellsBlock" style="width: auto;">
-						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые позиции</span>
-						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
-					</li>';
-
-					for ($i = 0; $i < count($items_j); $i++) {
-						$price = 0;
-
-						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-						$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
-
-                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
-						$number = mysqli_num_rows($res);
-						if ($number != 0){
-							$arr4 = mysqli_fetch_assoc($res);
-							$price = $arr4['price'];
-						}else{
-							$price = 0;
-						}
-
-						echo '
-									<li class="cellsBlock" style="width: auto;">
-										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
-										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter" target="_blank" rel="nofollow noopener">'.$items_j[$i]['name'].'</a>
-										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
-									</li>';
-					}
-				}
+//				$query = "SELECT * FROM `spr_storagegroup` WHERE `status` = '9'";
+//				//var_dump($query);
+//
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//				//var_dump($res);
+//
+//				$number = mysqli_num_rows($res);
+//				if ($number != 0){
+//					while ($arr3 = mysqli_fetch_assoc($res)){
+//						array_push($rez3, $arr3);
+//					}
+//					$items_j = $rez3;
+//				}else{
+//					$items_j = 0;
+//				}
+//
+//				//var_dump($items_j);
+//
+//				if ($items_j != 0){
+//					echo '
+//					<li class="cellsBlock" style="width: auto; margin-top: 10px;">
+//						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
+//						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые группы</span>
+//						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
+//					</li>';
+//					for ($i = 0; $i < count($items_j); $i++) {
+//						$price = 0;
+//
+//						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+//						/*$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+//
+//						$res = mysql_query($query) or die(mysql_error().' -> '.$query);
+//
+//						$number = mysql_num_rows($res);
+//						if ($number != 0){
+//							$arr4 = mysql_fetch_assoc($res);
+//							$price = $arr4['price'];
+//						}else{
+//							$price = 0;
+//						}*/
+//
+//						echo '
+//									<li class="cellsBlock" style="width: auto;">
+//										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
+//										<a href="pricelistgroup.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(223, 128, 252, 0.23);" id="4filter" target="_blank" rel="nofollow noopener">'.$items_j[$i]['name'].'</a>
+//										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(223, 128, 252, 0.23);">
+//											<div class="managePriceList" style="font-style: normal; font-size: 13px;">';
+//						/*echo '
+//												<a href="pricelistgroup_edit.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupEdit" class="fa fa-pencil-square-o pricemenu" aria-hidden="true" style="color: #777;" title="Редактировать"></i></a>
+//												<a href="add_pricelist_item.php?addinid='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupAdd" class="fa fa-plus pricemenu" aria-hidden="true" style="color: #36EA5E;" title="Добавить в эту группу"></i></a>
+//												<!--<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="" class="fa fa-bars pricemenu" aria-hidden="true" style="" title="Изменить порядок"></i></a>-->
+//												<a href="pricelistgroup_del.php?id='.$items_j[$i]['id'].'" class="ahref" target="_blank" rel="nofollow noopener"><i id="PriceListGroupDelete" class="fa fa-trash pricemenu" aria-hidden="true" style="color: #FF3636" title="Удалить"></i></a>';*/
+//						echo '
+//											</div>
+//										</div>
+//									</li>';
+//					}
+//				}
+//
+//				$arr = array();
+//				$rez = array();
+//				$arr4 = array();
+//				$rez4 = array();
+//				$arr3 = array();
+//				$rez3 = array();
+//
+//				//Удалённые позиции
+//
+//				$query = "SELECT * FROM `spr_pricelist_template` WHERE `status` = '9'";
+//
+//                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//
+//				$number = mysqli_num_rows($res);
+//				if ($number != 0){
+//					while ($arr3 = mysqli_fetch_assoc($res)){
+//						array_push($rez3, $arr3);
+//					}
+//					$items_j = $rez3;
+//				}else{
+//					$items_j = 0;
+//				}
+//
+//				//var_dump($items_j);
+//
+//				if ($items_j != 0){
+//
+//					echo '
+//					<li class="cellsBlock" style="width: auto;">
+//						<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
+//						<span class="cellOffice 4filter" style="font-weight: bold; text-align: left; width: 350px; min-width: 350px; max-width: 350px; background-color: rgba(114, 114, 114, 0.5);" id="4filter">Удалённые позиции</span>
+//						<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px; background-color: rgba(114, 114, 114, 0.5);"></div>
+//					</li>';
+//
+//					for ($i = 0; $i < count($items_j); $i++) {
+//						$price = 0;
+//
+//						//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+//						$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$items_j[$i]['id']."' ORDER BY `create_time` DESC LIMIT 1";
+//
+//                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+//
+//						$number = mysqli_num_rows($res);
+//						if ($number != 0){
+//							$arr4 = mysqli_fetch_assoc($res);
+//							$price = $arr4['price'];
+//						}else{
+//							$price = 0;
+//						}
+//
+//						echo '
+//									<li class="cellsBlock" style="width: auto;">
+//										<div class="cellPriority" style="background-color: rgba(114, 114, 114, 0.5);"></div>
+//										<a href="pricelistitem.php?id='.$items_j[$i]['id'].'" class="ahref cellOffice 4filter" style="text-align: left; width: 350px; min-width: 350px; max-width: 350px;" id="4filter" target="_blank" rel="nofollow noopener">'.$items_j[$i]['name'].'</a>
+//										<div class="cellText" style="text-align: center; width: 150px; min-width: 150px; max-width: 150px;">'.$price.'</div>
+//									</li>';
+//					}
+//				}
 				
 				
 			//}

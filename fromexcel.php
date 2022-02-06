@@ -27,7 +27,7 @@
 		exit("На данный момент данных нет. Попробуйте позже.\n");
 	}
 
-	$objPHPExcel = PHPExcel_IOFactory::load("excel/new_prise_s.xlsx");
+	$objPHPExcel = PHPExcel_IOFactory::load("excel/new_prise_s_2022.02.02_child.xlsx");
 
 	// Устанавливаем индекс активного листа
 	$objPHPExcel->setActiveSheetIndex(1);
