@@ -1081,7 +1081,7 @@
 		// Год
 		$result .= '<select name="sel_year'.$index.'" id="sel_year'.$index.'">';
 		$result .= '<option value="0000">0000</option>';
-		while ($j <= 2020) {
+		while ($j <= date('Y')) {
 			if ($selY == $j) $selected = ' selected'; else $selected = '';
 			
 			$result .= '<option value="'.$j.'"'.$selected.'>'.$j.'</option>';
