@@ -451,6 +451,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                         //var_dump($rezult2);
 
                                         //Код
+                                        $rezult2_code = $rezult2[0]['code'];
+                                        if (mb_strlen($rezult2[0]['code']) == 0){
+                                            $rezult2_code = $rezult2[0]['code_u'];
+                                        }
                                         $rez_str_invoice_ex .= '<td>'.$rezult2[0]['code'].'</td>';
                                         //Название
                                         $rez_str_invoice_ex .= '<td>';
