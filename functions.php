@@ -4505,7 +4505,7 @@
                 $itemTemp_str .= '
                                                 <span class="cellOrder" style="position: relative;">
                                                     <div style="font-weight: bold;">
-                                                    	<a href="'.$order_link.'" class="ahref">'.$order_name.' #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></a>
+                                                    	<a href="'.$order_link.'" class="ahref" target="_blank" rel="nofollow noopener">'.$order_name.' #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></a>
 													</div>
                                                     <div style="margin: 3px;">';
 
