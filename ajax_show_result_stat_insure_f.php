@@ -453,10 +453,10 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                         //Код
                                         //var_dump($rezult2[0]['code']);
                                         $rezult2_code = $rezult2[0]['code'];
-                                        if ($rezult2[0]['code'] == 'NULL'){
+                                        if ($rezult2[0]['code'] == NULL){
                                             $rezult2_code = $rezult2[0]['code_u'];
                                         }
-                                        $rez_str_invoice_ex .= '<td>'.$rezult2[0]['code'].'</td>';
+                                        $rez_str_invoice_ex .= '<td>'.$rezult2_code.'</td>';
                                         //Название
                                         $rez_str_invoice_ex .= '<td>';
 
