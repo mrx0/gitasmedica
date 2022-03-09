@@ -1081,7 +1081,7 @@
 		// Год
 		$result .= '<select name="sel_year'.$index.'" id="sel_year'.$index.'">';
 		$result .= '<option value="0000">0000</option>';
-		while ($j <= 2020) {
+		while ($j <= date('Y')) {
 			if ($selY == $j) $selected = ' selected'; else $selected = '';
 			
 			$result .= '<option value="'.$j.'"'.$selected.'>'.$j.'</option>';
@@ -2152,10 +2152,10 @@
 					echo '
 							<ul style="display: none;">';
 					
-					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";			
+					$query = "SELECT * FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY 1*SUBSTRING_INDEX(`code_u`, '.', 1) ASC, 1*SUBSTRING_INDEX(`code_u`, '.', -1) ASC, `name`";
 					
 					if ($insure_id != 0){
-						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";			
+						$query = "SELECT * FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
 					}
 					
 					//var_dump($query);
