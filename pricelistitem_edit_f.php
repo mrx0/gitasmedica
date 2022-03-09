@@ -31,12 +31,12 @@
 				$rezult = SelDataFromDB('spr_pricelist_template', $name, 'name');
 				//var_dump($rezult);
 				
-				if (($rezult != 0) && ($rezult[0]['id'] != $_POST['id'])){
+				/*if (($rezult != 0) && ($rezult[0]['id'] != $_POST['id'])){
 					echo '
 						<div class="query_neok">
 							Такая позиция уже есть.<br><br>
 						</div>';
-				}else{
+				}else{*/
 
 					WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $code_u, $code_nom, $_POST['category_id'], $_POST['id'], $_SESSION['id']);
 
@@ -50,7 +50,7 @@
 							Изменено.<br><br>
                             <a href="pricelistitem.php?id='.$_POST['id'].'" class="b">Перейти к позиции</a>
 						</div>';
-				}
+//				}
 			}
 		}
 	}
