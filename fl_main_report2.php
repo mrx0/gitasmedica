@@ -508,9 +508,13 @@
                                 <td colspan="2" style="font-size:80%;"><b>Выдачи сотрудникам:</b></td>
                             </tr>
                             <tr style="background-color: rgba(252, 237, 199, 0.77);">
-                                <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
-                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на руки</i></td>
-                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на карту</i></td>
+                                <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><!--Всего--></td>
+                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;">
+                                    <i style="color: orangered;">на руки</i>
+                                </td>
+                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;">
+                                    <i style="color: orangered;">на карту</i>
+                                </td>
                             </tr>';
 
                 //Пошли по типам/должностям
