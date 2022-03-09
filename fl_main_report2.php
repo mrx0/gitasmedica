@@ -478,7 +478,7 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
                                    <b>Заработная плата</b>
                                 </div>
-                                <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
+                                <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44); text-align: right;">
                                     <b>На руки:</b><br>
                                     <b>' . number_format(($subtractions_summ-$subtractions_summ_beznal), 0, '.', ' ') . '</b><br>  
                                 </div>
