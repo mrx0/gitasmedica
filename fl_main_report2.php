@@ -663,10 +663,11 @@
                 echo '
                             <li class="filterBlock">
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 110%; font-weight: bold; background-color: rgba(219, 214, 214, 0.25);">
+                                   <b>На руки</b><br>
                                    <b>Всего:</b>
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(219, 214, 214, 0.25); text-align: right;">
-                                    <b>' . number_format($subtractions_summ_beznal, 0, '.', ' ') . '</b>                                
+                                    <b>' . number_format(($subtractions_summ-$subtractions_summ_beznal), 0, '.', ' ') . '</b><br>                              
                                     <b>' . number_format($subtractions_summ, 0, '.', ' ') . '</b>                                
                                 </div>
                             </li>';
