@@ -607,9 +607,10 @@
                                 $fin_summ_w += $data['summ'];
                                 $permission_summ += $data['summ'];
 
-                                //
+                                //на руки
                                 if ($type != 4) {
                                     $temp_summ_arr[$type] += $data['summ'];
+                                //на карту
                                 }else{
                                     $temp_summ_arr_karta[$type] += $data['summ'];
                                 }
@@ -665,6 +666,7 @@
                                    <b>Всего:</b>
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(219, 214, 214, 0.25); text-align: right;">
+                                    <b>' . number_format($subtractions_summ_beznal, 0, '.', ' ') . '</b>                                
                                     <b>' . number_format($subtractions_summ, 0, '.', ' ') . '</b>                                
                                 </div>
                             </li>';

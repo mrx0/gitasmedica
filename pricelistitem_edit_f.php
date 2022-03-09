@@ -30,7 +30,8 @@
 				//Проверяем есть ли такая услуга
 				$rezult = SelDataFromDB('spr_pricelist_template', $name, 'name');
 				//var_dump($rezult);
-				
+
+                //!!! 20220309 - Убрал проверку на одинаковые имена
 				/*if (($rezult != 0) && ($rezult[0]['id'] != $_POST['id'])){
 					echo '
 						<div class="query_neok">
