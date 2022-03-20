@@ -1783,7 +1783,8 @@
 	}
 	
 	//Ещё одно дерево с рекурсией
-	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
+	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $show_code = FALSE){
+//		var_dump($show_code);
 
         //$msql_cnnct = ConnectToDB ();
 		$db = new DB();
@@ -1905,13 +1906,13 @@
 					echo '
 							<ul style="display: none;">';
 					
-					$query = "SELECT `id`, `code`, `name`, `status` FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";
+					$query = "SELECT `id`, `code`, `code_u`, `code_nom`, `name`, `status` FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";
 					
 					if ($insure_id != 0){
-						$query = "SELECT `id`, `code`, `name`, `status` FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
+						$query = "SELECT `id`, `code`, `code_u`, `code_nom`, `name`, `status` FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
 					}
 					
-					//var_dump($query);
+//					var_dump($query);
 
 //                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 //					$number = mysqli_num_rows($res);
@@ -1933,6 +1934,8 @@
 						
 						//for ($i = 0; $i < count($items_j); $i++) {
 						foreach ($items_j as $item_value) {
+							//var_dump($item_value);
+
 							$price = 0;
 							
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$item_value['id']."' ORDER BY `create_time` DESC LIMIT 1";
@@ -1961,11 +1964,17 @@
 //								$price = $arr3['price'];
 //							}
 
-
+							$code_u_text = '';
+							if ($show_code){
+								if (isset($item_value['code_u'])) {
+									//$code_u_text = '<span style="font-size: 75%; font-weight: bold;">[#' . $item_value['code_u'] . ']</span>';
+									$code_u_text = '<span style="font-size: 75%; font-weight: bold;">' . $item_value['code_u'] . '</span>';
+								}
+							}
 						
 							echo '
 										<li style="cursor: pointer;">
-											<p onclick="checkPriceItem('.$item_value['id'].', '.$dtype.')"><span class="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$item_value['id'].']</span> <i>'.$item_value['code'].'</i> '.$item_value['name'].'</span></p>
+											<p onclick="checkPriceItem('.$item_value['id'].', '.$dtype.')"><span class="4filter">'.$code_u_text.' <i>'.$item_value['code'].'</i> '.$item_value['name'].'</span></p>
 										</li>';
 						}
 					}else{
@@ -1993,7 +2002,7 @@
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
 					$last_level2 = $last_level+1;
-					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
+					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype, $show_code);
 				}else{
 					//---
 				}
