@@ -582,7 +582,7 @@ ORDER BY `name`;
 							<ul>
 								<li><a href="#tabs-1">Посещения (запись)</a></li>';
 
-					if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
+					if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode   || ($_SESSION['id'] == 719)){
 						echo '
 								<li>
 									<a href="#tabs-2">Счёт</a>';
@@ -643,7 +643,7 @@ ORDER BY `name`;
 
 					//Счёт -->
 
-					if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode){
+					if (($finances['see_all'] != 0) || ($finances['see_own'] != 0) || $god_mode   || ($_SESSION['id'] == 719)){
 						if ($client_j['status'] != 9){
 
 							echo '

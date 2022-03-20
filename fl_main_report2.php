@@ -478,8 +478,9 @@
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(219, 215, 214, 0.44);">
                                    <b>Заработная плата</b>
                                 </div>
-                                <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44);">
-
+                                <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(219, 215, 214, 0.44); text-align: right;">
+                                    <b>На руки:</b><br>
+                                    <b>' . number_format(($subtractions_summ-$subtractions_summ_beznal), 0, '.', ' ') . '</b><br>  
                                 </div>
                             </li>';
 
@@ -507,9 +508,13 @@
                                 <td colspan="2" style="font-size:80%;"><b>Выдачи сотрудникам:</b></td>
                             </tr>
                             <tr style="background-color: rgba(252, 237, 199, 0.77);">
-                                <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"></td>
-                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на руки</i></td>
-                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><i style="color: orangered;">на карту</i></td>
+                                <td style="width: 149px; outline: 1px solid rgb(233, 233, 233); text-align: center;"><!--Всего--></td>
+                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;">
+                                    <i style="color: orangered;">на руки</i>
+                                </td>
+                                <td style="width: 89px; outline: 1px solid rgb(233, 233, 233); text-align: center;">
+                                    <i style="color: orangered;">на карту</i>
+                                </td>
                             </tr>';
 
                 //Пошли по типам/должностям
@@ -607,9 +612,10 @@
                                 $fin_summ_w += $data['summ'];
                                 $permission_summ += $data['summ'];
 
-                                //
+                                //на руки
                                 if ($type != 4) {
                                     $temp_summ_arr[$type] += $data['summ'];
+                                //на карту
                                 }else{
                                     $temp_summ_arr_karta[$type] += $data['summ'];
                                 }

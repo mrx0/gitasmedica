@@ -219,3 +219,27 @@ $(function(){
 
 });
 
+$(function(){
+
+	//Живой поиск для прайса
+	$('.search_block').bind("change keyup input click", function() {
+		//console.log(111);
+
+		if(this.value.length > 0){
+			$(".button_in_input").css({
+				"top": "4px",
+				"right": "86px",
+			})
+
+			$(".button_in_input").show();
+
+			//$('.search_block').val().replaceAll(',', '.')
+			$(this).val($(this).val().replace(',', '.'));
+
+		}else {
+			$(".button_in_input").hide();
+		}
+
+	})
+})
+

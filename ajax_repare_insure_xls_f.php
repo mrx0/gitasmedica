@@ -770,7 +770,13 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                                 //var_dump($rezult2);
 
                                                 //Код
-                                                $sheet->setCellValue('E' . $countRow, $rezult2[0]['code']);
+                                                $rezult2_code = $rezult2[0]['code'];
+                                                if ($rezult2[0]['code'] == NULL){
+                                                    $rezult2_code = $rezult2[0]['code_u'];
+                                                }
+                                                //Название
+
+                                                $sheet->setCellValue('E' . $countRow, $rezult2_code);
                                                 $sheet->getStyle('E' . $countRow)->applyFromArray($style_arial_8);
                                                 $sheet->getStyle('E' . $countRow)->applyFromArray($style_horizontal_left);
                                                 $sheet->getStyle('E' . $countRow)->applyFromArray($style_verical_top);

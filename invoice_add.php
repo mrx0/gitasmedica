@@ -641,7 +641,7 @@
 
                                     //Быстрый поиск
                                     echo '	
-                                                            <div style="margin: 0 0 5px; font-size: 11px; cursor: pointer; text-align: left;">';
+                                                            <div style="position: relative; margin: 0 0 5px; font-size: 11px; cursor: pointer; text-align: left;">';
                                     echo $block_fast_filter;
                                     echo '
                                                             </div>';
@@ -655,7 +655,7 @@
                                                                 <ul class="ul-tree ul-drop live_filter" id="lasttree">';
 
                                     //Показывает дерево прайса
-                                    showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type']);
+                                    showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $_GET['type'], TRUE);
 
                                     echo '
                                                                 </ul>
