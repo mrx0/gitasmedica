@@ -247,13 +247,14 @@
                 }
 
                 echo '
-                        <div style="border: 1px solid #CCC;">
+                        <div style="border: 1px solid #CCC;">';
+                echo '
                             <li class="filterBlock">
                                 <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
                                    <b>Приход</b>
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52); text-align: right;">
-                                    <b id="allSumm">' . number_format($cashbox_nal + $arenda + $beznal + $insure_summ, 0, '.', ' ') . '</b>
+                                    <b id="allSumm">' . number_format($cashbox_nal + $beznal + $insure_summ, 0, '.', ' ') . '</b>
                                 </div>
                             </li>';
 
@@ -298,6 +299,16 @@
                                 </div>
                                 <div class="cellRight" style="width: 180px; min-width: 180px; background-color: rgba(95, 247, 145, 0.3);">
                                     <div style="float:left;">' . number_format($arenda, 0, '.', ' ') . '</div>
+                                </div>
+                            </li>';
+
+                echo '
+                            <li class="filterBlock">
+                                <div class="cellLeft" style="width: 120px; min-width: 120px; font-size: 120%; font-weight: bold; background-color: rgba(236, 247, 95, 0.52);">
+                                   <b>Приход Общий</b>
+                                </div>
+                                <div class="cellRight" style="width: 180px; min-width: 180px; font-size: 120%; background-color: rgba(236, 247, 95, 0.52); text-align: right;">
+                                    <b id="allSumm">' . number_format($cashbox_nal + $arenda + $beznal + $insure_summ, 0, '.', ' ') . '</b>
                                 </div>
                             </li>';
 
