@@ -161,7 +161,7 @@
                         $query = "
                         SELECT s_w.*, opt_w_s.oklad, opt_w_s.oklad_work, opt_w_s.prikaz8 FROM `spr_workers` s_w 
                           LEFT JOIN `options_worker_spec` opt_w_s ON opt_w_s.worker_id = s_w.id
-                        WHERE s_w.permissions='{$type}' AND s_w.status <> '8'";
+                        WHERE s_w.permissions='{$type}' AND s_w.status <> '8' AND s_w.status <> '6'";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 
