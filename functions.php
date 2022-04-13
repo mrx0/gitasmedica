@@ -4664,7 +4664,7 @@
                                                     <div style="font-weight: bold;">Выдача #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></div>
                                                     <div style="margin: 3px;">';
 
-                $itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
+                $itemTemp_str .= 'Филиал: '.$offices_j[$items['filial_id']]['name'];
 
                 $itemTemp_str .= '
                                                     </div>
