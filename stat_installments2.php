@@ -13,8 +13,10 @@
         //var_dump($specialization_j);
         $specializations = array();
 
-        foreach ($specialization_j as $spec_data){
-            array_push($specializations, $spec_data['id']);
+        if ($specialization_j != 0) {
+            foreach ($specialization_j as $spec_data) {
+                array_push($specializations, $spec_data['id']);
+            }
         }
         //var_dump($specializations);
         //var_dump(in_array(11, $specializations));

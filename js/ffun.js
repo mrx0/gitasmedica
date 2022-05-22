@@ -3381,6 +3381,86 @@
         }
     }
 
+    //Промежуточная функция для добавылния отзыва
+    function fl_showReviewAdd(mode){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if ($('#SelectFilial').val() == 0){
+            $("#errror").html('<div class="query_neok">Не выбран филиал</div>');
+        }else {
+            if ($('#search_client2').val().length > 0) {
+                if ($('#search_client3').val().length > 0) {
+                    if ($('#review_text').val().length > 0) {
+                        if ($('#sites').val().length > 0) {
+                            let review_id = 0;
+
+                            let link = "review_add_f.php";
+
+                            if (mode == 'edit') {
+                                link = "review_edit_f.php";
+                                review_id = $("#review_id").val();
+                            }
+
+                            let reqData = {
+                                date: $('#iWantThisDate').val(),
+                                worker_name: $('#search_client2').val(),
+                                filial_id: $('#SelectFilial').val(),
+                                review_text: $('#review_text').val(),
+                                added_name: $('#search_client3').val(),
+                                sites: $('#sites').val(),
+                                status: status,
+                                review_id: review_id
+                            };
+                            console.log(reqData);
+
+
+                            $.ajax({
+                                url: link,
+                                global: false,
+                                type: "POST",
+                                dataType: "JSON",
+                                data: reqData,
+                                cache: false,
+                                beforeSend: function() {
+                                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                                },
+                                // действие, при ответе с сервера
+                                success: function(res){
+                                    //console.log(res);
+
+                                    $('.center_block').remove();
+                                    $('#overlay').hide();
+
+                                    if(res.result == "success"){
+                                        //$('#data').hide();
+                                        $('#data').html(res.data);
+
+                                        setTimeout(function () {
+                                            //!!! переход window.location.href - это правильное использование
+                                            window.location.href = 'reviews.php';
+                                        }, 300);
+                                    }else{
+                                        $('#errror').html(res.data);
+                                    }
+                                }
+                            });
+                        }else{
+                            $("#errror").html('<div class="query_neok">Укажите сайты</div>');
+                        }
+                    }else{
+                        $("#errror").html('<div class="query_neok">Отзыв не может быть пустым</div>');
+                    }
+                }else{
+                    $("#errror").html('<div class="query_neok">Выберите того, кто добавил</div>');
+                }
+            }else{
+                $("#errror").html('<div class="query_neok">Выберите врача</div>');
+            }
+        }
+    }
+
     //Промежуточная функция для прихода денег извне
     function fl_showMoneyFromOutsideAdd(){
 
