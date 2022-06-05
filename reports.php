@@ -315,6 +315,11 @@
 								<a href="remarks_to_employees.php" class="b3" style="width: 270px;">Замечания сотрудникам</a>
 							</li>';
 
+                echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="reviews.php" class="b3" style="width: 270px;">Отзывы</a>
+							</li>';
+
 
                 //if (($finances['see_all'] == 1) || $god_mode) {
 

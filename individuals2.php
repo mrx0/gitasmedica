@@ -147,7 +147,7 @@
 
         //Выборка
         $query = "SELECT j_ind.*
-            FROM `journal_individuals` j_ind
+            FROM `journal_individuals2` j_ind
             WHERE (TRUE
             {$query_dop})
             ORDER BY j_ind.date DESC";
@@ -162,7 +162,7 @@
                     <a href="univer.php" class="b">UNIVER главная</a>
                     <a href="individuals.php" class="b">Индивидуальные занятия</a>
                 </div>
-				<h1>Индивидуальные занятия</h1>';
+				<h1>Работа с админами</h1>';
 			echo '
 			</header>
 
@@ -172,17 +172,17 @@
 			<div id="data">';
 
         if (($it['add_own'] == 1) || ($it['add_new'] == 1) || $god_mode){
-            echo '<a href="individual_add.php" class="b">Добавить занятие</a><br>';
+            echo '<a href="individuals2_add.php" class="b">Добавить</a><br>';
           }
 
 
-        echo '
-					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 1;">';
-
-        //echo $block_fast_search_client;
-
-        echo '
-					</div>';
+//        echo '
+//					<div class="cellsBlock2" style="width: 400px; position: absolute; top: 20px; right: 20px; z-index: 1;">';
+//
+//        //echo $block_fast_search_client;
+//
+//        echo '
+//					</div>';
 
 //        $stocks_str = '';
 //        $news_str = '';
@@ -191,13 +191,16 @@
         if (!empty($tasks_j)){
 
             echo '
-                            <li class="cellsBlock" style="">
-                                <div class="cellPriority" style="font-weight: bold; background-color:"></div>
-                                <div class="cellOffice 4filter" style="font-weight: bold; text-align: center; width: 180px; min-width: 180px;" id="4filter">Кому проведено</div>
-                                <div class="cellAddress" style="font-weight: bold; text-align: left">Дата</div>
-                                <div class="cellText" style="font-weight: bold; text-align: left">Тема занятия/обсуждения</div>
-                                <div class="cellOffice 4filter" style="font-weight: bold; text-align: center; width: 180px; min-width: 180px;" id="4filter">Кто провёл</div>
-                            </li>';
+                            <table width="100%" style="/*border: 1px solid #BEBEBE;*/ margin:5px;">
+                                <tr style="font-weight: bold; font-size: 11px;">
+                                    <td style="border: 1px solid #BEBEBE; padding: 2px 10px; text-align: center;">Дата</td>
+                                    <td style="border: 1px solid #BEBEBE; padding: 2px 10px; text-align: center;">ФИО</td>
+                                    <td style="border: 1px solid #BEBEBE; padding: 2px 10px; text-align: center;">План работы</td>
+                                    <td colspan="2" style="border: 1px solid #BEBEBE; padding: 2px 10px; text-align: center;">Ошибки<br> кол-во принятых звонков/ замечание по звонку</td>
+                                    <td style="border: 1px solid #BEBEBE; padding: 2px 10px; text-align: center;">Работа с  пациентами в холле</td>
+                                    <td style="border: 1px solid #BEBEBE; padding: 2px 10px; text-align: center;">Коррекция ошибок</td>
+                                    <td style="border: 1px solid #BEBEBE; padding: 2px 10px; text-align: center;">Статистика звонков</td>
+                                </tr>';
 
             foreach ($tasks_j as $task) {
 //                var_dump($task);
@@ -207,19 +210,24 @@
                     $bgColor = "background-color: #8C8C8C;";
                 }
                 echo '
-                            <li class="cellsBlock cellsBlockHover" style="'.$bgColor.'">
-                                <div class="cellPriority" style="background-color:"></div>
-                                <div class="cellOffice 4filter" style="text-align: center; width: 180px; min-width: 180px;" id="4filter">'.WriteSearchUser('spr_workers', $task['student_id'], 'user', true).'</div>
-                                <div class="cellAddress" style="text-align: left">'.explode('-', $task['date'])[2].'.'.explode('-', $task['date'])[1].'.'.explode('-', $task['date'])[0].'</div>
-                                <div class="cellText" style="text-align: left">'.$task['theme'].'</div>
-                                <div class="cellOffice 4filter" style="text-align: center; width: 180px; min-width: 180px;" id="4filter">'.WriteSearchUser('spr_workers', $task['author_id'], 'user', true).'</div>
-                            </li>';
+                            <tr>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.explode('-', $task['date'])[2].'.'.explode('-', $task['date'])[1].'.'.explode('-', $task['date'])[0].'</td>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.WriteSearchUser('spr_workers', $task['worker_id'], 'user', false).'</td>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.$task['plan'].'</td>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.$task['rings_count'].'</td>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.$task['rings_review'].'</td>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.$task['work_w_patients'].'</td>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.$task['error_correction'].'</td>
+                                <td style="border: 1px solid #BEBEBE; padding: 1px 5px;">'.$task['ring_stat'].'</td>
+                            </tr>';
             }
+
+            echo '</table>';
         }
 
         echo '	
 			
-			    <div id="doc_title">Индивидуальные занятия - Асмедика</div>
+			    <div id="doc_title">Работа с админами - Асмедика</div>
 				</div>';
 		
 	}else{

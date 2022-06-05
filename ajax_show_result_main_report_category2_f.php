@@ -333,6 +333,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                     }
                     //var_dump($journal);
+                    //var_dump(count($journal));
 
                     //Выводим результат (нет)
                     //Делаем рассчеты
@@ -362,6 +363,9 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         $temp_cat_opened_array = array();
                         $temp_cat_all_array = array();
 
+                        //кол-во операций определенной категории
+                        $temp_cat_count = array();
+
                         $opened_summ = 0;
                         $closed_summ = 0;
                         $all_summ = 0;
@@ -390,15 +394,28 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                 if ($item['insure'] == 0) {
                                     //Если сумма не = 0
                                     if ($item['invoice_summ'] != 0) {
+                                        //кол-во
+                                        if (!isset($temp_cat_count[$item['percent_cats']])) {
+                                            $temp_cat_count[$item['percent_cats']] = 0;
+                                            //var_dump($item['percent_cats']);
+                                            //var_dump($temp_cat_close_array);
+
+                                        }
+
                                         //Все созданные наряды (откр+закр)
                                         if (!isset($temp_cat_all_array[$item['percent_cats']])) {
                                             $temp_cat_all_array[$item['percent_cats']] = $item['itog_price'];
                                             //var_dump($item['percent_cats']);
                                             //var_dump($temp_cat_close_array);
 
+                                            $temp_cat_count[$item['percent_cats']]++;
+
                                         } else {
                                             $temp_cat_all_array[$item['percent_cats']] += $item['itog_price'];
+
+                                            $temp_cat_count[$item['percent_cats']]++;
                                         }
+
                                         //Без категории
                                         if ($item['percent_cats'] == 0) {
                                             if (!in_array($item['invoice_id'], $invoice_all_wo_cat)) {
@@ -476,6 +493,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                         }
                         //var_dump($temp_cat_close_array);
                         //var_dump($temp_inv_array);
+//                        var_dump($temp_cat_count);
 
                         //Сортируем по значению
                         arsort($temp_cat_closed_array);
@@ -520,6 +538,12 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                                 $percent_from_all_summ = $item_summ * 100 / $all_summ;
                                 $percent_from_all_summ = number_format($percent_from_all_summ, 2, ',', '');
+                                if ($temp_cat_count[$item_id] > 0) {
+                                    $sredniy_check = $item_summ / $temp_cat_count[$item_id];
+                                    $sredniy_check = number_format($sredniy_check, 2, ',', ' ');
+                                }else{
+                                    $sredniy_check = 0;
+                                }
 
                                 if ($item_id != 0) {
                                     echo '
@@ -527,9 +551,12 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
                                             <div class="cellOrder">
                                                 '.$percent_cats_j[$item_id].'
                                             </div>
-                                            <div class="cellName" style="text-align: right;">
-                                                ' . number_format($item_summ, 0, ',', ' ') . ' руб.
+                                            <div class="cellName" style="text-align: right; width: 200px;">
+                                                ' . number_format($item_summ, 0, ',', ' ') . ' руб.  <br><span style="color: #575656; font-size: 10px;">(ср. ' .$sredniy_check.' руб.)</span>
                                             </div>
+                                            <!--<div class="cellName" style="text-align: right;">
+                                                ' . $sredniy_check . ' руб.
+                                            </div>-->
                                             <div class="cellName categoryItem" percentCat="'.$percent_from_all_summ.'" nameCat="'.$percent_cats_j[$item_id].'"  style="text-align: right;">
                                                 ' . $percent_from_all_summ . ' %
                                             </div>
