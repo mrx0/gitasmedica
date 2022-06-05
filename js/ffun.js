@@ -8376,4 +8376,67 @@
         }
     }
 
+    //Промежуточная функция добавления
+    function fl_showAddFunction(path, task_id, mode){
+
+        //убираем ошибки
+        hideAllErrors ();
+
+        if ($('#search_client2').val().length > 0) {
+            let task_id = 0;
+
+            let link = "individuals2_add_f.php";
+
+            if (mode == 'edit') {
+                link = "individuals2_edit_f.php";
+                task_id = $("#task_id").val();
+            }
+
+            let reqData = {
+                date: $('#iWantThisDate').val(),
+                worker_name: $('#search_client2').val(),
+                plan_text: $('#plan_text').val(),
+                rings_count: $('#rings_count').val(),
+                rings_review: $('#rings_review_text').val(),
+                work_w_patients: $('#work_w_patients_text').val(),
+                error_correction: $('#error_correction_text').val(),
+                ring_stat: $('#ring_stat_text').val(),
+                task_id: task_id
+            };
+            // console.log(reqData);
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function(res){
+                    //console.log(res);
+
+                    $('.center_block').remove();
+                    $('#overlay').hide();
+
+                    if(res.result == "success"){
+                        //$('#data').hide();
+                        $('#data').html(res.data);
+
+                        setTimeout(function () {
+                            //!!! переход window.location.href - это правильное использование
+                            window.location.href = path+'.php';
+                        }, 300);
+                    }else{
+                        $('#errror').html(res.data);
+                    }
+                }
+            });
+        }else{
+            $("#errror").html('<div class="query_neok">Выберите сотрудника</div>');
+        }
+    }
 
