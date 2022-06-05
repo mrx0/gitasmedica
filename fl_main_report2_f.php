@@ -159,6 +159,7 @@
                 }
             }
         }
+        //var_dump($zapis_ids);
 
         //Выберем наряды по записям
         $invoices_j = array();
@@ -246,7 +247,7 @@
         //сортируем по основным ключам
         ksort($invoices_j);
         ksort($zapis_summ);
-        //            var_dump($zapis_summ);
+        //var_dump($zapis_summ[5]);
 
         //!!! тестовая проверка нового определения первичек
         $pervich_summ_arr_new = array();
