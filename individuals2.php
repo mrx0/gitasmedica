@@ -1,7 +1,7 @@
 <?php
 
-//individuals.php
-//Индивидуальные занятия
+//individuals2.php
+//Индивидуальные занятия для админов
 
 	require_once 'header.php';
     require_once 'blocks_dom.php';
@@ -160,7 +160,7 @@
 			<header style="margin-bottom: 5px;">
                 <div class="nav">
                     <a href="univer.php" class="b">UNIVER главная</a>
-                    <a href="individuals2.php" class="b">Работа с админами</a>
+                    <a href="individuals.php" class="b">Индивидуальные занятия</a>
                 </div>
 				<h1>Индивидуальные занятия</h1>';
 			echo '
