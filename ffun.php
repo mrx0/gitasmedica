@@ -2050,7 +2050,7 @@
                         <div style="text-align: center; /*margin-top: 10px;*/ font-size: 14px; /*font-weight: bold;*/">выполненных работ для расчета зарплаты  сотруднику</div>
                         <div style="text-align: center; margin-top: 5px;/*margin-top: 10px;*/ font-size: 14px; font-weight: bold; text-decoration: underline;">' . $worker_j['full_name'] . '</div>
                         <div style="text-align: center; /*margin-top: 10px;*/ font-size: 10px; /*font-weight: bold;*/ font-style: italic;">ФИО</div>
-                        <div style="text-align: center; margin-top: 40px; font-size: 14px; /*font-weight: bold;*/">Расчет заработной платы за ' . $month . ' ' . $year . ' г.</div>
+                        <div style="text-align: center; margin-top: 40px; font-size: 14px; /*font-weight: bold;*/">Расчет заработной платы</div>
 
 
                         
@@ -2072,8 +2072,11 @@
                                 <td style="width: 6%; text-align: center; font-size: 14px; border: 1px solid #525252;">
                                     '.$i.'.
                                 </td>
-                                <td style="width: 47%; text-align: center; font-size: 14px; border: 1px solid #525252;">
-                                    
+                                <td style="width: 47%; text-align: center; font-size: 14px; border: 1px solid #525252;">';
+
+            if ($i==1) $rezult .= ' за ' . $month . ' ' . $year . ' г.';
+
+            $rezult .= '   
                                 </td>
                                 <td style="width: 47%; text-align: center; font-size: 14px; border: 1px solid #525252;">';
 
