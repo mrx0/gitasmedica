@@ -325,7 +325,8 @@
 		if (($cosm['see_all'] == 1) || ($cosm['see_own'] == 1) || $god_mode){
 			echo '
                 <li>
-                    <a href="cosmet.php" style="width: 85px;">Косметология</a>';
+                    <!--<a href="cosmet.php" style="width: 85px;">Косметология</a>-->
+                    <a href="" style="width: 85px;">Косметология</a>';
             echo '
                     <ul style="/*background: #FFF; width: 108px;*/">
                         <li>
