@@ -112,7 +112,7 @@
             //var_dump($datas['error_invoices']);
 
             if (!empty($datas['error_invoices'])){
-                echo '<div class="query_neok" style="padding: 10px 4px 2px; margin-left: 10px; width: 50vw;">Наряды с ошибками в категориях (анализы):';
+                echo '<div class="query_neok" style="padding: 10px 4px 2px; margin-left: 10px; width: 50vw;">Наряды с ошибками в категориях:';
 
                 for($i=0; $i < count($datas['error_invoices']); $i++){
                     echo '<a href="invoice.php?id='.$datas['error_invoices'][$i].'" class="ahref button_tiny" style="margin: 0 3px;" target="_blank" rel="nofollow noopener">#'.$datas['error_invoices'][$i].'</a>';
@@ -851,6 +851,7 @@
                         $child_stom_summ = $rezult_arr[5]['child_stom_summ'];
                     }
                 }
+                //var_dump($child_stom_summ);
 
                 //Стоматология
                 if (isset($rezult_arr[5])) {

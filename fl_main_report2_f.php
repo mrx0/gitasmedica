@@ -9,6 +9,9 @@
         include_once 'ffun.php';
         require 'variables.php';
 
+//        var_dump($month);
+//        var_dump($year);
+
         $permissions_sort_method = [5, 6, 10, 7, 4, 13, 14, 15, 9, 12, 11, 777];
 
         //$filials_j = getAllFilials(false, false, false);
@@ -201,19 +204,46 @@
                     $invoices_j[$arr['enter']][$arr['type']]['insure_data'] = array();
                     $invoices_j[$arr['enter']][$arr['type']]['child_stom_summ'] = 0;
                 }
+
+
                 //Если страховой
-                if ($arr['insure'] == 1) {
-                    if (!isset($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']])) {
-                        $invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']] = array();
-                    }
-                    array_push($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']], $arr);
+                //!!!Чтобы не сломать старые данные по отчётам, тут поставим костыль, чтоб по-новому считалось только с июня 2022 года.
+                if ($year.'-'.$month > '2022-05') {
+                    if ($arr['insure'] != 0) {
+                        //var_dump($arr['invoice_id']);
 
-                } else {
-                    if (!isset($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']])) {
-                        $invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']] = array();
-                    }
-                    array_push($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']], $arr);
+                        if (!isset($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']])) {
+                            $invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']] = array();
+                        }
+                        array_push($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']], $arr);
 
+                    } else {
+                        //var_dump($arr['invoice_id']);
+
+                        if (!isset($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']])) {
+                            $invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']] = array();
+                        }
+                        array_push($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']], $arr);
+
+                    }
+                }else{
+                    if ($arr['insure'] == 1) {
+                        //var_dump($arr['invoice_id']);
+
+                        if (!isset($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']])) {
+                            $invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']] = array();
+                        }
+                        array_push($invoices_j[$arr['enter']][$arr['type']]['insure_data'][$arr['invoice_id']], $arr);
+
+                    } else {
+                        //var_dump($arr['invoice_id']);
+
+                        if (!isset($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']])) {
+                            $invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']] = array();
+                        }
+                        array_push($invoices_j[$arr['enter']][$arr['type']]['data'][$arr['invoice_id']], $arr);
+
+                    }
                 }
 
 
@@ -248,6 +278,20 @@
         ksort($invoices_j);
         ksort($zapis_summ);
         //var_dump($zapis_summ[5]);
+        //var_dump($invoices_j[1][5]['insure_data']);
+
+        //!!!Проверка страховых 2022-07-04
+//        $summ_ins_test = 0;
+//
+//        foreach ($invoices_j[1][5]['insure_data'] as $invoice_id => $invoice_data) {
+//            foreach ($invoice_data as $data) {
+////                var_dump($data['invoice_id']);
+//                $summ_ins_test += $data['invoice_summins'];
+//                break;
+//            }
+//        }
+
+//        var_dump($summ_ins_test);
 
         //!!! тестовая проверка нового определения первичек
         $pervich_summ_arr_new = array();
@@ -325,7 +369,7 @@
             ksort($invoices_j[$id]);
         }
         //var_dump($invoices_j[1][5]['data']);
-        //var_dump($invoices_j2);
+        //var_dump($invoices_j);
 
         //Итоговый массив для хранения по типам стом/косм/...
         $rezult_arr = array();
@@ -493,6 +537,8 @@
                         //                                var_dump($invoice_summins == $invoice_summ_pos);
 
                     }
+
+                    //var_dump($type_data['insure_data']);
 
                     //страховые
                     if (!empty($type_data['insure_data'])) {
