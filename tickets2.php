@@ -1,7 +1,7 @@
 <?php
 
-//tickets.php
-//Заявки
+//tickets2.php
+//Заявки - тест другого дизайна
 
 	require_once 'header.php';
 	//require_once 'blocks_dom.php';
@@ -106,21 +106,6 @@
 
             $msql_cnnct2 = ConnectToDB_2 ('config_ticket');
 
-            //Настройка для вида
-            $query = "SELECT `value` FROM `settings`
-                WHERE `worker_id` = '{$_SESSION['id']}' AND `option`='tickets_view'";
-
-            $res = mysqli_query($msql_cnnct2, $query) or die(mysqli_error($msql_cnnct2).' -> '.$query);
-
-            $number = mysqli_num_rows($res);
-
-            if ($number != 0){
-                $arr3 = mysqli_fetch_assoc($res);
-                $cur_view = $arr3['value'];
-            }else{
-                $cur_view = 'block';
-            }
-
             $tickets_arr = array();
 
             $arr = array();
@@ -224,14 +209,14 @@
 						<div id="data">
 						    <div style="border: 1px dotted #CCC; margin: 10px; font-size: 95%;">
 						        <div style="display: inline-block;">
-                                    <a href="tickets.php?show_option=allopen" class="b4" style="padding: 0 2px;'.$bgColor_allopen.'">Все открытые</a>
-                                    <a href="tickets.php?show_option=all" class="b4" style="padding: 0 2px;'.$bgColor_all.'">Все</a>
-                                    <!--<a href="tickets.php?show_option=excl2" class="b4" style="padding: 0 2px;">Просроченные <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"  title="Истёк срок"></i></a>-->
-                                    <a href="tickets.php?show_option=excl" class="b4" style="padding: 0 2px;'.$bgColor_excl.'">Подходит срок + просроченные <i class="fa fa-exclamation" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"  title="Истёк срок"></i></a>
-                                    <a href="tickets.php?show_option=newtopic" class="b4" style="padding: 0 2px;'.$bgColor_newtopic.'">Обновлённые <i class="fa fa-bell" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Обновлено"></i></a><br>
-                                    <a href="tickets.php?show_option=done" class="b4" style="padding: 0 2px;'.$bgColor_done.'">Закрытые <i class="fa fa-check" aria-hidden="true" style="color: green; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i></a>
-                                    <a href="tickets.php?show_option=person" class="b4" style="padding: 0 2px;'.$bgColor_person.'">Персональные <i class="fa fa-user" aria-hidden="true" style="color: rgba(124, 0, 255, 0.68); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Вы исполнитель"></i></a>
-                                    <a href="tickets.php?show_option=deleted" class="b4" style="padding: 0 2px;'.$bgColor_deleted.'">Удалённые <i class="fa fa-trash" aria-hidden="true" style="color: rgba(244, 244, 244, 0.8); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Удалено"></i></a>
+                                    <a href="tickets2.php?show_option=allopen" class="b4" style="padding: 0 2px;'.$bgColor_allopen.'">Все открытые</a>
+                                    <a href="tickets2.php?show_option=all" class="b4" style="padding: 0 2px;'.$bgColor_all.'">Все</a>
+                                    <!--<a href="tickets2.php?show_option=excl2" class="b4" style="padding: 0 2px;">Просроченные <i class="fa fa-exclamation-circle" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"  title="Истёк срок"></i></a>-->
+                                    <a href="tickets2.php?show_option=excl" class="b4" style="padding: 0 2px;'.$bgColor_excl.'">Подходит срок + просроченные <i class="fa fa-exclamation" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"  title="Истёк срок"></i></a>
+                                    <a href="tickets2.php?show_option=newtopic" class="b4" style="padding: 0 2px;'.$bgColor_newtopic.'">Обновлённые <i class="fa fa-bell" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Обновлено"></i></a><br>
+                                    <a href="tickets2.php?show_option=done" class="b4" style="padding: 0 2px;'.$bgColor_done.'">Закрытые <i class="fa fa-check" aria-hidden="true" style="color: green; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i></a>
+                                    <a href="tickets2.php?show_option=person" class="b4" style="padding: 0 2px;'.$bgColor_person.'">Персональные <i class="fa fa-user" aria-hidden="true" style="color: rgba(124, 0, 255, 0.68); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Вы исполнитель"></i></a>
+                                    <a href="tickets2.php?show_option=deleted" class="b4" style="padding: 0 2px;'.$bgColor_deleted.'">Удалённые <i class="fa fa-trash" aria-hidden="true" style="color: rgba(244, 244, 244, 0.8); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Удалено"></i></a>
                                 </div>                                    
 						        <div style="display: inline-block; float: right; text-align: right">
 						            <!--<button class="b2" style="padding: 0 2px; margin: 2px 2px; cursor: pointer;" onclick="">Фильтр <i class="fa fa-filter" aria-hidden="true" style="color: green; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i></button>-->
@@ -261,7 +246,7 @@
                                 }
                             }
                         }
-                        $paginator_str .= '<a href="tickets.php?page='.($i).'&'.$show_option_str_for_paginator.'" class="paginator_btn" style="'.$pg_btn_bgcolor.'">'.($i).'</a> ';
+                        $paginator_str .= '<a href="tickets2.php?page='.($i).'&'.$show_option_str_for_paginator.'" class="paginator_btn" style="'.$pg_btn_bgcolor.'">'.($i).'</a> ';
                     }
                 }
 
@@ -272,14 +257,11 @@
 						    </div>';
                 }
 
-                if ($cur_view == 'table') {
-                    echo '<table style="width: 90%;">';
-                }
+                echo '<table>';
 
                 foreach ($tickets_arr as $j_tickets) {
 
-                    $ticket_style = 'ticketBlock';
-                    $ticket_style_table = 'ticketBlock_table';
+                    $ticket_style = 'ticketBlock_table';
                     $expired_icon = '';
 
                     //Если просрочен
@@ -294,13 +276,11 @@
                         } else {
                             if (strtotime($pd) < strtotime($nd)){
                                 $expired = true;
-                                $ticket_style = 'ticketBlockexpired';
-                                $ticket_style_table = 'ticketBlockexpired_table';
+                                $ticket_style = 'ticketBlockexpired_table';
                                 $expired_icon = 'fa fa-exclamation-circle';
                             }else {
                                 $expired = true;
-                                $ticket_style = 'ticketBlockexpired2';
-                                $ticket_style_table = 'ticketBlockexpired2_table';
+                                $ticket_style = 'ticketBlockexpired2_table';
                                 $expired_icon = 'fa fa-exclamation';
                             }
                         }
@@ -316,16 +296,14 @@
                     //Если выполнен и закрыт
                     if ($j_tickets['status'] == 1) {
                         $ticket_done = true;
-                        $ticket_style = 'ticketBlockdone';
-                        $ticket_style_table = 'ticketBlockdone_table';
+                        $ticket_style = 'ticketBlockdone_table';
                     }else{
                         $ticket_done = false;
                     }
                     //Если удалён
                     if ($j_tickets['status'] == 9) {
                         $ticket_deleted = true;
-                        $ticket_style = 'ticketBlockdeleted';
-                        $ticket_style_table = 'ticketBlockdeleted_table';
+                        $ticket_style = 'ticketBlockdeleted_table';
                     }else{
                         $ticket_deleted = false;
                     }
@@ -340,46 +318,42 @@
 
                     //Длина строки проверка, если больше, то сокращаем
                     if (strlen($j_tickets['descr']) > 100){
-                        $descr = mb_strimwidth($j_tickets['descr'], 0, 200, "...", 'utf-8');
+                        $descr = mb_strimwidth($j_tickets['descr'], 0, 100, "...", 'utf-8');
                     }else{
                         $descr = $j_tickets['descr'];
                     }
 
-
-                    if ($cur_view == 'table') {
-                        //Табличный стиль
-                        echo '<tr class="'.$ticket_style_table.'" style="font-size: 95%;">';
-                        echo '
-                            <td style="width: 100px; padding: 5px 10px; border: 1px solid #CCC; border-right: none;">
+                    echo '<tr class="'.$ticket_style.'" style="font-size: 95%;">';
+                    echo '
+                            <td style="padding: 5px 10px; border: 1px solid #CCC; border-right: none;">
                                <div class="ticketBlockheader_table> 
                                     <div style="margin-left: 5px; text-align: left; float: left;">
-                                        <a href="ticket.php?id='.$j_tickets['id'].'&'.$show_option_str_for_paginator.'" class="ahref">
                                         <span style=" color: rgb(29, 29, 29); font-size: 80%; font-weight: bold; margin-right: 3px;">#'.$j_tickets['id'].'</span>';
 
-                        if ($ticket_deleted){
-                            echo '
+                    if ($ticket_deleted){
+                        echo '
                                         <i class="fa fa-trash" aria-hidden="true" style="color: rgba(244, 244, 244, 0.8); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Удалено"></i>
                                         <!--<i class="fa fa-reply" aria-hidden="true" style="color: rgb(167, 255, 0); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>-->';
-                        }else {
-                            if ($ticket_done) {
-                                echo '                                    
+                    }else {
+                        if ($ticket_done) {
+                            echo '                                    
                                         <i class="fa fa-check" aria-hidden="true" style="color: green; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>';
-                            }
-
-                            if ($_SESSION['id'] == $j_tickets['worker_id']){
-                                echo '                        
-                                            <i class="fa fa-user" aria-hidden="true" style="color: rgba(124, 0, 255, 0.68); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Вы исполнитель"></i>';
-                            }
-                            if ($newTopic) {
-                                echo '                        
-                                            <i class="fa fa-bell" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Обновлено"></i>';
-                            }
                         }
 
-                        echo '<br>';
+                        if ($_SESSION['id'] == $j_tickets['worker_id']){
+                            echo '                        
+                                            <i class="fa fa-user" aria-hidden="true" style="color: rgba(124, 0, 255, 0.68); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Вы исполнитель"></i>';
+                        }
+                        if ($newTopic) {
+                            echo '                        
+                                            <i class="fa fa-bell" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Обновлено"></i>';
+                        }
+                    }
+
+                    echo '<br>';
 
 
-                        if (!$ticket_deleted) {
+                    if (!$ticket_deleted) {
                             if ($ticket_done) {
                                 echo '                                    
                                         <!--<i class="fa fa-check" aria-hidden="true" style="color: green; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>-->
@@ -388,7 +362,7 @@
                                 if ($j_tickets['plan_date'] != '0000-00-00') {
                                     echo '
                                         <span style=" color: rgb(115, 112, 112); font-size: 80%;">до ' . date('d.m.Y', strtotime($j_tickets['plan_date'])) . '</span>';
-                                    //<i class="fa fa-times" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>
+                                       //<i class="fa fa-times" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>
                                 }
                             }
                             if (!$ticket_done && $expired) {
@@ -402,7 +376,6 @@
 
 
                         echo '
-                                    </a>
                                     </div>
                                 </div>
                             </td>
@@ -414,7 +387,7 @@
                                 <br>
                             
                             </td>
-                            <td style="width: 150px; padding: 5px 10px; border: 1px solid #CCC; border-left: none;">
+                            <td style="padding: 5px 10px; border: 1px solid #CCC; border-left: none;">
                                 <div class="ticketBlockfooter_table">
                                     <!--создан '.date('d.m.y H:i', strtotime($j_tickets['create_time'])).'<br>-->
                                     автор: <span style="color: rgb(51, 51, 51);">'.WriteSearchUser('spr_workers', $j_tickets['create_person'], 'user', false).'</span><br>
@@ -439,108 +412,91 @@
                         echo '                                
                                 </div>
                             </td>';
-                        echo '</tr>';
-                    }else {
-                        echo '
-                        <div class="' . $ticket_style . '" style="font-size: 95%;">
+                    echo '</tr>';
+
+
+
+                    /*echo '
+                        <div class="'.$ticket_style.'" style="font-size: 95%;">
                             <div class="ticketBlockheader">
                                 <div style="margin-left: 5px; text-align: left; float: left;">
-                                    <span style=" color: rgb(29, 29, 29); font-size: 80%; font-weight: bold; margin-right: 3px;">#' . $j_tickets['id'] . '</span>';
-                        if (!$ticket_deleted) {
-                            if ($ticket_done) {
-                                echo '                                    
+                                    <span style=" color: rgb(29, 29, 29); font-size: 80%; font-weight: bold; margin-right: 3px;">#'.$j_tickets['id'].'</span>';
+                    if (!$ticket_deleted) {
+                        if ($ticket_done) {
+                            echo '                                    
                                     <i class="fa fa-check" aria-hidden="true" style="color: green; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>
                                     <span style=" color: rgb(115, 112, 112); font-size: 80%;">' . date('d.m.Y', strtotime($j_tickets['fact_date'])) . '</span>';
-                            } else {
-                                if ($j_tickets['plan_date'] != '0000-00-00') {
-                                    echo '
-                                    <span style=" color: rgb(115, 112, 112); font-size: 80%;">до ' . date('d.m.Y', strtotime($j_tickets['plan_date'])) . '</span>';
-                                    //<i class="fa fa-times" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>
-                                }
-                            }
-                            if (!$ticket_done && $expired) {
-                                echo '
-                                    <i class="' . $expired_icon . '" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"  title=""></i>';
-                            }
                         } else {
-                            echo '
-                                    <span style=" color: rgb(115, 112, 112); font-size: 80%;">удалён</span>';
+                            if ($j_tickets['plan_date'] != '0000-00-00') {
+                                echo '
+                                    <span style=" color: rgb(115, 112, 112); font-size: 80%;">до ' . date('d.m.Y', strtotime($j_tickets['plan_date'])) . '</span>';
+                                   //<i class="fa fa-times" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>
+                            }
                         }
+                        if (!$ticket_done && $expired) {
+                            echo '
+                                    <i class="'.$expired_icon.'" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"  title=""></i>';
+                        }
+                    }else{
                         echo '
+                                    <span style=" color: rgb(115, 112, 112); font-size: 80%;">удалён</span>';
+                    }
+                    echo '
                                 </div>
                                 <div style="margin-right: 5px; text-align: right; float: right;">';
-                        if ($ticket_deleted) {
-                            echo '
+                    if ($ticket_deleted){
+                        echo '
                                     <i class="fa fa-trash" aria-hidden="true" style="color: rgba(244, 244, 244, 0.8); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Удалено"></i>
                                     <!--<i class="fa fa-reply" aria-hidden="true" style="color: rgb(167, 255, 0); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);"></i>-->';
-                        } else {
-                            if ($_SESSION['id'] == $j_tickets['worker_id']) {
-                                echo '                        
+                    }else {
+                        if ($_SESSION['id'] == $j_tickets['worker_id']){
+                            echo '                        
                                         <i class="fa fa-user" aria-hidden="true" style="color: rgba(124, 0, 255, 0.68); text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Вы исполнитель"></i>';
-                            }
-                            if ($newTopic) {
-                                echo '                        
-                                        <i class="fa fa-bell" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Обновлено"></i>';
-                            }
                         }
-
-                        echo '
+                        if ($newTopic) {
+                            echo '                        
+                                        <i class="fa fa-bell" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(52, 152, 219, 0.8);" title="Обновлено"></i>';
+                        }
+                    }
+                    
+                    echo '
                                 </div>
                             </div>
-                            <a href="ticket.php?id=' . $j_tickets['id'] . '&' . $show_option_str_for_paginator . '" class="ticketBlockmain ahref">
-                                ' . $descr . '<br>
+                            <a href="ticket.php?id='.$j_tickets['id'].'&'.$show_option_str_for_paginator.'" class="ticketBlockmain ahref">
+                                '.$descr.'<br>
                                 <span style="font-size: 80%; color: rgb(115, 112, 112);">нажмите, чтобы открыть</span>
                             </a><br>
 
                             <div class="ticketBlockfooter">
-                                <!--создан ' . date('d.m.y H:i', strtotime($j_tickets['create_time'])) . '<br>-->
-                                автор: <span style="color: rgb(51, 51, 51);">' . WriteSearchUser('spr_workers', $j_tickets['create_person'], 'user', false) . '</span><br>
-                                <!--где создано: ', $j_tickets['filial_id'] == 0 ? 'не указано' : $filials_j[$j_tickets['filial_id']]['name'], '-->';
-                        if ($j_tickets['filials'] != NULL) {
-                            echo 'филиалы: ';
-                            $filials_arr_temp = explode(',', $j_tickets['filials']);
+                                <!--создан '.date('d.m.y H:i', strtotime($j_tickets['create_time'])).'<br>-->
+                                автор: <span style="color: rgb(51, 51, 51);">'.WriteSearchUser('spr_workers', $j_tickets['create_person'], 'user', false).'</span><br>
+                                <!--где создано: ', $j_tickets['filial_id']==0 ? 'не указано' : $filials_j[$j_tickets['filial_id']]['name'] ,'-->';
+                    if ($j_tickets['filials'] != NULL){
+                        echo 'филиалы: ';
+                        $filials_arr_temp = explode(',', $j_tickets['filials']);
 
-                            if (!empty($filials_arr_temp)) {
-                                foreach ($filials_arr_temp as $f_id) {
-                                    $bgColor_filialHere = '';
-                                    if (isset($_SESSION['filial'])) {
-                                        if ($f_id == $_SESSION['filial']) {
-                                            $bgColor_filialHere = 'background-color: rgba(144,247,95, 1); border: 1px dotted rgba(65, 33, 222, 0.34);';
-                                        }
+                        if (!empty($filials_arr_temp)) {
+                            foreach ($filials_arr_temp as $f_id) {
+                                $bgColor_filialHere = '';
+                                if (isset($_SESSION['filial'])){
+                                    if ($f_id == $_SESSION['filial']){
+                                        $bgColor_filialHere = 'background-color: rgba(144,247,95, 1); border: 1px dotted rgba(65, 33, 222, 0.34);';
                                     }
-                                    echo '<div style="display: inline-block; font-size: 80%; margin-right: 5px; color: rgb(59, 9, 111); ' . $bgColor_filialHere . '">' . $filials_j[$f_id]['name2'] . '</div>';
                                 }
+                                echo '<div style="display: inline-block; font-size: 80%; margin-right: 5px; color: rgb(59, 9, 111); '.$bgColor_filialHere.'">' . $filials_j[$f_id]['name2'] . '</div>';
                             }
-
                         }
-                        echo '                                
-                            </div>
-                        </div>';
+
                     }
-
-
+                    echo '                                
+                            </div>
+                        </div>';*/
                 }
 
-                if ($cur_view == 'table') {
-                    echo '</table>';
-                }
-
-                if ($cur_view == 'block'){
-                    $new_view = 'table';
-                }else{
-                    $new_view = 'block';
-                }
-
-                echo '
-                            <div class="no_print" style="position: fixed; top: 50px; right: 10px; border: 1px solid #0C0C0C; border-radius: 5px; padding: 5px 5px; background-color: #FFFFFF" title="Сменить вид">
-                                <div class="cellCosmAct b" style="text-align: center; display: inline-block !important; vertical-align: middle; height: auto; border-radius: 3px;"
-                                onclick="changeSettingsTickets('.$_SESSION['id'].',\'tickets_view\',\''.$new_view.'\')">
-                                    <i class="fa fa-sort" aria-hidden="true"></i>
-                                </div>
-                            </div>';
+                echo '</table>';
 
             }else{
-                echo '<br><br>ничего не найдено<br><br><a href="tickets.php" class="b4">Перейти в начало</a>';
+                echo '<br><br>ничего не найдено<br><br><a href="tickets2.php" class="b4">Перейти в начало</a>';
             }
 
 			echo '

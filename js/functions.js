@@ -2091,6 +2091,56 @@
 		})
 	};
 
+	//Изменить вид заявок tickets
+    function changeSettingsTickets(worker_id, option, value) {
+
+        let link = "change_settings_tickets_f.php";
+
+        // if (mode == 'edit') {
+        //     link = "review_edit_f.php";
+        //     review_id = $("#review_id").val();
+        // }
+
+        let reqData = {
+            worker_id: worker_id,
+            option: option,
+            value: value
+        };
+        //console.log(reqData);
+
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                // $('.center_block').remove();
+                // $('#overlay').hide();
+
+                if(res.result == "success"){
+                    //$('#data').hide();
+                    // $('#data').html(res.data);
+
+                    setTimeout(function () {
+                        //!!! переход window.location.href - это правильное использование
+                        window.location.href = 'tickets.php';
+                    }, 300);
+                }else{
+                    // $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
 	//Добавить новую задачу
 	function Ajax_add_ticket(mode) {
 
@@ -12240,7 +12290,7 @@
                     //$("#data").html(res.data);
 
                     if (res.result == 'success') {
-                     //location.reload();
+                        location.reload();
                     } else {
 
                     }
@@ -16696,6 +16746,31 @@
 	    // console.log(add_url)
 
         urlGetWork(add_url, ['date','create_person']);
+    }
+
+    //Для фильтра работы с администраторами
+    function Ajax_show_result_stat_individuals2() {
+        //console.log($("input[name=all_time]:checked").val());
+
+        let add_url = '';
+
+        let date = document.querySelector('input[name="date"]:checked').value;
+        // if (last_month === undefined){
+        //     last_month = 0;
+        // }
+        if ((date == 0)||(date == 1)||(date == 3)||(date == 6)){
+            add_url += '&date='+date;
+        }
+
+        // let worker_full_name =  $("#search_client4").val()
+        // if (worker_full_name.length > 0) {
+        //     add_url += '&create_person='+worker_full_name;
+        // }
+
+        // console.log(add_url)
+
+        //urlGetWork(add_url, ['date','create_person']);
+        urlGetWork(add_url, ['date']);
     }
 
     //Добавление нового занятия

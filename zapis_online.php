@@ -20,7 +20,7 @@
 
             //Деление на странички пагинатор paginator
             $limit_pos[0] = 0;
-            $limit_pos[1] = 15;
+            $limit_pos[1] = 50;
             $pages = 0;
 
             if (isset($_GET['page'])){
