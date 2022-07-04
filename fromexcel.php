@@ -23,11 +23,11 @@
 	/** Include PHPExcel_IOFactory */
 	require_once dirname(__FILE__) . '/PHPExcel/Classes/PHPExcel/IOFactory.php';
 
-	if (!file_exists("excel/new_prise_k_chern_2022.02.20.xlsx")) {
+	if (!file_exists("excel/new_prise_som_2022.03.08.xlsx")) {
 		exit("На данный момент данных нет. Попробуйте позже.\n");
 	}
 
-	$objPHPExcel = PHPExcel_IOFactory::load("excel/new_prise_k_chern_2022.02.20.xlsx");
+	$objPHPExcel = PHPExcel_IOFactory::load("excel/new_prise_som_2022.03.08.xlsx");
 
 	// Устанавливаем индекс активного листа
 	$objPHPExcel->setActiveSheetIndex(0);
@@ -107,8 +107,8 @@
                 'item' => $insert_id,
                 'date_from' => 1622538000,
                 'price' => (int)$price,
-                'price2' => (int)$price2,
-                'price3' => (int)$price3
+                'price2' => (int)$price,
+                'price3' => (int)$price
             ];
 
             $query = "INSERT INTO `spr_priceprices`

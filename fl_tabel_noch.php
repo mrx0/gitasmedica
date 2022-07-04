@@ -999,7 +999,8 @@
                         }*/
 
                         echo '
-                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '&noch=1" class="b" style="font-size: 80%;" >Распечатать</a>';
+                                                <a href="fl_tabel_print.php?tabel_id=' . $tabel_j[0]['id'] . '&noch=1" class="b" style="font-size: 80%;" >Распечатать</a>
+                                                <a href="fl_akt_print.php?tabel_id=' . $tabel_j[0]['id'] . '&noch=1"  target="_blank" rel="nofollow noopener" class="b" style="font-size: 80%;" >Акт</a>';
 
                         echo '
                                             </div>

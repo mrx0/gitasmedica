@@ -2091,6 +2091,56 @@
 		})
 	};
 
+	//Изменить вид заявок tickets
+    function changeSettingsTickets(worker_id, option, value) {
+
+        let link = "change_settings_tickets_f.php";
+
+        // if (mode == 'edit') {
+        //     link = "review_edit_f.php";
+        //     review_id = $("#review_id").val();
+        // }
+
+        let reqData = {
+            worker_id: worker_id,
+            option: option,
+            value: value
+        };
+        //console.log(reqData);
+
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success: function(res){
+                //console.log(res);
+
+                // $('.center_block').remove();
+                // $('#overlay').hide();
+
+                if(res.result == "success"){
+                    //$('#data').hide();
+                    // $('#data').html(res.data);
+
+                    setTimeout(function () {
+                        //!!! переход window.location.href - это правильное использование
+                        window.location.href = 'tickets.php';
+                    }, 300);
+                }else{
+                    // $('#errror').html(res.data);
+                }
+            }
+        });
+    }
+
 	//Добавить новую задачу
 	function Ajax_add_ticket(mode) {
 
@@ -3904,6 +3954,164 @@
         })
     }
 
+    //Выборка тех, кто первичка и потом пришли
+    function Ajax_show_result_stat_another_pervich(){
+        $('#q2result').html('');
+
+        let typeW = document.querySelector('input[name="typeW"]:checked').value;
+
+        // var zapisAll = $("input[id=zapisAll]:checked").val();
+        // if (zapisAll === undefined){
+        //     zapisAll = 0;
+        // }
+        // // var zapisArrive = $("input[id=zapisArrive]:checked").val();
+        // // if (zapisArrive === undefined){
+        // //     zapisArrive = 0;
+        // // }
+        // // var zapisNotArrive = $("input[id=zapisNotArrive]:checked").val();
+        // // if (zapisNotArrive === undefined){
+        // //     zapisNotArrive = 0;
+        // // }
+        // //
+        // // var zapisError = $("input[id=zapisError]:checked").val();
+        // // if (zapisError === undefined){
+        // //     zapisError = 0;
+        // // }
+        //
+        // var zapisNull = $("input[id=zapisNull]:checked").val();
+        // if (zapisNull === undefined){
+        //     zapisNull = 0;
+        // }
+
+        // var fullAll = $("input[id=fullAll]:checked").val();
+        // if (fullAll === undefined){
+        //     fullAll = 0;
+        // }
+        //
+        // var fullWOInvoice = $("input[id=fullWOInvoice]:checked").val();
+        // if (fullWOInvoice === undefined){
+        //     fullWOInvoice = 0;
+        // }
+        //
+        // var fullWOTask = $("input[id=fullWOTask]:checked").val();
+        // if (fullWOTask === undefined){
+        //     fullWOTask = 0;
+        // }
+        //
+        // var fullOk = $("input[id=fullOk]:checked").val();
+        // if (fullOk === undefined){
+        //     fullOk = 0;
+        // }
+        //
+        // var statusAll = $("input[id=statusAll]:checked").val();
+        // if (statusAll === undefined){
+        //     statusAll = 0;
+        // }
+        //
+        // var statusPervich = $("input[id=statusPervich]:checked").val();
+        // if (statusPervich === undefined){
+        //     statusPervich = 0;
+        // }
+        //
+        // var statusInsure = $("input[id=statusInsure]:checked").val();
+        // if (statusInsure === undefined){
+        //     statusInsure = 0;
+        // }
+        //
+        // var statusNight = $("input[id=statusNight]:checked").val();
+        // if (statusNight === undefined){
+        //     statusNight = 0;
+        // }
+        //
+        // var statusAnother = $("input[id=statusAnother]:checked").val();
+        // if (statusAnother === undefined){
+        //     statusAnother = 0;
+        // }
+        //
+        // var invoiceAll = $("input[id=invoiceAll]:checked").val();
+        // if (invoiceAll === undefined){
+        //     invoiceAll = 0;
+        // }
+        //
+        // var invoicePaid = $("input[id=invoicePaid]:checked").val();
+        // if (invoicePaid === undefined){
+        //     invoicePaid = 0;
+        // }
+        //
+        // var invoiceNotPaid = $("input[id=invoiceNotPaid]:checked").val();
+        // if (invoiceNotPaid === undefined){
+        //     invoiceNotPaid = 0;
+        // }
+        //
+        // var invoiceInsure = $("input[id=invoiceInsure]:checked").val();
+        // if (invoiceInsure === undefined){
+        //     invoiceInsure = 0;
+        // }
+
+        let patientUnic = $("input[id=patientUnic]:checked").val();
+        if (patientUnic === undefined){
+            patientUnic = 0;
+        }
+
+        let reqData = {
+            all_time: all_time,
+            datastart:  $("#datastart").val(),
+            dataend:  $("#dataend").val(),
+
+            //Кто создал запись
+            creator:$("#search_worker").val(),
+            //Пациент
+            client:$("#search_client").val(),
+            //К кому запись
+            worker:$("#search_client4").val(),
+            filial:$("#filial").val(),
+
+            typeW:typeW,
+
+            // zapisAll: zapisAll,
+            // zapisArrive: zapisArrive,
+            // zapisNotArrive: zapisNotArrive,
+            // zapisError: zapisError,
+            // zapisNull: zapisNull,
+            //
+            // fullAll: fullAll,
+            // fullWOInvoice: fullWOInvoice,
+            // fullWOTask: fullWOTask,
+            // fullOk: fullOk,
+            //
+            // statusAll: statusAll,
+            // statusPervich: statusPervich,
+            // statusInsure: statusInsure,
+            // statusNight: statusNight,
+            // statusAnother: statusAnother,
+            //
+            // invoiceAll: invoiceAll,
+            // invoicePaid: invoicePaid,
+            // invoiceNotPaid: invoiceNotPaid,
+            // invoiceInsure: invoiceInsure,
+
+            patientUnic: patientUnic
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url:"ajax_show_result_stat_another_pervich_f.php",
+            global: false,
+            type: "POST",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(data){
+                $('#qresult').html(data);
+                //$('#q2result').html('');
+
+                Ajax_show_result_stat_another_pervich_analiz();
+            }
+        })
+    }
+
     //Функция анализа записей первичек
     function Ajax_show_result_stat_lost_pervich_analiz(){
 
@@ -3913,6 +4121,48 @@
             let zapis_id = $(this).val();
 
             let link = "lost_pervich_analiz.php";
+
+            let reqData = {
+                zapis_id: zapis_id
+            };
+
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                //dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    //console.log(res);
+                    //  $('#q2result').append(zapis_id);
+                    // $('#q2result').append(res);
+
+                    //console.log(res.data);
+
+                    getInvoiceByZapis(res);
+
+                    $('#q2result').html('');
+                }
+            })
+
+
+        })
+
+    }
+
+    //Функция анализа записей первичек для another
+    function Ajax_show_result_stat_another_pervich_analiz(){
+
+        $(".zapis_id").each(function(){
+            //console.log($(this).val());
+
+            let zapis_id = $(this).val();
+
+            let link = "another_pervich_analiz.php";
 
             let reqData = {
                 zapis_id: zapis_id
@@ -12040,7 +12290,7 @@
                     //$("#data").html(res.data);
 
                     if (res.result == 'success') {
-                     //location.reload();
+                        location.reload();
                     } else {
 
                     }
@@ -12580,9 +12830,11 @@
     //Очистить поле ввода поиска
 	function clearSearchInput(){
 		$("#search_clients").val("");
-        $(".button_in_input").hide();
         $("#search_result_fc2").html("");
-	}
+        $(".search_block").val("");
+
+        $(".button_in_input").hide();
+    }
 
 
 	//Для графика фактического
@@ -16494,6 +16746,31 @@
 	    // console.log(add_url)
 
         urlGetWork(add_url, ['date','create_person']);
+    }
+
+    //Для фильтра работы с администраторами
+    function Ajax_show_result_stat_individuals2() {
+        //console.log($("input[name=all_time]:checked").val());
+
+        let add_url = '';
+
+        let date = document.querySelector('input[name="date"]:checked').value;
+        // if (last_month === undefined){
+        //     last_month = 0;
+        // }
+        if ((date == 0)||(date == 1)||(date == 3)||(date == 6)){
+            add_url += '&date='+date;
+        }
+
+        // let worker_full_name =  $("#search_client4").val()
+        // if (worker_full_name.length > 0) {
+        //     add_url += '&create_person='+worker_full_name;
+        // }
+
+        // console.log(add_url)
+
+        //urlGetWork(add_url, ['date','create_person']);
+        urlGetWork(add_url, ['date']);
     }
 
     //Добавление нового занятия

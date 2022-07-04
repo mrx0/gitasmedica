@@ -151,6 +151,59 @@
 		return $rez;
 	}
 
+	//Функция перевода чисел в слова
+	function num2str($num) {
+		$nul='ноль';
+		$ten=array(
+			array('','один','два','три','четыре','пять','шесть','семь', 'восемь','девять'),
+			array('','одна','две','три','четыре','пять','шесть','семь', 'восемь','девять'),
+		);
+		$a20=array('десять','одиннадцать','двенадцать','тринадцать','четырнадцать' ,'пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать');
+		$tens=array(2=>'двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят' ,'восемьдесят','девяносто');
+		$hundred=array('','сто','двести','триста','четыреста','пятьсот','шестьсот', 'семьсот','восемьсот','девятьсот');
+		$unit=array( // Units
+			array('копейка' ,'копейки' ,'копеек',	 1),
+			array('рубль'   ,'рубля'   ,'рублей'    ,0),
+			array('тысяча'  ,'тысячи'  ,'тысяч'     ,1),
+			array('миллион' ,'миллиона','миллионов' ,0),
+			array('миллиард','милиарда','миллиардов',0),
+		);
+		//
+		list($rub,$kop) = explode('.',sprintf("%015.2f", floatval($num)));
+		$out = array();
+		if (intval($rub)>0) {
+			foreach(str_split($rub,3) as $uk=>$v) { // by 3 symbols
+				if (!intval($v)) continue;
+				$uk = sizeof($unit)-$uk-1; // unit key
+				$gender = $unit[$uk][3];
+				list($i1,$i2,$i3) = array_map('intval',str_split($v,1));
+				// mega-logic
+				$out[] = $hundred[$i1]; # 1xx-9xx
+				if ($i2>1) $out[]= $tens[$i2].' '.$ten[$gender][$i3]; # 20-99
+				else $out[]= $i2>0 ? $a20[$i3] : $ten[$gender][$i3]; # 10-19 | 1-9
+				// units without rub & kop
+				if ($uk>1) $out[]= morph($v,$unit[$uk][0],$unit[$uk][1],$unit[$uk][2]);
+			} //foreach
+		}
+		else $out[] = $nul;
+		$out[] = morph(intval($rub), $unit[1][0],$unit[1][1],$unit[1][2]); // rub
+		$out[] = $kop.' '.morph($kop,$unit[0][0],$unit[0][1],$unit[0][2]); // kop
+		return trim(preg_replace('/ {2,}/', ' ', join(' ',$out)));
+	}
+
+	/**
+	 * Склоняем словоформу
+	 * @ author runcore
+	 */
+	function morph($n, $f1, $f2, $f5) {
+		$n = abs(intval($n)) % 100;
+		if ($n>10 && $n<20) return $f5;
+		$n = $n % 10;
+		if ($n>1 && $n<5) return $f2;
+		if ($n==1) return $f1;
+		return $f5;
+	}
+
 	//Функция показывает, сколько рабочих дней в указанном месяце при 6тидневой рабочей неделе (без праздников)
 	function getWeekdays($m, $y = NULL){
 		$arrDtext = array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
@@ -1783,7 +1836,8 @@
 	}
 	
 	//Ещё одно дерево с рекурсией
-	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype){
+	function showTree2($level, $space, $type, $sel_id, $first, $last_level, $deleted, $dbtable, $insure_id, $dtype, $show_code = FALSE){
+//		var_dump($show_code);
 
         //$msql_cnnct = ConnectToDB ();
 		$db = new DB();
@@ -1905,13 +1959,13 @@
 					echo '
 							<ul style="display: none;">';
 					
-					$query = "SELECT `id`, `code`, `name`, `status` FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";
+					$query = "SELECT `id`, `code`, `code_u`, `code_nom`, `name`, `status` FROM `{$dbtable}` WHERE `id` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$deleted_str." ".$q_dop." ORDER BY `name`";
 					
 					if ($insure_id != 0){
-						$query = "SELECT `id`, `code`, `name`, `status` FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
+						$query = "SELECT `id`, `code`, `code_u`, `code_nom`, `name`, `status` FROM `spr_pricelist_template` WHERE `id` IN (SELECT `item` FROM `{$dbtable}` WHERE `item` IN (SELECT `item` FROM `spr_itemsingroup` WHERE `group`='{$value['id']}') ".$q_dop.") ".$deleted_str." ORDER BY `name`";
 					}
 					
-					//var_dump($query);
+//					var_dump($query);
 
 //                    $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
 //					$number = mysqli_num_rows($res);
@@ -1933,6 +1987,8 @@
 						
 						//for ($i = 0; $i < count($items_j); $i++) {
 						foreach ($items_j as $item_value) {
+							//var_dump($item_value);
+
 							$price = 0;
 							
 							//$query = "SELECT `price` FROM `spr_priceprices` WHERE `item`='".$item_value['id']."' ORDER BY `create_time` DESC LIMIT 1";
@@ -1961,11 +2017,17 @@
 //								$price = $arr3['price'];
 //							}
 
-
+							$code_u_text = '';
+							if ($show_code){
+								if (isset($item_value['code_u'])) {
+									//$code_u_text = '<span style="font-size: 75%; font-weight: bold;">[#' . $item_value['code_u'] . ']</span>';
+									$code_u_text = '<span style="font-size: 75%; font-weight: bold;">' . $item_value['code_u'] . '</span>';
+								}
+							}
 						
 							echo '
 										<li style="cursor: pointer;">
-											<p onclick="checkPriceItem('.$item_value['id'].', '.$dtype.')"><span class="4filter"><span style="font-size: 75%; font-weight: bold;">[#'.$item_value['id'].']</span> <i>'.$item_value['code'].'</i> '.$item_value['name'].'</span></p>
+											<p onclick="checkPriceItem('.$item_value['id'].', '.$dtype.')"><span class="4filter">'.$code_u_text.' <i>'.$item_value['code'].'</i> '.$item_value['name'].'</span></p>
 										</li>';
 						}
 					}else{
@@ -1993,7 +2055,7 @@
 					//echo '_'.$value['name'].'<br>';
 					$space2 = $space. '&nbsp;&nbsp;&nbsp;';
 					$last_level2 = $last_level+1;
-					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype);
+					showTree2($value['id'], $space2, $type, $sel_id, $first, $last_level2, $deleted, $dbtable, $insure_id, $dtype, $show_code);
 				}else{
 					//---
 				}
@@ -4505,7 +4567,7 @@
                 $itemTemp_str .= '
                                                 <span class="cellOrder" style="position: relative;">
                                                     <div style="font-weight: bold;">
-                                                    	<a href="'.$order_link.'" class="ahref">'.$order_name.' #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></a>
+                                                    	<a href="'.$order_link.'" class="ahref" target="_blank" rel="nofollow noopener">'.$order_name.' #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></a>
 													</div>
                                                     <div style="margin: 3px;">';
 
@@ -4655,7 +4717,7 @@
                                                     <div style="font-weight: bold;">Выдача #'.$items['id'].'<span style="font-weight: normal;"> от '.date('d.m.y' ,strtotime($items['date_in'])).'</span></div>
                                                     <div style="margin: 3px;">';
 
-                $itemTemp_str .= 'Филиал: '.$offices_j[$items['office_id']]['name'];
+                $itemTemp_str .= 'Филиал: '.$offices_j[$items['filial_id']]['name'];
 
                 $itemTemp_str .= '
                                                     </div>

@@ -128,7 +128,7 @@
 								<div style="width: 900px; max-width: 900px; min-width: 900px;">
 									<ul class="ul-tree ul-drop" id="lasttree" style="width: 850px; font-size: 12px;">';
 
-							showTree4(15, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id'], 0);	
+							showTree4(312, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelists_insure', $_GET['id'], 0);
 										
 							echo '
 									</ul>

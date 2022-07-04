@@ -121,7 +121,8 @@
         if (in_array($_SESSION['permissions'], $permissionsWhoCanSee_arr) || $god_mode) {
             $query_dop = '';
         }else{
-            $query_dop = 'AND (j_ind.author_id	 = '.$_SESSION['id'].' OR j_ind.student_id	 = '.$_SESSION['id'].')';
+            //$query_dop = 'AND (j_ind.author_id	 = '.$_SESSION['id'].' OR j_ind.student_id	 = '.$_SESSION['id'].')';
+            $query_dop = 'AND (j_ind.author_id	 = '.$_SESSION['id'].')';
         }
 
 //        //Если не "бог" надо выбрать те, которые относятся к специализации, указанной при добавлении
@@ -159,6 +160,7 @@
 			<header style="margin-bottom: 5px;">
                 <div class="nav">
                     <a href="univer.php" class="b">UNIVER главная</a>
+                    <a href="individuals2.php" class="b">Работа с админами</a>
                 </div>
 				<h1>Индивидуальные занятия</h1>';
 			echo '

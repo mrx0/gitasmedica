@@ -142,7 +142,7 @@
                         echo '
                                     <div class="cellsBlock2">
                                         <div class="cellLeft">
-                                            <span style="font-size: 80%;">Для кого (если необходимо указать исполнителя)</span><br>
+                                            <span style="font-size: 80%;">Исполнитель (если необходимо указать)</span><br>
                 
                                             <div class="side-by-side clearfix">
                                                 <div>
@@ -252,7 +252,7 @@
                                             </div>';
                         //}
 
-                        echo '
+                        /*echo '
                                         <div class="cellsBlock2">
                                             <div class="cellLeft">
                                                 <span style="font-size: 80%;">Фото (если необходимо)</span><br>
@@ -260,7 +260,7 @@
                 
                                               
                                             </div>
-                                        </div>';
+                                        </div>';*/
 
 
                         echo '

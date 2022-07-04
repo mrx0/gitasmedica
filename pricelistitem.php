@@ -191,40 +191,42 @@
 
                     if ($insure_j != 0){
                         foreach ($insure_j as $insure_item){
-                            //var_dump($insure_item);
-                            echo '
+                            if ($insure_item['status'] != '9') {
+                                //var_dump($insure_item);
+                                echo '
                                 <li class="cellsBlock" style="width: auto;">
                                     <div class="cellOrder" style="position: relative;">
-                                        <a href="insure.php?id='.$insure_item['id'].'" class="ahref">'.$insure_item['name'].'</a>
+                                        <a href="insure.php?id=' . $insure_item['id'] . '" class="ahref">' . $insure_item['name'] . '</a>
                                     </div>';
-                            if (isset($insure_price_arr[$insure_item['id']])){
-                                if (($items['edit'] == 1) || $god_mode){
-                                     echo '
+                                if (isset($insure_price_arr[$insure_item['id']])) {
+                                    if (($items['edit'] == 1) || $god_mode) {
+                                        echo '
                                     <div class="cellName" style="background: rgb(157,255,134);">
-                                        <a href="pricelistitem_insure.php?insure='.$insure_item['id'].'&id='.$_GET['id'].'" class="ahref">открыть в страховой</a>
+                                        <a href="pricelistitem_insure.php?insure=' . $insure_item['id'] . '&id=' . $_GET['id'] . '" class="ahref">открыть в страховой</a>
                                     </div>';
-                                }else{
-                                    echo '
+                                    } else {
+                                        echo '
                                     <div class="cellName" style="background: rgb(157,255,134);">
                                         
                                     </div>';
-                                }
-                            }else{
-                                if ($rezult[0]['status'] != 9){
-                                    echo '
-                                        <div class="cellName" style="cursor: pointer; background: rgba(255,132,113,0.73);" onclick="Ajax_add_pricelistitem_insure('.$_GET['id'].', '.$insure_item['id'].');">
+                                    }
+                                } else {
+                                    if ($rezult[0]['status'] != 9) {
+                                        echo '
+                                        <div class="cellName" style="cursor: pointer; background: rgba(255,132,113,0.73);" onclick="Ajax_add_pricelistitem_insure(' . $_GET['id'] . ', ' . $insure_item['id'] . ');">
                                             добавить в эту страховую
                                         </div>';
-                                }else{
-                                    echo '
+                                    } else {
+                                        echo '
                                         <div class="cellName" style="cursor: pointer; background: rgba(255,132,113,0.73);">
                                             нет в этой страховой
                                         </div>';
+                                    }
                                 }
-                            }
-                            echo '           
+                                echo '           
                                 </li>   
-                            ';
+                                ';
+                            }
                         }
                     }
                     echo '

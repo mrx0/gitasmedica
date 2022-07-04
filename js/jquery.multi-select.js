@@ -23,7 +23,7 @@
     this.$container = $('<div/>', { 'class': "ms-container" });
     this.$selectableContainer = $('<div/>', { 'class': 'ms-selectable' });
     this.$selectionContainer = $('<div/>', { 'class': 'ms-selection' });
-    this.$selectableUl = $('<ul/>', { 'class': "ms-list", 'tabindex' : '-1' });
+    this.$selectableUl = $('<ul/>', { 'class': "ms-list ms-list-bgcolor2", 'tabindex' : '-1' });
     this.$selectionUl = $('<ul/>', { 'class': "ms-list ms-list-bgcolor", 'tabindex' : '-1' });
     this.scrollTo = 0;
     this.elemsSelector = 'li:visible:not(.ms-optgroup-label,.ms-optgroup-container,.'+options.disabledClass+')';

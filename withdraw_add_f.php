@@ -45,7 +45,7 @@
                     $comment = addslashes($_POST['comment']);
 
                     //Добавляем в базу
-                    $query = "INSERT INTO `journal_withdraw` (`client_id`, `office_id`, `summ`, `summ_type`, `org_pay`, `date_in`, `comment`, `create_person`, `create_time`) 
+                    $query = "INSERT INTO `journal_withdraw` (`client_id`, `filial_id`, `summ`, `summ_type`, `org_pay`, `date_in`, `comment`, `create_person`, `create_time`) 
                             VALUES (
                             '{$_POST['client_id']}', '{$_POST['office_id']}', '{$_POST['summ']}', '{$_POST['summtype']}', '{$_POST['org_pay']}', '{$date_in}', '{$comment}', '{$_SESSION['id']}', '{$time}')";
 

@@ -9,7 +9,7 @@
 	if ($enter_ok){
 		require_once 'header_tags.php';
 	
-		if (($finances['edit'] == 1) || $god_mode){
+		if (($finances['edit'] == 1) || $god_mode   || ($_SESSION['id'] == 719)){
 			if ($_GET){
 
                 include_once('DBWorkPDO.php');
@@ -76,7 +76,7 @@
                         }else {
 
                             //Если заднее число
-                            if ((strtotime($invoice_j['create_time']) + 12 * 60 * 60 < time()) && (($finances['see_all'] != 1) && !$god_mode)) {
+                            if ((strtotime($invoice_j['create_time']) + 12 * 60 * 60 < time()) && (($finances['see_all'] != 1) && !$god_mode    &&   ($_SESSION['id'] != 719))) {
                                 echo '<h1>Нельзя редактировать задним числом</h1>';
                             } else {
 
@@ -313,7 +313,7 @@
 
 
                                     //if (((($invoice_j['summ'] == $invoice_j['paid']) && ($invoice_j['summ'] != 0)) || ($invoice_j['status'] == 5) || ($invoice_j['summins'] != 0)) && !($god_mode || ($finances['see_all'] == 1))) {
-                                    if (((($invoice_j['summ'] == $invoice_j['paid']) && ($invoice_j['summ'] != 0)) || ($invoice_j['status'] == 5)) && !($god_mode || ($finances['see_all'] == 1))) {
+                                    if (((($invoice_j['summ'] == $invoice_j['paid']) && ($invoice_j['summ'] != 0)) || ($invoice_j['status'] == 5)) && !($god_mode || ($finances['see_all'] == 1)   || ($_SESSION['id'] == 719))) {
                                         echo '
                                                     <div>
                                                         <div style="display: inline-block; color: red;">Наряд оплачен или работа закрыта. Редактировать нельзя</div>
@@ -717,7 +717,7 @@
 
                                         //Быстрый поиск
                                         echo '	
-                                                                <div style="margin: 0 0 5px; font-size: 11px; cursor: pointer; text-align: left;">';
+                                                                <div style="position: relative; margin: 0 0 5px; font-size: 11px; cursor: pointer; text-align: left;">';
                                         echo $block_fast_filter;
                                         echo '
                                                                 </div>';
@@ -731,7 +731,7 @@
                                                                 <ul class="ul-tree ul-drop" id="lasttree">';
 
                                         //Список из прайса деревом (2020-12-29 долго грузится)
-                                        showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $invoice_j['type']);
+                                        showTree2(0, '', 'list', 0, FALSE, 0, FALSE, 'spr_pricelist_template', 0, $invoice_j['type'], TRUE);
 
                                         echo '
                                                                 </ul>
