@@ -375,7 +375,7 @@
 
                         //Пробуем вывести расчетный лист по табелю для печати
                         echo tabelAktTemplate ($_GET['tabel_id'], $monthsName[$tabel_j['month']], $tabel_j['year'], $worker_j[0], $filials_j[$filial_id]['name2'], count($rezultShed),
-                            $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3,
+                            /*$tabel_summ*/$tabel_j['paidout'], $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3,
                             $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1,
                             $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm,
                             $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount,

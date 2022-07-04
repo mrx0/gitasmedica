@@ -97,7 +97,7 @@
 
             //if (isset($_GET['client_id'])) {
                 echo '
-					<a href="phone_calls.php" class="b">Все звонки</a>';
+					<a href="phone_calls.php" class="paginator_btn">Все записи / сбросить фильтры</a>';
             //}
 			echo '
                     <div id="data" style="margin-top: 5px;">';
@@ -181,6 +181,7 @@
             $dopQuery
             ORDER BY j_pc.call_time DESC, j_pc.create_time DESC  LIMIT {$limit_pos[0]}, {$limit_pos[1]}";
 //            var_dump($query);
+//            var_dump($args);
 
             //Выбрать все
             $calls_j = $db::getRows($query, $args);

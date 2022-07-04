@@ -94,4 +94,10 @@
 
 .ms-list-bgcolor {
   background: rgba(15, 255, 0, 0.3);
+  /*border: 1px solid #6dff1c;*/
 }
+
+.ms-list-bgcolor2 {
+  background: rgb(126 126 126 / 30%);
+}
+
