@@ -1935,7 +1935,7 @@
     }
 
     //функция для создания шаблона табеля (оасчетного листа) для печати
-    function tabelAktTemplate ($tabel_id, $month, $year, $worker_j, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $tabel_noch, $link)
+    function tabelAktTemplate ($tabel_id, $month, $year, $worker_j, $filial, $org, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $tabel_noch, $link)
     {
         //var_dump($dop);
 
@@ -2011,7 +2011,7 @@
                             <div class="filtercellRight" style="border: none; width: 290px; min-width: 290px; max-width: 290px; padding: 2px 2px 1px;">
                                 <div style="/*border-bottom: 1px dotted grey;*/">
                                     <div style="display: inline;">&nbsp;</div>
-                                    <div style="float: right; display: inline; text-align: right; font-size: 14px;">ООО «______________»</div>
+                                    <div style="float: right; display: inline; text-align: right; font-size: 14px;">ООО «'.$org.'»</div>
                                 </div>
                                 <div style="/*border-bottom: 1px dotted grey;*/">';
 

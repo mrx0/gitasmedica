@@ -384,7 +384,10 @@
         foreach ($invoices_j as $enter => $enter_data) {
             //Если пришел к врачу
             if (($enter == 1) || ($enter == 6)) {
+//                var_dump($enter_data);
+
                 foreach ($enter_data as $type => $type_data) {
+                    //var_dump($type_data);
 
                     if (!isset($rezult_arr[$type])) {
                         $rezult_arr[$type] = array();
@@ -396,6 +399,10 @@
                     //Проход по нарядам
                     //не страховые
                     foreach ($type_data['data'] as $invoice_id => $invoice_data) {
+                        //var_dump($invoice_id);
+                        //echo '<a href="invoice.php?id='.$invoice_id.'">'.$invoice_id.'</a><br>';
+//                        var_dump($invoice_data);
+
                         //                                var_dump('-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-');
                         //                                var_dump($invoice_id);
 
@@ -599,6 +606,8 @@
             }
         }
         //            var_dump($rezult_arr);
+//        var_dump($rezult_arr[6]['data']);
+//        var_dump(array_sum($rezult_arr[6]['data']));
         //            var_dump($rezult_arr_summ);
 
         //Расходы, выдано из кассы

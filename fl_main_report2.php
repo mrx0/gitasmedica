@@ -1142,6 +1142,8 @@
 
                     if (!empty($rezult_arr[6])) {
                         if (!empty($rezult_arr[6]['data'])) {
+//                            var_dump($rezult_arr[6]);
+//                            var_dump(array_sum($rezult_arr[6]['data']));
                             //arsort($rezult_arr[5]['data']);
 
                             echo '<div id="summ6">'.number_format(array_sum($rezult_arr[6]['data']), 0, '.', ' ') . '</div>';
@@ -1264,6 +1266,8 @@
                     }
                 }
 
+//                var_dump($temp_solar_nal);
+//                var_dump($temp_solar_beznal);
                 if ($temp_solar_nal + $temp_solar_beznal != 0) {
                     //Солярий
                     echo '
