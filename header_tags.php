@@ -263,7 +263,7 @@
     //var_dump($oncopy);
 
     //Запрет на копирование
-	if ($god_mode || ($_SESSION['permissions'] == 3) || ($oncopy == 'true')) {
+	if ($god_mode || ($_SESSION['permissions'] == 3) || ($_SESSION['permissions'] == 8) || ($_SESSION['permissions'] == 16) || ($oncopy == 'true')) {
         echo '
 		<body>';
     }else {
