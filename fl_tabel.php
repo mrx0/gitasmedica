@@ -1189,6 +1189,10 @@
                                         <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
                                             Сумма всех РЛ: <span class="calculateOrder" style="font-size: 13px">' . $tabel_j[0]['summ_calc'] . '</span> руб. <div style="display: inline; color: #5f5f5f; font-size: 90%; font-style: italic;">Сумма всех нарядов: <span id="invoiceSumm"></span>  руб. (включая страховые)</div>
                                         </div>';
+                            echo '
+                                        <div style="background-color: rgba(230, 203, 72, 0.34); border: 1px dotted #AAA; margin: 5px 0; padding: 1px 3px; ">
+                                            Расчёт (РЛ + пустые смены): <span class="calculateOrder" style="font-size: 13px">' . ($tabel_j[0]['summ'] +  + $tabel_j[0]['empty_smena']) . '</span> руб.
+                                        </div>';
                         }
                         //Админы, ассистенты
                         if (($tabel_j[0]['type'] == 4) || ($tabel_j[0]['type'] == 7)) {
