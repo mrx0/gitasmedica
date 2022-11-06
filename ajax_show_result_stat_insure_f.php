@@ -200,7 +200,7 @@ if (empty($_SESSION['login']) || empty($_SESSION['id'])){
 
                     foreach ($journal as $journal_item){
                         //var_dump($journal_item);
-                        //var_dump($journal_item);
+                        //var_dump($journal_item['id']);
 
                         //$rezult_arr[$journal_item['client_id']]['name'] = WriteSearchUser('spr_clients', $journal_item['client_id'], 'user_full', false);
                         //$rezult_arr[$journal_item['client_id']][$journal_item['create_time']] = $journal_item;

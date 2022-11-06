@@ -383,6 +383,48 @@
         return $filials_j;
 	}
 
+	//Собираем все организации
+	function getAllOrgs($sort, $short_name, $closed){
+
+		$orgs_j = array();
+
+		$msql_cnnct = ConnectToDB ();
+
+		$query = "SELECT * FROM `spr_org`";
+
+		if (!$closed){
+			$query .= " WHERE `status` = '0'";
+		}
+
+		$res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct).' -> '.$query);
+
+		$number = mysqli_num_rows($res);
+
+		if ($number != 0){
+			while ($arr = mysqli_fetch_assoc($res)){
+				$orgs_j[(string)$arr['id']] = $arr;
+				//var_dump((string)$arr['id']);
+			}
+		}
+		//var_dump($filials_j);
+
+		if ($sort){
+			if (!empty($orgs_j)) {
+				//Сортировка по имени с сохранением ключей
+				uasort($orgs_j, function($a, $b){
+					$a = $a['name'];
+					$b = $b['name'];
+					if ($a == $b) {
+						return 0;
+					}
+					return ($a < $b) ? -1 : 1;
+				});
+			}
+		}
+
+		return $orgs_j;
+	}
+
 	//Собираем все специальности
 	function getAllPermissions($sort, $only_name){
 		$permissions_j = array();

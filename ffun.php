@@ -1935,9 +1935,11 @@
     }
 
     //функция для создания шаблона табеля (оасчетного листа) для печати
-    function tabelAktTemplate ($tabel_id, $month, $year, $worker_j, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $tabel_noch, $link)
+    function tabelAktTemplate ($tabel_id, $month, $year, $worker_j, $filial, $org, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $tabel_noch, $link)
     {
         //var_dump($dop);
+//        var_dump(func_get_args());
+//        var_dump($tabel_deductions_j2);
 
         //Часы работы
         $hours_count = '';
@@ -1969,8 +1971,10 @@
             $countSmen = '';
         }
 
+        $all_summ = $tabel_summ + $tabel_deductions_j2;
+
 //        $a = 9540.54;
-//        var_dump(num2str($tabel_summ));
+//        var_dump(num2str($all_summ));
 
         //!!! Первая буква строки заглавная ТЕСТ
         //$str = 'фывввв';
@@ -2011,26 +2015,26 @@
                             <div class="filtercellRight" style="border: none; width: 290px; min-width: 290px; max-width: 290px; padding: 2px 2px 1px;">
                                 <div style="/*border-bottom: 1px dotted grey;*/">
                                     <div style="display: inline;">&nbsp;</div>
-                                    <div style="float: right; display: inline; text-align: right; font-size: 14px;">ООО «______________»</div>
+                                    <div style="float: right; display: inline; text-align: right; font-size: 14px;">ООО «'.$org.'»</div>
                                 </div>
                                 <div style="/*border-bottom: 1px dotted grey;*/">';
 
         if ($hours_norma > 0) {
-            $rezult .= '
-                                    <div style="display: inline;">&nbsp;<!--Норма часов--></div>
-                                    <div style="float: right; display: inline; text-align: right;">';
+//            $rezult .= '
+//                                    <div style="display: inline;">&nbsp;<!--Норма часов--></div>
+//                                    <div style="float: right; display: inline; text-align: right;">';
 
-            $rezult .= $hours_norma;
+            //$rezult .= $hours_norma;
 
-            $rezult .= '
-                                    </div>';
+//            $rezult .= '
+//                                    </div>';
         } else {
-            $rezult .= '
-                                    <div style="display: inline;">&nbsp;<!--Норма смен/дней--></div>
-                                    <div style="float: right; display: inline; text-align: right;">';
+//            $rezult .= '
+//                                    <div style="display: inline;">&nbsp;<!--Норма смен/дней--></div>
+//                                    <div style="float: right; display: inline; text-align: right;">';
 
             //$rezult .= '-';
-            $rezult .= '&nbsp;';
+//            $rezult .= '&nbsp;';
 
             $rezult .= '
                                     </div>';
@@ -2080,7 +2084,7 @@
                                 </td>
                                 <td style="width: 47%; text-align: center; font-size: 14px; border: 1px solid #525252;">';
 
-            if ($i==1) $rezult .= $tabel_summ;
+            if ($i==1) $rezult .= $all_summ;
 
             $rezult .= '
                                 </td>
@@ -2089,8 +2093,8 @@
 
         $rezult .= '
                         </table>
-                        <div style="text-align: left; margin-top: 20px; font-size: 14px; /*font-weight: bold;*/">Итого заработанная сумма за указанный период: <b>'.$tabel_summ.' руб.</b>
-                        ('.mb_strtoupper(mb_substr(num2str($tabel_summ), 0, 1,'UTF-8'),'UTF-8').mb_substr(num2str($tabel_summ), 1, mb_strlen(num2str($tabel_summ),'UTF-8') - 1,'UTF-8').').</div>';
+                        <div style="text-align: left; margin-top: 20px; font-size: 14px; /*font-weight: bold;*/">Итого заработанная сумма за указанный период: <b>'.$all_summ.' руб.</b>
+                        ('.mb_strtoupper(mb_substr(num2str($all_summ), 0, 1,'UTF-8'),'UTF-8').mb_substr(num2str($all_summ), 1, mb_strlen(num2str($all_summ),'UTF-8') - 1,'UTF-8').').</div>';
 
         $rezult .= '
                         <div class="filterBlock" style="width: 650px; margin-top: 100px;">
@@ -2175,7 +2179,7 @@
                                     </td>
                                     <td class="border_tabel_print" style="text-align: right; padding: 3px 3px 3px 0;">
                                         <div class="pay_plus_part1_'.$tabel_id.'" style="display: inline;">
-                                            '.$tabel_summ.'
+                                            '.$all_summ.'
                                         </div> р.
                                     </td>
                                     <td class="border_tabel_print" style="text-align: left; padding: 3px 0 3px 3px;">

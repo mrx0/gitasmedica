@@ -5938,6 +5938,39 @@
 
 	}
 
+    //Пациенты с сумма до указанной за год
+	function Ajax_show_result_stat_client_finance3(){
+
+		let reqData = {
+            //Год
+            orderYear:$("#orderYear").val(),
+            //Сумма
+            orderSumm:$("#orderSumm").val(),
+            //Филиал
+            filial_id:$("#filial").val(),
+		};
+		// console.log(reqData);
+
+		//Запрос к базе и получение лога и вывод
+		$.ajax({
+			url:"ajax_show_result_stat_client_finance3.php",
+			global: false,
+			type: "POST",
+			//dataType: "JSON",
+
+			data:reqData,
+
+			cache: false,
+			beforeSend: function() {
+                $('#qresult').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+			},
+			success:function(res){
+            	$('#qresult').html(res);
+			}
+		});
+
+	}
+
 	$('#showDiv1').click(function () {
 		$('#div1').stop(true, true).slideToggle('slow');
 		$('#div2').slideUp('slow');

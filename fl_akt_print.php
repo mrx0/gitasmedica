@@ -72,6 +72,10 @@
                     if (($report['see_all'] == 1) || $god_mode || ($tabel_j['worker_id'] == $_SESSION['id'])){
 
                         $filials_j = getAllFilials(false, true, true);
+                        //var_dump($filials_j);
+
+                        $orgs_j = getAllOrgs(false, true, true);
+                        //var_dump($orgs_j);
 
                         //Смена/график !!! переделать ! нужно только количество
                         $rezultShed = array();
@@ -374,7 +378,7 @@
                         }
 
                         //Пробуем вывести расчетный лист по табелю для печати
-                        echo tabelAktTemplate ($_GET['tabel_id'], $monthsName[$tabel_j['month']], $tabel_j['year'], $worker_j[0], $filials_j[$filial_id]['name2'], count($rezultShed),
+                        echo tabelAktTemplate ($_GET['tabel_id'], $monthsName[$tabel_j['month']], $tabel_j['year'], $worker_j[0], $filials_j[$filial_id]['name2'], $orgs_j[$filials_j[$filial_id]['org']]['name'], count($rezultShed),
                             /*$tabel_summ*/$tabel_j['paidout'], $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3,
                             $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1,
                             $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm,
