@@ -219,6 +219,14 @@
 //							</li>';
 //                }
                 }
+
+                if (($finances['see_all'] == 1) || $god_mode) {
+                    echo '
+							<li class="cellsBlock" style="margin: 1px;">
+								<a href="stat_client_finance3.php" class="b3 reportElement" style="">Пациенты по сумме ордеров</a>
+							</li>';
+                }
+
                 echo '
 						</ul>';
             }
