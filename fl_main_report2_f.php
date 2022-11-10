@@ -506,6 +506,13 @@
                                                 }
                                             }
                                         }
+                                        if ($type == 6){
+                                            if (!isset($percents_j[$type][$data['percent_cats']])){
+                                                if (!in_array($invoice_id, $error_invoices)) {
+                                                    array_push($error_invoices, $invoice_id);
+                                                }
+                                            }
+                                        }
                                         //if (isset($percents_j[7][$percent_cat_id])) {
                                     } else {
                                         //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
