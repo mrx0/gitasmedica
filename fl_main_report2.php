@@ -1180,12 +1180,13 @@
                     if (!empty($rezult_arr[6])) {
                         if (!empty($rezult_arr[6]['data'])) {
                             arsort($rezult_arr[6]['data']);
+                            var_dump($rezult_arr[6]['data']);
 
                             foreach ($rezult_arr[6]['data'] as $percent_cat_id => $value) {
 
                                 //$pervent_value = ;
 
-                                var_dump($percents_j[6][$percent_cat_id]);
+//                                var_dump($percents_j[6][$percent_cat_id]);
 
                                 echo '
                                 <li class="filterBlock">
