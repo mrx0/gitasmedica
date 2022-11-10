@@ -1185,6 +1185,7 @@
 
                                 //$pervent_value = ;
 
+                                var_dump($percents_j[6][$percent_cat_id]);
 
                                 echo '
                                 <li class="filterBlock">
