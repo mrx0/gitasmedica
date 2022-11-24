@@ -15,7 +15,7 @@
             include_once 'variables.php';
 
 //			$offices_j = SelDataFromDB('spr_filials', '', '');
-            $filials_j = getAllFilials(false, false, true);
+            $filials_j = getAllFilials(false, false, false);
 //            var_dump ( $filials_j);
 
 //            $office_j_arr = array();
