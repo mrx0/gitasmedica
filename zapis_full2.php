@@ -128,7 +128,7 @@
 					$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
 					//var_dump($kabsInFilial_json);
 					
-					if ($kabsInFilial_json != NULL){
+					if ($kabsInFilial_json` != NULL`){
 						$kabsInFilialExist = TRUE;
 						$kabsInFilial = json_decode($kabsInFilial_json, true);
 						//var_dump($kabsInFilial);

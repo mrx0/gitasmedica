@@ -110,6 +110,7 @@
 //            var_dump($subtractions_summ_beznal);
 
             //var_dump($datas['error_invoices']);
+            //var_dump($datas['error_invoices_summ']);
 
             if (!empty($datas['error_invoices'])){
                 echo '<div class="query_neok" style="padding: 10px 4px 2px; margin-left: 10px; width: 50vw;">Наряды с ошибками в категориях:';
@@ -858,7 +859,7 @@
 
                     //!!! Костыль.
                     // Предположительная сумма выручки по стоматологии
-                    $stom_summ_temp = $cashbox_nal + $beznal + $insure_summ - ($temp_solar_nal + $temp_solar_beznal);
+                    $stom_summ_temp = $cashbox_nal + $beznal + $insure_summ - ($temp_solar_nal + $temp_solar_beznal) /*- $datas['error_invoices_summ'][5]*/;
 
                     //Сумма по стоматологии будет разницей:
                     //Вся выручка минус косметология, специалисты, орто/кт, солярий
@@ -952,8 +953,10 @@
                                     //                                var_dump($stom_summ_temp);
                                     //                                var_dump($stom_summ_temp / 100 * $cat_prcnt_temp);
 
-                                    echo '
-                                    <li class="filterBlock">
+                                    //Если категория совпадает с типом; если нет, то и не показываем
+                                    //if (isset($percents_j[5][$percent_cat_id]['name'])) {
+                                        echo '
+                                        <li class="filterBlock">
                                         <div class="cellLeft" style="width: 120px; min-width: 120px;">
                                            <b>' . $percents_j[5][$percent_cat_id]['name'] . '</b>
                                         </div>
@@ -961,19 +964,20 @@
                                             <div style="float:left;">' . number_format($stom_summ_temp / 100 * $cat_prcnt_temp, 0, '.', ' ') . '</div> 
                                             <div style="float:right;">' . number_format($cat_prcnt_temp, 2, '.', '') . '%</div>
                                         </div>';
-                                    echo '
+                                        echo '
                                         <div class="cellRight material_costs" style="display: none !important">';
-                                    if (isset($material_costs[$percent_cat_id])){
-                                        echo $material_costs[$percent_cat_id]['summ'].' / '.number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ').'%';
-                                        $material_costs_summ_5 += $material_costs[$percent_cat_id]['summ'];
-                                        $material_costs_summ_p_5 += $material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp;
-                                    }else{
-                                        echo '0 / 0%';
-                                    }
-                                    echo '
+                                        if (isset($material_costs[$percent_cat_id])) {
+                                            echo $material_costs[$percent_cat_id]['summ'] . ' / ' . number_format(($material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp), 2, '.', ' ') . '%';
+                                            $material_costs_summ_5 += $material_costs[$percent_cat_id]['summ'];
+                                            $material_costs_summ_p_5 += $material_costs[$percent_cat_id]['summ'] * 100 / $stom_summ_temp;
+                                        } else {
+                                            echo '0 / 0%';
+                                        }
+                                        echo '
                                         </div>';
-                                    echo '
-                                    </li>';
+                                        echo '
+                                        </li>';
+                                    //}
                                 } else {
 
                                 }
