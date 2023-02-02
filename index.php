@@ -351,7 +351,7 @@
             ];
 
             $births_arr = $db::getRows($query, $args);
-            var_dump($births_arr);
+//            var_dump($births_arr);
 
             if (!empty($births_arr)){
                 foreach ($births_arr as $birth) {
