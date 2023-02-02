@@ -315,7 +315,7 @@
                 WHERE worker_id = s_w.id
             )
             WHERE
-            s_w.status <> '8'
+            s_w.status <> '8' AND s_w.id <> 1
             AND
             (
                 (
@@ -351,7 +351,7 @@
             ];
 
             $births_arr = $db::getRows($query, $args);
-//            var_dump($births_arr);
+            var_dump($births_arr);
 
             if (!empty($births_arr)){
                 foreach ($births_arr as $birth) {
