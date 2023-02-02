@@ -10,6 +10,8 @@ if ($enter_ok){
 
     if (($finances['see_all'] == 1) || ($finances['see_own'] == 1) || $god_mode){
 
+        include_once('DBWorkPDO.php');
+
         include_once 'DBWork.php';
         include_once 'functions.php';
         include_once 'ffun.php';
@@ -33,6 +35,8 @@ if ($enter_ok){
 
         if ($_GET){
             if (isset($_GET['invoice_id'])){
+
+                $db = new DB();
 
                 //unset($_SESSION['calculate_data']);
 
@@ -325,6 +329,9 @@ if ($enter_ok){
                                             $temp_arr2['work_percent'] = 0;
                                             $temp_arr2['material_percent'] = 0;
                                             $temp_arr2['summ_special'] = 0;
+                                            //Переменная для того, чтоб платить отдельно за позицию (в соответсвии со справочником) и маркер использовать или нет эту сумму
+                                            $temp_arr2['summ_position_special'] = 0;
+                                            $temp_arr2['use_summ_position_special'] = false;
 
 
                                             //Категории по прайсу
@@ -359,6 +366,24 @@ if ($enter_ok){
                                             } else {
                                                 $temp_arr2['manual_price'] = false;
                                             }
+
+
+                                            //Проверим, нет ли позиций прайса, за которые надо отдельно платить
+                                            $args = ['id' => $invoice_ex_j_val['price_id']];
+
+                                            $query = "SELECT `summ_special` FROM `fl_spr_percents_special` WHERE `price_pos_id`=:id LIMIT 1";
+
+                                            $summ_position_special = $db::getRow($query, $args);
+//                                            var_dump($invoice_ex_j_val['price_id']);
+//                                            var_dump($summ_position_special);
+//                                            var_dump(!empty($summ_position_special));
+
+                                            //Если есть
+                                            if (!empty($summ_position_special)){
+                                                $temp_arr2['summ_position_special'] = (int)$summ_position_special['summ_special'];
+                                                $temp_arr2['use_summ_position_special'] = true;
+                                            }
+
 
                                             if ($invoice_j[0]['type'] == 5) {
                                                 if (!isset($temp_arr[$ind])) {
