@@ -18,17 +18,18 @@
         $filials_j = getAllFilials(true, true, true);
         //var_dump($filials_j);
 
+        //Если не администратор 20230203
+        if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7) && ($_SESSION['permissions'] != 13) && ($_SESSION['permissions'] != 14) && ($_SESSION['permissions'] != 15)) {
 
-
-        echo '
+            echo '
             <div id="tabs_w">
                 <ul>';
-        foreach ($filials_j as $filials_j_data) {
-            if ($filials_j_data['id'] != 11) {
-                echo '
-                    <li id="filial_' . $filials_j_data['id'].'">
+            foreach ($filials_j as $filials_j_data) {
+                if ($filials_j_data['id'] != 11) {
+                    echo '
+                    <li id="filial_' . $filials_j_data['id'] . '">
                         <a href="#tabs-' . $filials_j_data['id'] . '">
-                            '.$filials_j_data['name2'].'
+                            ' . $filials_j_data['name2'] . '
                             <div class="notes_count_div">
                                 <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count3" style="display: none;" filial_id="' . $filials_j_data['id'] . '">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
@@ -41,32 +42,32 @@
                             </div>
                         </a>
                     </li>';
+                }
             }
-        }
 
-        echo '
+            echo '
                 </ul>';
 
-        foreach ($filials_j as $filials_j_data) {
-            if ($filials_j_data['id'] != 11) {
-                echo '
-                <div id="tabs-'.$filials_j_data['id'].'">';
-                echo '
+            foreach ($filials_j as $filials_j_data) {
+                if ($filials_j_data['id'] != 11) {
+                    echo '
+                <div id="tabs-' . $filials_j_data['id'] . '">';
+                    echo '
                 <h1>' . $filials_j_data['name'] . '</h1>
-                <div id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_tabels" class="tableTabels" style="background-color: rgba(210, 255, 167, 0.64);">
+                <div id="' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '_tabels" class="tableTabels" style="background-color: rgba(210, 255, 167, 0.64);">
                     <!--<div style="width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);"><img src="img/wait.gif" style="float:left;"><span style="float: right;  font-size: 90%;"> обработка...</span></div>-->
                 </div>
-                <div id="'.$_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'].'_calcs" class="tableDataNPaidCalcs" style="width: 80%; background-color: rgba(251, 170, 170, 0.18);">
+                <div id="' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '_calcs" class="tableDataNPaidCalcs" style="width: 80%; background-color: rgba(251, 170, 170, 0.18);">
                 </div>';
-                echo '
+                    echo '
                 </div>';
+                }
             }
-        }
 
-        echo '
+            echo '
             </div>';
 
-        echo '
+            echo '
 
             <script type="text/javascript">
 
@@ -98,8 +99,8 @@
                             permission: permission,
                             worker: worker,
                             office: office,
-                            month: "'.date("m").'",
-                            year: "'.date("Y").'",
+                            month: "' . date("m") . '",
+                            year: "' . date("Y") . '",
                             own_tabel: false
                         };
                         
@@ -125,8 +126,8 @@
                             permission: permission,
                             worker: worker,
                             office: office,
-                            month: "'.date("m").'",
-                            year: "'.date("Y").'",
+                            month: "' . date("m") . '",
+                            year: "' . date("Y") . '",
                             own_tabel: true
                         };
                         
@@ -135,6 +136,7 @@
                 });
                 
 		    </script>';
+        }
 
 
 	}else{
