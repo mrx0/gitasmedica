@@ -692,7 +692,31 @@
 
                                             //Напишем название
                                             if ($rezult2 != 0) {
-                                                echo $rezult2[0]['name'];
+                                                echo '
+                                                <i>'.$rezult2[0]['code'].'</i> 
+                                                '.$rezult2[0]['name'].' 
+                                                <a href="pricelistitem.php?id='.$rezult2[0]['id'].'" class="ahref" target="_blank" rel="nofollow noopener">';
+
+                                                if ((mb_strlen($rezult2[0]['code_u']) > 0) || (mb_strlen($rezult2[0]['code_nom']) > 0)) {
+                                                    echo '<br>';
+
+                                                    if (mb_strlen($rezult2[0]['code_u']) > 0) {
+                                                        echo ' <span style="background-color: rgba(197, 197, 197, 0.41); /*color: #555; */font-size: 90%;" title="Код услуги">[' . $rezult2[0]['code_u'] . '] </span>';
+                                                    }
+                                                    if (mb_strlen($rezult2[0]['code_nom']) > 0) {
+                                                        echo ' <span style="background-color: rgba(197, 197, 197, 0.41); /*color: #555; */font-size: 90%;" title="Код услуги по номенклатуре">[' . $rezult2[0]['code_nom'] . '] </span>';
+                                                    }
+                                                }else {
+
+                                                    echo '
+                                                    <br>
+                                                    <span style="font-size: 90%; background: rgba(197, 197, 197, 0.41);">
+                                                        [#' . $rezult2[0]['id'] . ']
+                                                    </span>';
+                                                }
+
+                                                echo '
+                                                </a>';
                                             } else {
                                                 echo '?';
                                             }
@@ -771,9 +795,9 @@
                                                         <b>';
 
                                                 //Рассчет цены за позицию
-                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);
+                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special'], $item['summ_position_special'], $item['use_summ_position_special']);
 
-                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special']);
+                                                $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special'], $item['summ_position_special'], $item['use_summ_position_special']);
 
                                                 echo '
                                                         </b>

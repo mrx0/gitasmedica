@@ -497,16 +497,21 @@
 
 
     //Результат расчета от процентов
-    function calculateResult($summ, $koeffW, $koeffM, $SummSpec){
+    function calculateResult($summ, $koeffW, $koeffM, $SummSpec, $summ_position_special = 0, $use_summ_position_special = false){
 
         //$result = 0;
 
-        //Если есть спеццена
-        if ($SummSpec > 0){
-            $result = $SummSpec;
-        //а иначе процент
+        //Если есть спеццена по позиции в прайсе
+        if ($use_summ_position_special){
+            $result = $summ_position_special;
         }else {
-            $result = ($summ - ($summ / 100 * $koeffM)) / 100 * $koeffW;
+            //Если есть спеццена по сотруднику
+            if ($SummSpec > 0) {
+                $result = $SummSpec;
+                //а иначе процент
+            } else {
+                $result = ($summ - ($summ / 100 * $koeffM)) / 100 * $koeffW;
+            }
         }
 
         return number_format($result, 2, '.', '');
@@ -2606,6 +2611,9 @@
                         $work_percent = $items['work_percent'];
                         $material_percent = $items['material_percent'];
                         $summ_special = $items['summ_special'];
+                        //Переменная для того, чтоб платить отдельно за позицию (в соответсвии со справочником) и маркер использовать или нет эту сумму
+                        $summ_position_special = $items['summ_position_special'];
+                        $use_summ_position_special = $items['use_summ_position_special'];
 
                         //Спрятали лишнее телодвижение
                         //
@@ -2661,14 +2669,20 @@
                             //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
 
                             //Сумма одной позиции
-                            $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+                            $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special, $summ_position_special, $use_summ_position_special);
 
                             $calculateCalcSumm += $pos_summ;
 
+                            if ($use_summ_position_special){
+                                $use_summ_position_special_mark = 1;
+                            }else{
+                                $use_summ_position_special_mark = 0;
+                            }
+
                             //Добавляем в базу
-                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`) 
+                            $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`, `summ_position_special`, `use_summ_position_special`) 
                                                 VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}')";
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}', '{$summ_position_special}', '{$use_summ_position_special_mark}')";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
@@ -2713,6 +2727,9 @@
                     $work_percent = $calculate_data['work_percent'];
                     $material_percent = $calculate_data['material_percent'];
                     $summ_special = $calculate_data['summ_special'];
+                    //Переменная для того, чтоб платить отдельно за позицию (в соответсвии со справочником) и маркер использовать или нет эту сумму
+                    $summ_position_special = $items['summ_position_special'];
+                    $use_summ_position_special = $items['use_summ_position_special'];
 
                     $itog_price_add = $itog_price;
 
@@ -2746,15 +2763,22 @@
                         if ($itog_price < 0) $itog_price = 0;
 
                         //Сумма одной позиции
-                        $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special);
+                        $pos_summ = calculateResult($itog_price, $work_percent, $material_percent, $summ_special, $summ_position_special, $use_summ_position_special);
 
-                        //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
                         $calculateCalcSumm += $pos_summ;
 
+                        if ($use_summ_position_special){
+                            $use_summ_position_special_mark = 1;
+                        }else{
+                            $use_summ_position_special_mark = 0;
+                        }
+
+                        //$calculateCalcSumm += calculateResult(round($price), $work_percent, $material_percent);
+
                         //Добавляем в базу
-                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`) 
+                        $query = "INSERT INTO `fl_journal_calculate_ex` (`calculate_id`, `ind`, `price_id`, `inv_pos_id`, `quantity`, `insure`, `insure_approve`, `price`, `guarantee`, `spec_koeff`, `discount`, `percent_cats`, `work_percent`, `material_percent`, `summ`, `summ_special`, `summ_position_special`, `use_summ_position_special`) 
                                                 VALUES (
-                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}')";
+                                                '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}', '{$summ_position_special}', '{$use_summ_position_special_mark}')";
 
                         $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 
