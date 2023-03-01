@@ -401,6 +401,9 @@
             echo '<li><a href="univer.php" >UNIVER<div class="have_new-univer notes_count" style="display: none; top: 0; right: 0; background: red;" title="Есть непрочитанные сообщения"></div></a></li>';
             //echo '<li><a href="" >UNIVER</a></li>';
         }
+        if (($spravka['see_all'] == 1) || ($spravka['see_own'] == 1) || $god_mode){
+            echo '<li><a href="dentalpro_api.php">DP тест</a></li>';
+        }
 
 		//echo '<li><a href="search.php"><i class="fa fa-search"></i></a></li>';
 
