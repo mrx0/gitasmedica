@@ -16857,6 +16857,106 @@
     }
 
 
+    //DP функция получения данных
+    function DPloadZapisData(callback, method, id, day, month, year) {
+        // console.log(arguments)
+        // console.log(day);
 
+        id = id || 0;
+        day = day || new Date().getDate();
+        month = month || new Date().getMonth()+1; //January is 0!;
+        year = year || new Date().getFullYear();
+
+        hideAllErrors();
+
+        if(day<10) {
+            day = '0'+day
+        }
+        if(month<10) {
+            month = '0'+month
+        }
+
+        let link = "dp_api_f.php";
+
+        let reqData = {
+            method: method,
+        };
+
+        //Дополняем данные запроса
+        if (method == 'lm/appointments'){
+            reqData['day'] = day;
+            reqData['month'] = month;
+            reqData['year'] = year;
+        }
+        if ((method == 'i/client') || (method == 'lm/doctors')){
+            reqData['id'] = id;
+        }
+        // console.log('reqData');
+        // console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                // console.log (res);
+                //$('#data').html(res);
+                // console.log (res.data);
+
+                if(res.result == "success") {
+                    callback (res.data);
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    }
+
+    //DP функция для вывода таблицы с посещениями на страницу
+    function DPshowZapisData(zapis_data) {
+        // console.log(arguments)
+        // console.log(day);
+
+        hideAllErrors();
+
+        let link = "dp_api_show_zapis_f.php";
+
+        let reqData = {
+            zapis_data: zapis_data,
+        };
+        //console.log(reqData);
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                // console.log (res);
+                //$('#data').html(res);
+                //console.log (res.data);
+
+                if(res.result == "success") {
+                    $('#data').html(res.data);
+
+                }else{
+                    $('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+    }
 
 
