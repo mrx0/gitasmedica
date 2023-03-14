@@ -68,7 +68,7 @@
                 if (!empty($rezult_arr)) {
 
                     //var_dump($rezult_arr);
-                    echo json_encode(array('result' => 'success', 'data' => $rezult_arr));
+                    echo json_encode(array('result' => 'success', 'data' => $rezult_arr,  'query' => $query));
 
                 }else{
                     echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка! Данных нет.</div>'));

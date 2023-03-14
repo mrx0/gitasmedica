@@ -16908,12 +16908,12 @@
                 // console.log (res);
                 //$('#data').html(res);
                 // console.log (res.data);
+                console.log (res.query);
 
                 if(res.result == "success") {
                     callback (res.data);
                 }else{
                     $('#errror').html(res.data);
-                    //$('#descr').css({'border-color': 'red'});
                 }
             }
         })

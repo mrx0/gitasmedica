@@ -2727,9 +2727,11 @@
                     $work_percent = $calculate_data['work_percent'];
                     $material_percent = $calculate_data['material_percent'];
                     $summ_special = $calculate_data['summ_special'];
-                    //Переменная для того, чтоб платить отдельно за позицию (в соответсвии со справочником) и маркер использовать или нет эту сумму
-                    $summ_position_special = $items['summ_position_special'];
-                    $use_summ_position_special = $items['use_summ_position_special'];
+                    //Переменная для того, чтоб платить отдельно за позицию (в соответствии со справочником) и маркер использовать или нет эту сумму
+                    //if (isset($items['summ_position_special']) && isset($items['use_summ_position_special'])) {
+                        $summ_position_special = $items['summ_position_special'];
+                        $use_summ_position_special = $items['use_summ_position_special'];
+                    //}
 
                     $itog_price_add = $itog_price;
 
