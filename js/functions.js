@@ -16891,8 +16891,8 @@
         if ((method == 'i/client') || (method == 'lm/doctors')){
             reqData['id'] = id;
         }
-        // console.log('reqData');
-        // console.log(reqData);
+        console.log('reqData');
+        console.log(reqData);
 
         $.ajax({
             url: link,
