@@ -27,8 +27,8 @@
                     $time_dp_arr = explode('-', $time_str);
                     $time_dp_start = $time_dp_arr[0];
                     $time_dp_end = $time_dp_arr[1];
-//                    var_dump($time_start);
-//                    var_dump($time_end);
+//                    var_dump($time_dp_start);
+//                    var_dump($time_dp_start);
 
                     //Выясняем разницу в минутах между временами (время работы)
                     $interval = date_diff(date_create($time_dp_start), date_create($time_dp_end));

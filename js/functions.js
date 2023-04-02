@@ -17323,7 +17323,7 @@
         //Работаем с ID записей
         for (const id of ids_arr){
             // let resData = await DPloadZapisData("lm/doctors", id);
-            //console.log(await clientData.data);
+            console.log(id);
             // console.log($('td[client_id|="' + id + '"]').html());
             // console.log($('td[client_id|="' + id + '"]').attr("client_data_" + id));
 
@@ -17337,7 +17337,7 @@
                 year: y,
                 time: $('td[zapis_dp_id|="' + id + '"]').html()
             };
-            //console.log(reqData);
+            // console.log(reqData);
 
             await $.ajax({
                 url: link,
@@ -17351,7 +17351,7 @@
                 },
                 success:function(res){
                     // console.log (res);
-                    $('#zapis_data_status').append(res);
+                    // $('#zapis_data_status').append(res);
                     // $('#zapis_data_status').append(res.data);
                     //$('#data').html(res);
                     //console.log (res.data);
