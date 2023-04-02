@@ -292,7 +292,7 @@
             $selected_fil = $offices_j[0]['name'];
         }else{
             $selected_fil = '<span style="color: rgb(181 170 170); font-style: italic; font-size: 95%;">филиал не выбран</span>';
-            $filial_id_default = 15;
+            $filial_id_default = 16;
         }
 
 

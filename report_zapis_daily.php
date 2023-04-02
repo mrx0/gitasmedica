@@ -40,7 +40,7 @@
                 $filial_id = $_SESSION['filial'];
                 $have_target_filial = true;
             } else {
-                $filial_id = 15;
+                $filial_id = 16;
                 $have_target_filial = true;
             }
 
