@@ -99,6 +99,14 @@
         return sign + ch_first + ch_rest + ch_last;
     }
 
+    //Массив с уникальными значениями
+    function uniq(a) {
+        var seen = {};
+        return a.filter(function(item) {
+            return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+        });
+    }
+
 	//Задаёт цвет в зависимости от заполнения от 0 до 100% данных (от красного к зеленому)
     function Colorize (data, alpha){
 		//console.log(data);
@@ -677,7 +685,7 @@
             if (target.closest('tr').attr('id') !== undefined) {
                 event.preventDefault();
 
-                ind = target.closest('tr').attr('id').split('_')[1];;
+                ind = target.closest('tr').attr('id').split('_')[1];
                 //console.log(ind);
 
             }else{
@@ -717,7 +725,7 @@
             if (target.closest('tr').attr('id') !== undefined) {
                 event.preventDefault();
 
-                ind = target.closest('tr').attr('id').split('_')[1];;
+                ind = target.closest('tr').attr('id').split('_')[1];
                 //console.log(ind);
 
             }else{
@@ -1837,9 +1845,9 @@
 				},
 				success:function(data){
 					$('#errrror').html(data);
-					setTimeout(function () {
-						window.location.replace('client.php?id='+id);
-					}, 100);
+					// setTimeout(function () {
+					// 	window.location.replace('client.php?id='+id);
+					// }, 100);
 				}
 			})
 		}
@@ -14112,6 +14120,52 @@
         window.location.href = "payment_from_alien_add.php?client_id="+$("#new_payer_id").val() + get_data_str;
     }
 
+    //Показать данные пациента, к которому будем всё переносить
+    function checkBeforeMoveAll(){
+
+        let client_id_move_from = $("#id").val();
+        let client_name_move_to = $("#move_to_id").val();
+
+        let link = "check_client_by_name_f.php";
+
+        let reqData = {
+            from_id: client_id_move_from,
+            to_id: client_name_move_to
+        };
+        //console.log(reqData);
+
+        //$('.move_description').css("display", "inline-table");
+
+        $.ajax({
+            url: link,
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+            data: reqData,
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            success:function(res){
+                //console.log(res.rezult_to);
+                // $('#move_from_descr').html(res);
+                // $("#status").html(res);
+
+                if(res.result == "success") {
+                    $('.move_description').css("display", "inline-table");
+                    $("#move_from_descr").html(res.rezult_from);
+                    $("#move_to_descr").html(res.rezult_to);
+
+                    //$('div[client_id_move_from|="' + client_name_move_to + '"]').append(res.data);
+                }else{
+                    //$('#errror').html(res.data);
+                    //$('#descr').css({'border-color': 'red'});
+                }
+            }
+        })
+
+    }
+
     //Изменение пациента, кому выдаем сертификат именной
     function changeCertificateNameMaster(){
         //!!!Получение данных из GET тест
@@ -16860,7 +16914,7 @@
     //!!! Далее про API Dental Pro
 
     //DP функция получения данных
-    async function DPloadZapisData(/*callback, */method, id, day, month, year) {
+    async function DPloadZapisData(method, id, day, month, year) {
         //console.log("Итерация 0. Загружаем данные по записи");
         // console.log(arguments)
         // console.log(day);
@@ -16874,11 +16928,11 @@
 
         hideAllErrors();
 
-        if(day<10) {
-            day = '0'+day
+        if(parseInt(day) < 10) {
+            day = '0' + parseInt(day)
         }
-        if(month<10) {
-            month = '0'+month
+        if(parseInt(month) < 10) {
+            month = '0' + parseInt(month)
         }
 
         let link = "dp_api_f.php";
@@ -16967,7 +17021,8 @@
 
                 if(res.result == "success") {
                     $('#data').html(res.data);
-
+                    //Ставим блокировку страницы через подложку
+                    $('#overlay').show();
                 }else{
                     $('#errror').html(res.data);
                     //$('#descr').css({'border-color': 'red'});
@@ -17147,7 +17202,7 @@
         $("#zapis_data_status_dop").html("Проверяем, есть ли пациенты в базе");
 
         //Работаем с ID записей
-        for (const id of ids_arr){
+        for (const id of uniq(ids_arr)){
             // let resData = await DPloadZapisData("lm/doctors", id);
             //console.log(await clientData.data);
             // console.log($('td[client_id|="' + id + '"]').html());
@@ -17177,9 +17232,12 @@
                     // $('#zapis_data_status').append(res.data);
                     //$('#data').html(res);
                     //console.log (res.data);
+                    // console.log (res.client_acc_id);
 
                     if(res.result == "success") {
                         $('td[client_id|="' + id + '"]').append(res.data);
+
+                        $('td[client_dp_id|="' + id + '"]').attr("client_acc_id", res.client_acc_id)
 
                     }else{
                         //$('#errror').html(res.data);
@@ -17189,17 +17247,143 @@
             })
 
             // //Выводим данные по пациентам
-            // await $('td[client_id|="' + id + '"]').html(resData.data.data.surname + " " + resData.data.data.name + " " + resData.data.data.second_name);
+            // await $('td[client_id|="' + iёd + '"]').html(resData.data.data.surname + " " + resData.data.data.name + " " + resData.data.data.second_name);
+            // await $('td[client_id|="' + id + '"]').attr("client_data_" + id, "" + resData.data.data.birthday + ";" + resData.data.data.mobile_phone);
+        }
+    }
+
+    //Проверка наличия врача в базе Асстом
+    async function DPCheckDocsData(ids_arr){
+        //Итерация 5. Проверяем по ФИО есть ли такой врач в базе
+        // console.log(ids_arr);
+        // console.log(uniq(ids_arr));
+        console.log("Итерация 5. Проверяем по ФИО есть ли такой врач в базе");
+        //$('#zapis_data_status').html('');
+
+        $("#zapis_data_status_dop").html("Проверяем данные по врачам");
+
+        //Работаем с ID записей
+        for (const id of uniq(ids_arr)){
+            // let resData = await DPloadZapisData("lm/doctors", id);
+            //console.log(await clientData.data);
+            // console.log($('td[client_id|="' + id + '"]').html());
+            // console.log($('td[client_id|="' + id + '"]').attr("client_data_" + id));
+
+            let link = "dp_api_check_doc_data_f.php";
+
+            let reqData = {
+                fio: $('td[doctor_id|="' + id + '"]').html()
+            };
+            //console.log(reqData);
+
+            await $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    // console.log (res);
+                    // $('#zapis_data_status').append(res);
+                    // $('#zapis_data_status').append(res.data);
+                    //$('#data').html(res);
+                    //console.log (res.data);
+
+                    if(res.result == "success") {
+                        $('td[doctor_id|="' + id + '"]').append(res.data);
+
+                        $('td[doctor_dp_id|="' + id + '"]').attr("doc_acc_id", res.doc_acc_id)
+                    }else{
+                        //$('#errror').html(res.data);
+                        //$('#descr').css({'border-color': 'red'});
+                    }
+                }
+            })
+
+            // //Выводим данные по пациентам
+            // await $('td[client_id|="' + iёd + '"]').html(resData.data.data.surname + " " + resData.data.data.name + " " + resData.data.data.second_name);
+            // await $('td[client_id|="' + id + '"]').attr("client_data_" + id, "" + resData.data.data.birthday + ";" + resData.data.data.mobile_phone);
+        }
+    }
+
+    //Проверка записи в базе Асстом
+    async function DPCheckZapisData(ids_arr, d, m, y){
+        //Итерация 6. Проверяем по ФИО есть ли такой врач в базе
+        // console.log(ids_arr);
+        // console.log(uniq(ids_arr));
+        console.log("Итерация 6. Проверяем запись пациента в базе");
+        //$('#zapis_data_status').html('');
+
+        $("#zapis_data_status_dop").html("Проверяем данные по записи");
+
+        //Работаем с ID записей
+        for (const id of ids_arr){
+            // let resData = await DPloadZapisData("lm/doctors", id);
+            //console.log(await clientData.data);
+            // console.log($('td[client_id|="' + id + '"]').html());
+            // console.log($('td[client_id|="' + id + '"]').attr("client_data_" + id));
+
+            let link = "dp_api_check_zapis_data_f.php";
+
+            let reqData = {
+                client_id: $('td[zapis_dp_id|="' + id + '"]').attr("client_acc_id"),
+                doctor_id: $('td[zapis_dp_id|="' + id + '"]').attr("doc_acc_id"),
+                day: d,
+                month: m,
+                year: y,
+                time: $('td[zapis_dp_id|="' + id + '"]').html()
+            };
+            //console.log(reqData);
+
+            await $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data: reqData,
+                cache: false,
+                beforeSend: function() {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                success:function(res){
+                    // console.log (res);
+                    $('#zapis_data_status').append(res);
+                    // $('#zapis_data_status').append(res.data);
+                    //$('#data').html(res);
+                    //console.log (res.data);
+
+                    if(res.result == "success") {
+                        $('td[zapis_dp_id|="' + id + '"]').append(res.data);
+
+                        //$('td[doctor_dp_id|="' + id + '"]').attr("doc_acc_id", res.doc_acc_id)
+                    }else{
+                        //$('#errror').html(res.data);
+                        //$('#descr').css({'border-color': 'red'});
+                    }
+                }
+            })
+
+            // //Выводим данные по пациентам
+            // await $('td[client_id|="' + iёd + '"]').html(resData.data.data.surname + " " + resData.data.data.name + " " + resData.data.data.second_name);
             // await $('td[client_id|="' + id + '"]').attr("client_data_" + id, "" + resData.data.data.birthday + ";" + resData.data.data.mobile_phone);
         }
     }
 
 
 
+    //Функция в которой остальные функции выполняются последовательно, поочередно, по порядку, дожидаясь, #ожидание
     async function loadAllDataFromAPI_DP2() {
 
+        let d = $("#iWantThisDate2").val().split('.')[0];
+        let m = $("#iWantThisDate2").val().split('.')[1];
+        let y = $("#iWantThisDate2").val().split('.')[2];
+
         // запрашиваем JSON с данными пользователя
-        let zapisData = await DPloadZapisData("lm/appointments", 0);
+        let zapisData = await DPloadZapisData("lm/appointments", 0, d, m, y);
         // console.log(await zapisData);
         //console.log(typeof($(".zapis_id")));
         // console.log($(".zapis_id"));
@@ -17221,9 +17405,31 @@
 
         await DPCheckClientData2(zapisData.client_ids);
 
+        await DPCheckDocsData(zapisData.doc_ids);
+
+        await DPCheckZapisData(zapisData.zapis_ids, d, m, y);
+
         // ждём N секунд и затем показываем, что всё загружено
         await new Promise((resolve, reject) => setTimeout(resolve, 1000));
-        $("#zapis_data_status").html("<div class=\"query_ok\"><span style=\"font-size: 85%; color: #FF0202; margin-bottom: 5px;\"><i class=\"fa fa-check-circle-o\" aria-hidden=\"true\" style=\"font-size: 170%;\"></i></span>    Все данные загружены.</div>");
+
+        //Убираем блокировку через подложку
+        $('#overlay').hide();
+        //Сортировка таблицы https://mottie.github.io/tablesorter/docs/
+        $("table").tablesorter({
+            //Тема
+            theme : 'blue',
+            //Сразу отсортируем первый столбец по возрастанию
+            sortList : [
+                [1,0]
+            ],
+            headers: {
+                '.npp' : {
+                    //Отмена сортировки столбца /  disable it by setting the property sorter to false
+                    sorter: false
+                }
+            }});
+        //Сообщение о готовности таблицы с данными
+        $("#zapis_data_status").html("<div class='query_ok' style='padding: 12px;'><span style='font-size: 85%; color: #FF0202; margin-bottom: 5px;'><i class='fa fa-check-circle-o' aria-hidden='true' style='font-size: 170%;'></i></span>    Все данные загружены.</div>");
 
     }
 

@@ -13,9 +13,10 @@
             $rezult = '';
             $rezult_arr = array();
 
-            //ID клиентов и врачей
+            //ID клиентов и врачей + id записей
             $client_ids_arr = array();
             $doc_ids_arr = array();
+            $zapis_ids_arr = array();
 
             require 'config_dentalpro_api.php';
             include_once('DBWorkPDO.php');
@@ -124,12 +125,13 @@
                         foreach ($rezult_arr['data'] as $zapis_data){
                             array_push($client_ids_arr, $zapis_data['client_id']);
                             array_push($doc_ids_arr, $zapis_data['doctor_id']);
+                            array_push($zapis_ids_arr, $zapis_data['id']);
                         }
 
                     }
 
 //                    var_dump($rezult_arr['data']);
-                    echo json_encode(array('result' => 'success', 'data' => $rezult_arr,  'query' => $query, 'client_ids' => $client_ids_arr, 'doc_ids' => $doc_ids_arr));
+                    echo json_encode(array('result' => 'success', 'data' => $rezult_arr,  'query' => $query, 'client_ids' => $client_ids_arr, 'doc_ids' => $doc_ids_arr, 'zapis_ids' => $zapis_ids_arr));
 
                 }else{
                     echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка! Данных нет.</div>'));

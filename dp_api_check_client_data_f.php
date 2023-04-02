@@ -13,6 +13,8 @@
             $rezult = '';
             $rezult_arr = array();
 
+            $rezult_client_id = 0;
+
             //ID клиентов и врачей
             $client_ids_arr = array();
             $doc_ids_arr = array();
@@ -67,7 +69,7 @@
 
                 $query = "SELECT * FROM `spr_clients` WHERE (
                   LOWER(`full_name`) RLIKE LOWER('^{$fio_str}')
-                  ) AND `status`<> 9 ORDER BY `full_name` ASC LIMIT 10";
+                  ) LIMIT 10";
 
                 $res = $db::getRows($query, $args);
 
@@ -77,28 +79,34 @@
 
                 if (!empty($res)) {
                     //ФИО найдены
-                    $rezult .= '<span style="color: #36ff00; font-size: 80%;">ФИО найдены. </span>';
+                    $rezult .= '<span style="color: #36ff00; font-size: 90%; font-weight: normal;">ФИО найдены. </span>';
 
                     //Если их больше чем 1
                     if (count($res) > 1){
-                        $rezult .= 'Найдено больше одного пациента с такими ФИО. ';
+                        $rezult .= '<span style="color: #8800ff; font-size: 90%; font-weight: normal;">Найдено больше одного пациента с такими ФИО. </span>';
                         //Проверка всех поочереди на дату рождения и телефон
                         foreach ($res as $item) {
                             if ($item['birthday2'] == $birthday){
-                                $rezult .= '<span style="color: #36ff00; font-size: 80%;">ДР у <a href="client.php?id='.$item['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">одного</a> совпадает. Можно не добавлять. </span>';
+                                $rezult .= '<span style="color: #36ff00; font-size: 90%; font-weight: normal;">ДР у <a href="client.php?id='.$item['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">одного</a> совпадает. Можно не добавлять. </span>';
+
+                                $rezult_client_id = $item['id'];
                             }
                         }
                     }else{
                         //Проверка на дату рождения и телефон
                         if ($res[0]['birthday2'] == $birthday){
-                            $rezult .= '<span style="color: #36ff00; font-size: 80%;">ДР <a href="client.php?id='.$res[0]['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">пациента</a> совпадает. Можно не добавлять. </span>';
+                            $rezult .= '<span style="color: #36ff00; font-size: 90%; font-weight: normal;">ДР <a href="client.php?id='.$res[0]['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">пациента</a> совпадает. Можно не добавлять. </span>';
+
+                            $rezult_client_id = $res[0]['id'];
+                        }else{
+                            $rezult .= '<span style="color: #ff0077; font-size: 90%; font-weight: normal;">ДР не совпадает. Требуется уточнение. </span>';
                         }
                     }
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>'));
+                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'client_acc_id' => $rezult_client_id));
 
                 }else{
-                    $rezult .= '<span style="color: #ff0000;">ФИО НЕ найдены. Необходимо добавить. </span>';
+                    $rezult .= '<span style="color: #ff0000; font-weight: normal;">ФИО не найдены. Необходимо добавить. </span>';
                     echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>'));
                 }
                 //var_dump($rezult);
