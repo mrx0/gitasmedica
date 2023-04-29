@@ -51,7 +51,7 @@
                 }
 
                 //Строка запроса
-                $query = $URL_api . $dopURL_api . '?token=' . $token_api . '&' . 'secret=' . $secret_api . '&' . $query_req_str;
+                $query = $URL_api . $dopURL_api . '?token=' . $token_api . '&' . 'secret=' . $secret_api . '&' . $query_req_str . '&limit=200';
 
 //                //Запрашиваем и получаем данные по API DP
 //                $ch = curl_init();
@@ -86,7 +86,7 @@
 //                        var_dump($rezult_arr['total']);
 //                        var_dump('limit');
 //                        var_dump($rezult_arr['limit']);
-//                        var_dump('page');
+//                        var_dump('page');Показания счётчика солярия/лазеров
 //                        var_dump($rezult_arr['page']);
 //                        var_dump($rezult_arr['data']);
                         if ($rezult_arr['total'] > $rezult_arr['limit']){
