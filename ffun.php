@@ -2729,8 +2729,10 @@
                     $summ_special = $calculate_data['summ_special'];
                     //Переменная для того, чтоб платить отдельно за позицию (в соответствии со справочником) и маркер использовать или нет эту сумму
                     //if (isset($items['summ_position_special']) && isset($items['use_summ_position_special'])) {
-                        $summ_position_special = $items['summ_position_special'];
-                        $use_summ_position_special = $items['use_summ_position_special'];
+//                        $summ_position_special = $items['summ_position_special'];
+//                        $use_summ_position_special = $items['use_summ_position_special'];
+                        $summ_position_special = $calculate_data['summ_position_special'];
+                        $use_summ_position_special = $calculate_data['use_summ_position_special'];
                     //}
 
                     $itog_price_add = $itog_price;
