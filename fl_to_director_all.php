@@ -50,7 +50,7 @@
                 if (isset($_GET['filial'])) {
                     $filial_id = $_GET['filial'];
                 }else{
-                    $filial_id = 15;
+                    $filial_id = 16;
                 }
 
                 if (!$god_mode) {

@@ -45,7 +45,7 @@
                 $filial_id = $_SESSION['filial'];
                 $have_target_filial = true;
             } else {
-                $filial_id = 15;
+                $filial_id = 16;
             }
 
             if (($finances['see_all'] == 1) || $god_mode) {

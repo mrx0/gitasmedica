@@ -37,7 +37,7 @@ $.widget = function( name, base, prototype ) {
 		// proxiedPrototype allows the provided prototype to remain unmodified
 		// so that it can be used as a mixin for multiple widgets (#8876)
 		proxiedPrototype = {},
-		namespace = name.split( "." )[ 0 ];
+		namespace = `name.split( "." )[ 0 ];`
 
 	name = name.split( "." )[ 1 ];
 	fullName = namespace + "-" + name;

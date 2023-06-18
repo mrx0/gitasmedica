@@ -82,8 +82,8 @@ if ($enter_ok){
 
                     $selected_filial = -1;
 
-                    if ($prihod_j[0]['filial_id'] == 15){
-                        $selected_filial = 15;
+                    if ($prihod_j[0]['filial_id'] == 16){
+                        $selected_filial = 16;
                     }
 
                     echo '

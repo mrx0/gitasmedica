@@ -72,7 +72,7 @@
 				if (isset($_SESSION['filial'])){
 					$filial_id = $_SESSION['filial'];
 				}else{
-                    $filial_id = 15;
+                    $filial_id = 16;
 				}
 			}else{
                 $filial_id = $filial_id;

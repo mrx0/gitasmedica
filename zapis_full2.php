@@ -52,7 +52,7 @@
                 if (isset($_SESSION['filial'])){
                     $_GET['filial'] = $_SESSION['filial'];
                 }else{
-                    $_GET['filial'] = 15;
+                    $_GET['filial'] = 16;
                 }
             }
 
@@ -128,7 +128,7 @@
 					$kabsInFilial_json = $kabsInFilial_arr[0][$kabsForDoctor];
 					//var_dump($kabsInFilial_json);
 					
-					if ($kabsInFilial_json != NULL){
+					if ($kabsInFilial_json` != NULL`){
 						$kabsInFilialExist = TRUE;
 						$kabsInFilial = json_decode($kabsInFilial_json, true);
 						//var_dump($kabsInFilial);

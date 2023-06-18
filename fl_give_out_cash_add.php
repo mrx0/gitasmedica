@@ -41,7 +41,7 @@
             if (isset($_SESSION['filial'])) {
                 $current_filial = $_SESSION['filial'];
             } else {
-                $current_filial = 15;
+                $current_filial = 16;
             }
 
             if (($finances['see_all'] == 1) || $god_mode) {

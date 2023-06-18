@@ -6566,6 +6566,32 @@ function showTreeNewPrice2 ($level, $space, $type, $sel_id, $first, $last_level,
 	return $rez_str;
 }
 
+//Функция получения данных из API DP через curl
+function getDataFromAPI_DP($query){
+
+	//Запрашиваем и получаем данные по API DP
+	$ch = curl_init();
+	//var_dump($ch);
+
+	curl_setopt($ch, CURLOPT_URL, $query);
+
+	curl_setopt($ch, CURLOPT_HEADER, FALSE);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+
+	curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+	curl_setopt($ch, CURLOPT_FAILONERROR, TRUE);
+
+	$rezult = curl_exec($ch);
+	//echo 'Ошибка curl: ' . curl_error($ch);
+//	var_dump(gettype($rezult));
+//	var_dump($rezult);
+
+	curl_close($ch);
+
+	return json_decode($rezult, true);
+}
 
 
 

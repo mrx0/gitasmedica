@@ -32,6 +32,8 @@
 
         //Массив с нарядами с ошибками
         $error_invoices = array();
+        //Сумма неверных нарядов
+        $error_invoices_summ = array();
 
         //Соберём все категории процентов (справочник)
         // по типу
@@ -425,58 +427,43 @@
 
                         //Проход по данным наряда (позиции)
                         foreach ($invoice_data as $data) {
-                            //var_dump($data);
-                            //var_dump($data['percent_cats']);
-
-                            //debug
-                            //                                    var_dump(strlen($data['percent_cats']));
-                            //                                    if (strlen($data['percent_cats']) == 0){
-                            //                                        var_dump($invoice_id);
-                            //                                    }
-
-                            //Если не гарантия/не подарок
-                            if (($data['guarantee'] != 1) && ($data['gift'] != 1)) {
-
-                                if (!isset($percents_j[$type][$data['percent_cats']])) {
-                                    if (strlen($data['percent_cats']) > 0) {
-                                        //var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
-                                        $warn_str_percent_cats .= '<a href="invoice.php?id=' . $invoice_id . '" class="ahref button_tiny" style="margin: 0 2px; font-size: 80%;">#' . $invoice_id . '</a>';
-                                    }
-                                }
-
-                                $invoice_summ = $data['invoice_summ'];
-                                $invoice_summins = $data['invoice_summins'];
-                                //var_dump($data['itog_price']);
-
-                                $invoice_summ_pos += $data['itog_price'];
-
-                                //$pervich_status = $data['pervich'];
-
-                                //Если не продолжение работы
-                                //if ($data['pervich'] != 5) {
+                            if ($data['id'] != NULL){
+                                //var_dump($data);
                                 //var_dump($data['percent_cats']);
 
-                                //Дети стоматология
-                                //var_dump(getyeardiff(strtotime($data['birthday']), 0));
-                                if (($type == 5) && (getyeardiff(strtotime($data['birthday']), 0) <= 14)) {
-                                    $child_stom_summ += $data['itog_price'];
-                                    //var_dump($invoice_id);
+                                //debug
+                                //                                    var_dump(strlen($data['percent_cats']));
+                                //                                    if (strlen($data['percent_cats']) == 0){
+                                //                                        var_dump($invoice_id);
+                                //                                    }
 
-                                    //Соберем общие суммы по категориям
-                                    if (!isset($rezult_arr_summ[$type])) {
-                                        $rezult_arr_summ[$type] = 0;
-                                    }
-                                    $rezult_arr_summ[$type] += $data['itog_price'];
+                                //Если не гарантия/не подарок
+                                if (($data['guarantee'] != 1) && ($data['gift'] != 1)) {
 
-                                } else {
-                                    //Костыль для категории 7 (ассистенты)
-                                    //Если не ассистенты
-                                    if (!in_array($data['percent_cats'], [58, 59, 61, 62])) {
-
-                                        if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
-                                            $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
+                                    if (!isset($percents_j[$type][$data['percent_cats']])) {
+                                        if (strlen($data['percent_cats']) > 0) {
+                                            //var_dump($invoice_id.' ['.$type.'] => '.$data['percent_cats']);
+                                            $warn_str_percent_cats .= '<a href="invoice.php?id=' . $invoice_id . '" class="ahref button_tiny" style="margin: 0 2px; font-size: 80%;">#' . $invoice_id . '</a>';
                                         }
-                                        $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+                                    }
+
+                                    $invoice_summ = $data['invoice_summ'];
+                                    $invoice_summins = $data['invoice_summins'];
+                                    //var_dump($data['itog_price']);
+
+                                    $invoice_summ_pos += $data['itog_price'];
+
+                                    //$pervich_status = $data['pervich'];
+
+                                    //Если не продолжение работы
+                                    //if ($data['pervich'] != 5) {
+                                    //var_dump($data['percent_cats']);
+
+                                    //Дети стоматология
+                                    //var_dump(getyeardiff(strtotime($data['birthday']), 0));
+                                    if (($type == 5) && (getyeardiff(strtotime($data['birthday']), 0) <= 14)) {
+                                        $child_stom_summ += $data['itog_price'];
+                                        //var_dump($invoice_id);
 
                                         //Соберем общие суммы по категориям
                                         if (!isset($rezult_arr_summ[$type])) {
@@ -484,44 +471,108 @@
                                         }
                                         $rezult_arr_summ[$type] += $data['itog_price'];
 
-                                        //Если что-то пошло не так
-                                        if ($type == 5){
-                                            if (!isset($percents_j[$type][$data['percent_cats']])){
-                                                if (!in_array($invoice_id, $error_invoices)) {
-                                                    array_push($error_invoices, $invoice_id);
-                                                }
-                                            }
-                                        }
-                                        if ($type == 7){
-                                            if (!isset($percents_j[$type][$data['percent_cats']])){
-                                                if (!in_array($invoice_id, $error_invoices)) {
-                                                    array_push($error_invoices, $invoice_id);
-                                                }
-                                            }
-                                        }
-                                        if ($type == 10){
-                                            if (!isset($percents_j[$type][$data['percent_cats']])){
-                                                if (!in_array($invoice_id, $error_invoices)) {
-                                                    array_push($error_invoices, $invoice_id);
-                                                }
-                                            }
-                                        }
-                                        //if (isset($percents_j[7][$percent_cat_id])) {
                                     } else {
-                                        //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
-                                        if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
-                                            $rezult_arr[7]['data'][$data['percent_cats']] = 0;
-                                        }
-                                        $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
+                                        //Костыль для категории 7 (ассистенты)
+                                        //Если не ассистенты
+                                        if (!in_array($data['percent_cats'], [58, 59, 60, 61, 62])) {
 
-                                        //Соберем общие суммы по категориям
-                                        if (!isset($rezult_arr_summ[7])) {
-                                            $rezult_arr_summ[7] = 0;
+                                            if (!isset($rezult_arr[$type]['data'][$data['percent_cats']])) {
+                                                $rezult_arr[$type]['data'][$data['percent_cats']] = 0;
+                                            }
+                                            $rezult_arr[$type]['data'][$data['percent_cats']] += $data['itog_price'];
+
+                                            //Соберем общие суммы по категориям
+                                            if (!isset($rezult_arr_summ[$type])) {
+                                                $rezult_arr_summ[$type] = 0;
+                                            }
+                                            $rezult_arr_summ[$type] += $data['itog_price'];
+
+                                            //Если что-то пошло не так
+                                            if ($type == 5) {
+                                                if (!isset($percents_j[$type][$data['percent_cats']])) {
+                                                    if (!in_array($invoice_id, $error_invoices)) {
+                                                        array_push($error_invoices, $invoice_id);
+                                                        //var_dump($invoice_id);
+                                                        //var_dump("!!!!!!!!!!!!!!!!!!1");
+                                                    }
+
+                                                    //Сумма неверных нарядов
+                                                    if (!isset($error_invoices_summ[$type])) {
+                                                        $error_invoices_summ[$type] = 0;
+                                                    }
+                                                    $error_invoices_summ[$type] += $data['itog_price'];
+                                                    //var_dump($data['itog_price']);
+
+                                                }
+
+                                            }
+                                            if ($type == 7) {
+                                                if (!isset($percents_j[$type][$data['percent_cats']])) {
+                                                    if (!in_array($invoice_id, $error_invoices)) {
+                                                        array_push($error_invoices, $invoice_id);
+                                                        //var_dump("!!!!!!!!!!!!!!!!!!2");
+                                                    }
+                                                }
+
+                                                //Сумма неверных нарядов
+                                                if (!isset($error_invoices_summ[$type])) {
+                                                    $error_invoices_summ[$type] = 0;
+                                                }
+                                                $error_invoices_summ[$type] += $data['itog_price'];
+                                            }
+                                            if ($type == 10) {
+                                                if (!isset($percents_j[$type][$data['percent_cats']])) {
+                                                    if (!in_array($invoice_id, $error_invoices)) {
+                                                        array_push($error_invoices, $invoice_id);
+                                                        //var_dump("!!!!!!!!!!!!!!!!!!3");
+                                                    }
+                                                }
+
+                                                //Сумма неверных нарядов
+                                                if (!isset($error_invoices_summ[$type])) {
+                                                    $error_invoices_summ[$type] = 0;
+                                                }
+                                                $error_invoices_summ[$type] += $data['itog_price'];
+                                            }
+
+                                            if ($type == 6) {
+                                                if (!isset($percents_j[$type][$data['percent_cats']])) {
+                                                    if (!in_array($invoice_id, $error_invoices)) {
+                                                        array_push($error_invoices, $invoice_id);
+                                                        //var_dump("!!!!!!!!!!!!!!!!!!4");
+                                                    }
+                                                }
+
+                                                //Сумма неверных нарядов
+                                                if (!isset($error_invoices_summ[$type])) {
+                                                    $error_invoices_summ[$type] = 0;
+                                                }
+                                                $error_invoices_summ[$type] += $data['itog_price'];
+                                            }
+                                            //if (isset($percents_j[7][$percent_cat_id])) {
+
+                                            //var_dump($invoice_id);
+//                                        if (!empty($error_invoices)) {
+//                                            var_dump($error_invoices);
+//                                        }
+
+
+                                        } else {
+                                            //Если ассистенты (позиция, которая используется только для ассистов (кт, орто))
+                                            if (!isset($rezult_arr[7]['data'][$data['percent_cats']])) {
+                                                $rezult_arr[7]['data'][$data['percent_cats']] = 0;
+                                            }
+                                            $rezult_arr[7]['data'][$data['percent_cats']] += $data['itog_price'];
+
+                                            //Соберем общие суммы по категориям
+                                            if (!isset($rezult_arr_summ[7])) {
+                                                $rezult_arr_summ[7] = 0;
+                                            }
+                                            $rezult_arr_summ[7] += $data['itog_price'];
                                         }
-                                        $rezult_arr_summ[7] += $data['itog_price'];
                                     }
+                                    //}
                                 }
-                                //}
                             }
                         }
 
@@ -1060,6 +1111,7 @@
             'pervich_summ_arr_new' => $pervich_summ_arr_new,
             'salary_debt_summ' => $salary_debt_summ,
             'error_invoices' => $error_invoices,
+            'error_invoices_summ' => $error_invoices_summ,
         );
 
         return $result;

@@ -212,8 +212,13 @@
                             || $god_mode
                             || ($_SESSION['permissions'] == 3)){
 								echo '
-										<div class="cellName" style="text-align: center; '.$bgColor.'">
-											<div style="display:inline-block;">'.$contacts[$i]['password'].'</div> <div style="color: red; display: inline-block; cursor: pointer;" title="Сменить пароль" onclick=changePass('.$contacts[$i]['id'].')><i class="fa fa-key" aria-hidden="true"></i></div>
+										<div class="cellName" style="text-align: center; '.$bgColor.'">';
+								if ($god_mode) {
+                                    echo '
+											<div style="display:inline-block;">' . $contacts[$i]['password'] . '</div>';
+                                }
+                                echo
+                                            '<div style="color: red; display: inline-block; cursor: pointer;" title="Сменить пароль" onclick=changePass('.$contacts[$i]['id'].')><i class="fa fa-key" aria-hidden="true"></i></div>
 										</div>';
 							}else{
 								echo '

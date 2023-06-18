@@ -56,7 +56,7 @@
                 if (isset($_SESSION['filial'])){
                     $_GET['filial_id'] = $_SESSION['filial'];
                 }else{
-                    $_GET['filial_id'] = 15;
+                    $_GET['filial_id'] = 16;
                 }
             }
 

@@ -63,7 +63,7 @@
             echo '
                                             <select name="SelectFilial" id="SelectFilial">';
 
-            $selected_filial = 15;
+            $selected_filial = 16;
 
             if (isset($_SESSION['filial'])){
                 $selected_filial = $_SESSION['filial'];

@@ -23,7 +23,7 @@
 
             $filials_j = getAllFilials(true, false, false);
             if ($scheduler['see_all'] == 1){
-                $filials_j = getAllFilials(true, false, true);
+                $filials_j = getAllFilials(true, false, false);
             }
             //var_dump($filials_j);
 
@@ -63,7 +63,7 @@
                 if (isset($_SESSION['filial'])){
                     $_GET['filial'] = $_SESSION['filial'];
                 }else{
-                    $_GET['filial'] = 15;
+                    $_GET['filial'] = 16;
                 }
             }
 

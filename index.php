@@ -315,7 +315,7 @@
                 WHERE worker_id = s_w.id
             )
             WHERE
-            s_w.status <> '8'
+            s_w.status <> '8' AND s_w.id <> 1
             AND
             (
                 (

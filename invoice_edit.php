@@ -42,6 +42,8 @@
 
                         $msql_cnnct = ConnectToDB();
 
+                        $invoice_exsist_j = array();
+
                         //Существующие возвраты по этому наряду
                         $refund_exist = false;
 
@@ -438,6 +440,32 @@
                                         echo '
                                             </ul>';
 
+                                        //Все услуги, из всех нарядов для этой записи
+                                        $query = "SELECT jiex.price_id FROM `journal_invoice` ji
+                                        LEFT JOIN `journal_invoice_ex` jiex 
+                                        ON ji.id = jiex.invoice_id
+                                        WHERE ji.zapis_id = '" . $invoice_j['zapis_id'] . "' AND ji.id <> '" . $invoice_j['id'] . "' AND ji.status <> 9;";
+//                                        var_dump($query);
+
+                                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                        $number = mysqli_num_rows($res);
+                                        if ($number != 0) {
+                                            while ($arr = mysqli_fetch_assoc($res)) {
+                                                array_push($invoice_exsist_j, $arr['price_id']);
+                                            }
+                                        } else
+                                            $invoice_exsist_j = 0;
+//                                        var_dump ($invoice_exsist_j);
+
+                                        if ($invoice_exsist_j != 0) {
+                                            echo '<input type="hidden" id="invoice_ex_j" value="';
+                                            echo implode(',', $invoice_exsist_j);
+                                            echo '">';
+                                        }else{
+                                            echo '<input type="hidden" id="invoice_ex_j" value="">';
+                                        }
+
+
                                         echo '
                                             <div id="data">';
 
@@ -454,6 +482,9 @@
                                                 <input type="hidden" id="invoice_type" name="invoice_type" value="' . $invoice_j['type'] . '">
                                                 <input type="hidden" id="cert_name_id" name="cert_name_id" value="'.$cert_name_id.'">
                                                 <input type="hidden" id="cert_name_old_id" name="cert_name_old_id" value="'.$cert_name_id.'">';
+
+
+
 
                                         if ($sheduler_zapis[0]['type'] == 5) {
                                             //Зубки

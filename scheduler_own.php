@@ -248,7 +248,7 @@
 					
 					//!!!!
 					if(isset($_GET['filial'])){
-						if ($_GET['filial'] == 0) $_GET['filial'] = 15;
+						if ($_GET['filial'] == 0) $_GET['filial'] = 16;
 						$selected_fil = $_GET['filial'];
 					}
 					
@@ -257,7 +257,7 @@
 						if (isset($_SESSION['filial'])){
 							$_GET['filial'] = $_SESSION['filial'];
 						}else{
-							$_GET['filial'] = 15;
+							$_GET['filial'] = 16;
 						}
 					}
 						

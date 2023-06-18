@@ -44,7 +44,7 @@
                 if (isset($_SESSION['filial'])){
                     $filial_id = $_SESSION['filial'];
                 } else {
-                    $filial_id = 15;
+                    $filial_id = 16;
                 }
             }
             //var_dump($filial_id);

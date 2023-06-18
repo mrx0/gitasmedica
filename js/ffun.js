@@ -1,6 +1,6 @@
 
 
-    //Ждем ждём ожидание
+    //Ждем ждём ожидание ждать
     //Взято с Хабра https://habrahabr.ru/post/134823/
     //first — первая функция,которую нужно запустить
     wait = function(first){
@@ -1178,7 +1178,7 @@
                                 })
 
                             } else if (res.result == "empty") {
-                                $('#errror').html('<div class="query_neok">Ошибка #61. Нет данных.</div>');
+                                //$('#errror').html('<div class="query_neok">Ошибка #61. Нет данных.</div>');
                             } else {
                                 $('#errror').html(res.data);
                             }
@@ -8439,4 +8439,6 @@
             $("#errror").html('<div class="query_neok">Выберите сотрудника</div>');
         }
     }
+
+
 
