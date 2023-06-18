@@ -8620,35 +8620,57 @@
 		}
 		//console.log(link);
 
-		$.ajax({
-			url: link,
-			global: false,
-			type: "POST",
-			dataType: "JSON",
-			data:
-			{
-				price_id: price_id,
-				client: $("#client").val(),
-				client_insure: $("#client_insure").val(),
-				zapis_id: $("#zapis_id").val(),
-				zapis_insure: $("#zapis_insure").val(),
-				filial: $("#filial").val(),
-				worker: $("#worker").val(),
+        let wasInAnother = false;
+		let rys = true;
 
-                type: type
-			},
-			cache: false,
-			beforeSend: function() {
-				//$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
-			},
-			// действие, при ответе с сервера
-			success: function(res){
-                //console.log(res.data);
 
-                fillInvoiseRez(true);
+        //Проверка был ли элемент в другом наряде
+        //Для теста
+        // $('#invoice_ex_j').val('');
+        // console.log(price_id)
+        // console.log($('#invoice_ex_j').val().split(','))
+        // console.log($('#invoice_ex_j').val().split(',').includes(String(price_id)))
+        if ($('#invoice_ex_j').val().split(',').includes(String(price_id))){
+            // alert('Дубликат');
+            wasInAnother = true;
+            rys = false;
+        }
 
-			}
-		});
+        if (wasInAnother) {
+            rys = confirm("\n\nДанная позиция уже была выписана в другом на ряде\nдля этой записи.\nВсё равно добавить?");
+        }
+
+        if (rys) {
+            $.ajax({
+                url: link,
+                global: false,
+                type: "POST",
+                dataType: "JSON",
+                data:
+                    {
+                        price_id: price_id,
+                        client: $("#client").val(),
+                        client_insure: $("#client_insure").val(),
+                        zapis_id: $("#zapis_id").val(),
+                        zapis_insure: $("#zapis_insure").val(),
+                        filial: $("#filial").val(),
+                        worker: $("#worker").val(),
+
+                        type: type
+                    },
+                cache: false,
+                beforeSend: function () {
+                    //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+                },
+                // действие, при ответе с сервера
+                success: function (res) {
+                    //console.log(res.data);
+
+                    fillInvoiseRez(true);
+
+                }
+            });
+        }
 
 	};
 

@@ -58,6 +58,7 @@
 						
 						$sheduler_zapis = array();
 						$invoice_j = array();
+                        $invoice_ex_j = array();
 
 						$client_j = SelDataFromDB('spr_clients', $_GET['client'], 'user');
 						//var_dump($client_j);
@@ -280,8 +281,6 @@
                                 //var_dump ($invoice_j);
 
                                 if ($invoice_j != 0) {
-                                    //var_dump ($invoice_j);
-
                                     foreach ($invoice_j as $invoice_item) {
                                         echo '
                                             <li class="cellsBlock" style="width: auto;">';
@@ -308,12 +307,39 @@
                                             </li>';
                                     }
 
+
                                 } else {
                                     echo '<li style="font-size: 75%; color: #7D7D7D; margin-bottom: 5px; color: red;">Нет нарядов</li>';
                                 }
 
                                 echo '
                                     </ul>';
+
+                                //Все услуги, из всех нарядов для этой записи
+                                $query = "SELECT jiex.price_id FROM `journal_invoice` ji
+                                        RIGHT JOIN `journal_invoice_ex` jiex 
+                                        ON ji.id = jiex.invoice_id
+                                        WHERE ji.zapis_id = '" . $_GET['id'] . "' AND ji.status <> 9;";
+//                                var_dump ($query);
+                                $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                                $number = mysqli_num_rows($res);
+                                if ($number != 0) {
+                                    while ($arr = mysqli_fetch_assoc($res)) {
+                                        array_push($invoice_ex_j, $arr['price_id']);
+                                    }
+                                } else
+                                    $invoice_ex_j = 0;
+//                                    var_dump ($invoice_ex_j);
+
+                                if ($invoice_ex_j != 0) {
+                                    echo '<input type="hidden" id="invoice_ex_j" value="';
+                                    echo implode(',', $invoice_ex_j);
+                                    echo '">';
+                                }else{
+                                    echo '<input type="hidden" id="invoice_ex_j" value="">';
+                                }
+
+
 
                                 $discount = $_SESSION['invoice_data'][$_GET['client']][$_GET['id']]['discount'];
 
