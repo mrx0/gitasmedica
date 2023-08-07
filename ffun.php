@@ -1437,7 +1437,7 @@
 
     //функция для создания шаблона табеля (оасчетного листа) для печати
     function tabelPrintTemplate ($tabel_id, $month, $year, $worker_j, $filial, $countSmen, $tabel_summ, $tabel_deductions_j2, $tabel_surcharges_j2, $tabel_deductions_j3, $tabel_surcharges_j3, $tabel_deductions_j4, $tabel_surcharges_j1, $tabel_deductions_j5, $emptySmenaCount, $emptySmenaPrice, $emptySmenaSumm, $tabel_paidouts_j1, $tabel_paidouts_j4, $tabel_paidouts_j2, $nightSmenaCount, $nightSmenaPrice, $nightSmenaSumm, $tabel_paidouts_j3, $dop, $tabel_noch, $link){
-        //var_dump($dop);
+        var_dump($dop);
 
         //Часы работы
         $hours_count = '';
