@@ -158,7 +158,7 @@
                                                         } else {
                                                             //Если в итоге общее потрачено будет больше денег на балансе
                                                             if ($debited > $client_balance['summ']) {
-                                                                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">На балансе не хватит средств для оплаты</div>'));
+                                                                echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">На балансе не хватит средств для оплаты</div>', 'data1' => $debited, 'data1' => $client_balance['summ']));
                                                             } else {
 
                                                                 //Ну вроде все норм, поехали всё обновлять/сохранять
