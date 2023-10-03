@@ -150,7 +150,7 @@
                                                     } else {
 
                                                         $payed = $invoice_j[0]['paid'] + $_POST['summ'];
-                                                        $debited = $client_balance['debited'] + $_POST['summ'];
+                                                        $debited = $client_balance['debited'] + $_POST['summ'] + $client_balance['refund'];
 
                                                         //Если в итоге общая суммы оплаты больше чем требуемая
                                                         if ($payed > $invoice_j[0]['summ']) {
