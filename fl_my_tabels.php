@@ -15,21 +15,53 @@
 		//var_dump($_SESSION);
 		//var_dump(date("m"));
 
+//        $filials_j = getAllFilials(true, true, true);
+//        //var_dump($filials_j);
+//
+//        //Если не администратор 20230203 --- 20231109 - вернули доступ
+////        if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7) && ($_SESSION['permissions'] != 13) && ($_SESSION['permissions'] != 14) && ($_SESSION['permissions'] != 15)) {
+//
+//            echo '
+//            <div id="tabs_w">
+//                <ul>';
+//            foreach ($filials_j as $filials_j_data) {
+//                if ($filials_j_data['id'] != 11) {
+//                    echo '
+//                    <li id="filial_' . $filials_j_data['id'] . '">
+//                        <a href="#tabs-' . $filials_j_data['id'] . '">
+//                            ' . $filials_j_data['name2'] . '
+//                            <div class="notes_count_div">
+//                                <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count3" style="display: none;" filial_id="' . $filials_j_data['id'] . '">
+//                                    <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
+//                                </div>
+//
+//                                <div id="tabs_notes_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count2" style="display: none;" filial_id="' . $filials_j_data['id'] . '">
+//                                    <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
+//                                </div>
+//
+//                            </div>
+//                        </a>
+//                    </li>';
+//                }
+////            }
+//
+//            echo '
+//                </ul>';
+
         $filials_j = getAllFilials(true, true, true);
         //var_dump($filials_j);
 
-        //Если не администратор 20230203 --- 20231109 - вернули доступ
-//        if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7) && ($_SESSION['permissions'] != 13) && ($_SESSION['permissions'] != 14) && ($_SESSION['permissions'] != 15)) {
 
-            echo '
+
+        echo '
             <div id="tabs_w">
                 <ul>';
-            foreach ($filials_j as $filials_j_data) {
-                if ($filials_j_data['id'] != 11) {
-                    echo '
-                    <li id="filial_' . $filials_j_data['id'] . '">
+        foreach ($filials_j as $filials_j_data) {
+            if ($filials_j_data['id'] != 11) {
+                echo '
+                    <li id="filial_' . $filials_j_data['id'].'">
                         <a href="#tabs-' . $filials_j_data['id'] . '">
-                            ' . $filials_j_data['name2'] . '
+                            '.$filials_j_data['name2'].'
                             <div class="notes_count_div">
                                 <div id="tabs_notes2_' . $_SESSION['permissions'] . '_' . $_SESSION['id'] . '_' . $filials_j_data['id'] . '" class="notes_count3" style="display: none;" filial_id="' . $filials_j_data['id'] . '">
                                     <i class="fa fa-exclamation-circle" aria-hidden="true" title=""></i>
@@ -42,10 +74,10 @@
                             </div>
                         </a>
                     </li>';
-                }
-//            }
+            }
+        }
 
-            echo '
+        echo '
                 </ul>';
 
             foreach ($filials_j as $filials_j_data) {
