@@ -18,8 +18,8 @@
         $filials_j = getAllFilials(true, true, true);
         //var_dump($filials_j);
 
-        //Если не администратор 20230203
-        if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7) && ($_SESSION['permissions'] != 13) && ($_SESSION['permissions'] != 14) && ($_SESSION['permissions'] != 15)) {
+        //Если не администратор 20230203 --- 20231109 - вернули доступ
+//        if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7) && ($_SESSION['permissions'] != 13) && ($_SESSION['permissions'] != 14) && ($_SESSION['permissions'] != 15)) {
 
             echo '
             <div id="tabs_w">
@@ -43,7 +43,7 @@
                         </a>
                     </li>';
                 }
-            }
+//            }
 
             echo '
                 </ul>';

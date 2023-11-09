@@ -239,11 +239,11 @@
 			}
 
             //if (($_SESSION['permissions'] == 5) || ($_SESSION['permissions'] == 6)) {
-            //Если не администратор 20230203
-            if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7) && ($_SESSION['permissions'] != 13) && ($_SESSION['permissions'] != 14) && ($_SESSION['permissions'] != 15)) {
+            //Если не администратор 20230203 --- 20231109 - вернули доступ
+//            if (($_SESSION['permissions'] != 4) && ($_SESSION['permissions'] != 7) && ($_SESSION['permissions'] != 13) && ($_SESSION['permissions'] != 14) && ($_SESSION['permissions'] != 15)) {
                 echo '
                         <a href="fl_my_tabels.php" class="b">Табели</a>';
-            }
+//            }
 
 			echo '
                         <div id="status_notes">';
