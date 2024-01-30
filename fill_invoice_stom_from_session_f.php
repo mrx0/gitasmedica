@@ -221,8 +221,15 @@
 								}
 								
 								if ($rezult2 != 0){
-									$request .= $rezult2[0]['name'];
-									
+									$request .= $rezult2[0]['name']."";
+
+									if ($rezult2[0]['consumable'] == 1){
+                                        $consumable = true;
+                                        $request .= '<br><span style="background: red; color: #FFF; font-size: 9px; padding: 1px 5px;"><i>Расход на материалы</i></span>';
+                                    }else{
+                                        $consumable = false;
+                                    }
+
 									//Узнать цену
                                     //переменная для цены
                                     $price['price'] = 0;

@@ -3091,6 +3091,7 @@
 
             pricecode_u: $("#pricecode_u").val(),
             pricecode_nom: $("#pricecode_nom").val(),
+            consumable_value: consumable_value,
 
             price: $("#price").val(),
             price2: $("#price2").val(),
@@ -3222,6 +3223,7 @@
 
             pricelistitemcode_u: $("#pricelistitemcode_u").val(),
             pricelistitemcode_nom: $("#pricelistitemcode_nom").val(),
+            consumable_value: consumable_value,
 
             group: $("#group").val(),
             category_id: $("#category_id").val(),

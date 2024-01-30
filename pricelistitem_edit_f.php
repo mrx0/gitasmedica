@@ -26,6 +26,7 @@
 				$codemkb = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricelistitemcodemkb']))));
                 $code_u = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricelistitemcode_u']))));
                 $code_nom = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricelistitemcode_nom']))));
+                $consumable_value = $_POST['consumable_value'];
 
 				//Проверяем есть ли такая услуга
 				$rezult = SelDataFromDB('spr_pricelist_template', $name, 'name');
@@ -39,7 +40,7 @@
 						</div>';
 				}else{*/
 
-					WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $code_u, $code_nom, $_POST['category_id'], $_POST['id'], $_SESSION['id']);
+					WriteToDB_UpdatePriceItem ($name, $code, $codemkb, $code_u, $code_nom, $consumable_value, $_POST['category_id'], $_POST['id'], $_SESSION['id']);
 
 					if (isset($_POST['group'])){
 						if ($_POST['group'] != 0){

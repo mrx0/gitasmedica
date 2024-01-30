@@ -92,6 +92,15 @@
 									<label id="pricecode_nom_error" class="error"></label>
 								</div>
 							</div>
+
+                            <div class="cellsBlock2">
+								<div class="cellLeft">Расходный материал</div>
+								<div class="cellRight">
+									<input id="consumable" name="consumable" value="0" type="radio" checked> Нет
+									<input id="consumable" name="consumable" value="1" type="radio"> Да
+									<label id="consumable_error" class="error"></label>
+								</div>
+							</div>
 							
                             <div class="cellsBlock2">
                                 <div class="cellLeft">Категория</div>
@@ -104,9 +113,9 @@
                 }
             }
             echo '
-                                            </select>
-                                        </div>
-                                    </div>
+                                    </select>
+                                </div>
+                            </div>
 							<div class="cellsBlock2">
 								<div class="cellLeft">
 								    Цена
@@ -166,7 +175,14 @@
 				
 			echo '
 					</div>
-				</div>';
+				</div>
+				
+                <script type="text/javascript">
+					consumable_value = 0;
+					$("input[name=consumable]").change(function() {
+						consumable_value = $("input[name=consumable]:checked").val();
+					});
+				</script>';
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';
 		}

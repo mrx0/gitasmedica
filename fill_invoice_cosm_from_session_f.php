@@ -134,6 +134,7 @@
 								}else{
 									$rezult2 = 0;
 								}
+
 								
 								if ($rezult2 != 0){
 									$request .= $rezult2[0]['name'];
