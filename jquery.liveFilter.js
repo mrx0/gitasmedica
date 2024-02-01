@@ -38,7 +38,7 @@
 			var containsNot = el.not(contains);
 			if (options.filterChildSelector){
 				contains = contains.parents(filterEl);
-				containsNot = containsNot.parents(filterEl).hide();
+				containsNot = containsNot.parents(filterEl);
 			}
 			
 			options.before.call(this, contains, containsNot);
