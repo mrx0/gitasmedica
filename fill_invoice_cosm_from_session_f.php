@@ -134,9 +134,18 @@
 								}else{
 									$rezult2 = 0;
 								}
+
 								
 								if ($rezult2 != 0){
 									$request .= $rezult2[0]['name'];
+
+                                    //Пока закомментируем
+                                    if ($rezult2[0]['consumable'] > 0){
+                                        $consumable = true;
+                                        $request .= '<br><span style="background: #f3f3f3; color: #3f3f3f; font-size: 9px; padding: 1px 5px;"><i>Материалы: '.$rezult2[0]['consumable'].' руб.</i></span>';
+                                    }else{
+                                        $consumable = false;
+                                    }
 
                                     //Узнать цену
                                     //переменная для цены

@@ -2615,6 +2615,18 @@
                         $summ_position_special = $items['summ_position_special'];
                         $use_summ_position_special = $items['use_summ_position_special'];
 
+                        // Затраты на материалы 2024
+                        $query = "SELECT consumable FROM `spr_pricelist_template` WHERE id = '".$price_id."';";
+                        $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
+                        $number = mysqli_num_rows($res);
+                        if ($number != 0) {
+                            while ($arr = mysqli_fetch_assoc($res)) {
+                                $consumable = $arr['consumable'];
+                            }
+                        } else {
+                            $consumable = 0;
+                        }
+
                         //Спрятали лишнее телодвижение
                         //
                         /*if ($itog_price == 0){
@@ -2656,6 +2668,9 @@
                             //$calculateInvSumm +=  round($price);
                             $calculateInvSumm += $itog_price;
 
+                            // Вычитаем заложенный расход на материал
+                            $itog_price = $itog_price - $consumable;
+
                             if (!empty($mat_cons_j_ex['data'])) {
                                 if (isset($mat_cons_j_ex['data'][$pos_id])) {
                                     $itog_price = $itog_price - $mat_cons_j_ex['data'][$pos_id];
@@ -2685,7 +2700,6 @@
                                                 '{$mysql_insert_id}', '{$ind}', '{$price_id}', '{$pos_id}', '{$quantity}', '{$insure}', '{$insure_approve}', '{$itog_price_add}', '{$guarantee}', '{$spec_koeff}', '{$discount}', '{$percent_cats}', '{$work_percent}', '{$material_percent}', '{$pos_summ}', '{$summ_special}', '{$summ_position_special}', '{$use_summ_position_special_mark}')";
 
                             $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
-
 
                         }
                     }

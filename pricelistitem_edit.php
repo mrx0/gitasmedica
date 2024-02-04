@@ -80,7 +80,13 @@
                                             <label id="pricelistitemcode_nom_error" class="error"></label>
                                         </div>
                                     </div>
-        
+                                    <div class="cellsBlock2">
+										<div class="cellLeft">Затраты на материал</div>
+										<div class="cellRight">
+                                            <input type="text" name="consumable" id="consumable" value="'.$items_j[0]['consumable'].'"> руб.
+											<label id="consumable_error" class="error"></label>
+										</div>
+									</div>
                                     <div class="cellsBlock2">
                                         <div class="cellLeft">Категория</div>
                                         <div class="cellRight">
@@ -124,7 +130,18 @@
 									<input type="button" class="b" value="Применить" onclick="Ajax_edit_pricelistitem('.$_GET['id'].', '.$_SESSION['id'].')">
 								</form>
 							</div>
-						</div>';
+						</div>
+						
+						
+                        <!--<script type="text/javascript">
+                            consumable_value = '.$items_j[0]['consumable'].';
+                            $("input[name=consumable]").change(function() {
+                                consumable_value = $("input[name=consumable]:checked").val();
+                            });
+                        </script>-->
+						
+						
+						';
 				}else{
 					echo '<h1>Что-то пошло не так</h1><a href="index.php">Вернуться на главную</a>';
 				}

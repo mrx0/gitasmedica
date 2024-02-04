@@ -79,7 +79,7 @@ if ($enter_ok){
 							<div id="status">
 								<header>
 
-									<h2>Добавить расход на материалы для <a href="invoice.php?id='.$_GET['invoice_id'].'" class="ahref">Наряда #'.$_GET['invoice_id'].'</a>';
+									<h2>Добавить расходы на материалы для <a href="invoice.php?id='.$_GET['invoice_id'].'" class="ahref">Наряда #'.$_GET['invoice_id'].'</a>';
 
 
                         echo '			
@@ -337,7 +337,7 @@ if ($enter_ok){
                                                         </div>
                                                         
                                                         <div class="cellText2" style="font-size: 100%; text-align: center; width: 220px; min-width: 220px; max-width: 220px;">
-                                                            <i><b>Наименование</b></i>
+                                                            <i><b>Расходы в руб.</b></i>
                                                         </div>
                                                         
                                                     </div>';
@@ -394,6 +394,13 @@ if ($enter_ok){
                                             //echo $item['id'].' -> '.$rezult2[0]['name'];
                                             echo $rezult2[0]['name'];
 
+                                            if ($rezult2[0]['consumable'] > 0){
+                                                $consumable = true;
+                                                echo  '<br><span style="background: red; color: white; font-size: 9px; padding: 1px 5px;"><i>Затраты на материал: '.$rezult2[0]['consumable'].' руб.</i></span>';
+                                            }else{
+                                                $consumable = false;
+                                            }
+
                                         } else {
                                             echo '?';
                                         }
@@ -411,6 +418,7 @@ if ($enter_ok){
 
                                         if (($item['itog_price'] != 0) && ($price != 0)) {
 
+                                            // $stoim_item = $item['itog_price'] - $rezult2[0]['consumable'];
                                             $stoim_item = $item['itog_price'];
 
                                         } else {

@@ -130,6 +130,19 @@
                                     </div>
                                     <div class="cellRight">'.$rezult[0]['code_nom'].'</div>
                                 </div>';
+
+                    echo '
+                                <div class="cellsBlock2" style="margin-bottom: 5px;">
+                                    <div class="cellLeft" style="position: relative;">
+                                        Затраты на материал
+                                    </div>
+                                    <div class="cellRight">';
+
+                    echo $rezult[0]['consumable'] . ' руб.';
+                    echo '
+                                    </div>
+                                </div>';
+
                     echo '
                                 <div class="cellsBlock2">
                                     <div class="cellLeft">Категория</div>

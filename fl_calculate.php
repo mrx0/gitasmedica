@@ -689,6 +689,7 @@
                                             } else {
                                                 $rezult2 = 0;
                                             }
+                                            //var_dump($rezult2);
 
                                             //Напишем название
                                             if ($rezult2 != 0) {
@@ -759,15 +760,15 @@
                                                         <i><b>';
                                                 if (!empty($mat_cons_j_ex['data'])) {
                                                     if (isset($mat_cons_j_ex['data'][$item['inv_pos_id']])) {
-                                                        echo '<span style="color: red;">' . -$mat_cons_j_ex['data'][$item['inv_pos_id']] . '</span>';
+                                                        echo '<span style="color: red;">' . -($rezult2[0]['consumable'] + $mat_cons_j_ex['data'][$item['inv_pos_id']]) . '</span>';
 
-                                                        $stoim_item = $stoim_item - $mat_cons_j_ex['data'][$item['inv_pos_id']];
+                                                        $stoim_item = $stoim_item - $rezult2[0]['consumable'] - $mat_cons_j_ex['data'][$item['inv_pos_id']];
 
                                                     } else {
-                                                        echo 0;
+                                                        echo $rezult2[0]['consumable'];
                                                     }
                                                 } else {
-                                                    echo 0;
+                                                    echo $rezult2[0]['consumable'];
                                                 }
                                                 echo '
                                                         </b></i>
@@ -795,7 +796,7 @@
                                                         <b>';
 
                                                 //Рассчет цены за позицию
-                                                echo calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special'], $item['summ_position_special'], $item['use_summ_position_special']);
+                                                echo calculateResult($stoim_item - $rezult2[0]['consumable'], $item['work_percent'], $item['material_percent'], $item['summ_special'], $item['summ_position_special'], $item['use_summ_position_special']);
 
                                                 $summ += calculateResult($stoim_item, $item['work_percent'], $item['material_percent'], $item['summ_special'], $item['summ_position_special'], $item['use_summ_position_special']);
 
