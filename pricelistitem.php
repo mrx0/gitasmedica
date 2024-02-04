@@ -134,14 +134,11 @@
                     echo '
                                 <div class="cellsBlock2" style="margin-bottom: 5px;">
                                     <div class="cellLeft" style="position: relative;">
-                                        Расходный материал
+                                        Затраты на материал
                                     </div>
                                     <div class="cellRight">';
-                    if ($rezult[0]['consumable'] == 1)
-                        echo 'Да';
-                    else
-                        echo 'Нет';
 
+                    echo $rezult[0]['consumable'] . ' руб.';
                     echo '
                                     </div>
                                 </div>';

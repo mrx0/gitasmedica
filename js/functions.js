@@ -3091,7 +3091,7 @@
 
             pricecode_u: $("#pricecode_u").val(),
             pricecode_nom: $("#pricecode_nom").val(),
-            consumable_value: consumable_value,
+            consumable: $("#consumable").val(),
 
             price: $("#price").val(),
             price2: $("#price2").val(),
@@ -3223,7 +3223,7 @@
 
             pricelistitemcode_u: $("#pricelistitemcode_u").val(),
             pricelistitemcode_nom: $("#pricelistitemcode_nom").val(),
-            consumable_value: consumable_value,
+            consumable: $("#consumable").val(),
 
             group: $("#group").val(),
             category_id: $("#category_id").val(),
@@ -10014,15 +10014,16 @@
 
 		var link = "fl_calculate_add_f.php";
 
-		if (mode == 'edit'){
-			link = "fl_calculate_edit_f.php";
-            //calculate_id = $("#invoice_id").val();
-		}
-
-		if (mode == 'reset'){
-			link = "fl_calculate_reset_f.php";
-            //calculate_id = $("#invoice_id").val();
-		}
+		//Не используем
+		// if (mode == 'edit'){
+		// 	link = "fl_calculate_edit_f.php";
+        //     //calculate_id = $("#invoice_id").val();
+		// }
+        //
+		// if (mode == 'reset'){
+		// 	link = "fl_calculate_reset_f.php";
+        //     //calculate_id = $("#invoice_id").val();
+		// }
 
 		var invoice_type = $("#invoice_type").val();
 		//console.log (invoice_type);

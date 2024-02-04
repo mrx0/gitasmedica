@@ -81,13 +81,12 @@
                                         </div>
                                     </div>
                                     <div class="cellsBlock2">
-										<div class="cellLeft">Расходный материал</div>
+										<div class="cellLeft">Затраты на материал</div>
 										<div class="cellRight">
-											<input id="consumable" name="consumable" value="0" ', $items_j[0]['consumable'] == 0 ? 'checked': '',' type="radio"> Нет
-											<input id="consumable" name="consumable" value="1" ', $items_j[0]['consumable'] == 1 ? 'checked': '',' type="radio"> Да
+                                            <input type="text" name="consumable" id="consumable" value="'.$items_j[0]['consumable'].'"> руб.
 											<label id="consumable_error" class="error"></label>
 										</div>
-									</div
+									</div>
                                     <div class="cellsBlock2">
                                         <div class="cellLeft">Категория</div>
                                         <div class="cellRight">
@@ -134,12 +133,12 @@
 						</div>
 						
 						
-                        <script type="text/javascript">
+                        <!--<script type="text/javascript">
                             consumable_value = '.$items_j[0]['consumable'].';
                             $("input[name=consumable]").change(function() {
                                 consumable_value = $("input[name=consumable]:checked").val();
                             });
-                        </script>
+                        </script>-->
 						
 						
 						';

@@ -26,7 +26,7 @@
 				$pricecodemkb = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecodemkb']))));
 				$pricecode_u = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecode_u']))));
 				$pricecode_nom = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['pricecode_nom']))));
-                $consumable_value = $_POST['consumable_value'];
+                $consumable_value = $_POST['consumable'];
 
 				//Проверяем есть ли такая услуга
 				$rezult = SelDataFromDB('spr_pricelist_template', addslashes($name), 'name');
