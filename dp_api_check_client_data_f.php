@@ -155,6 +155,7 @@
 
 
                      }
+                    $rezult .= "<div class='query_ok' style='padding: 8px;'>Пациент добавлен в Акк.</div>";
 
                     echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
