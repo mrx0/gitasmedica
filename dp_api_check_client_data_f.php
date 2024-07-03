@@ -29,7 +29,7 @@
             }else {
 
                 $fio_post = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['fio']))));
-                $temp_data_fio = explode(' ', $fio_post);
+                $temp_data_fio = explode(' ', str_replace('*', '', $fio_post));
                 $f = $temp_data_fio[0];
                 $i = $temp_data_fio[1];
                 $o = $temp_data_fio[2];
@@ -158,7 +158,7 @@
                              $c_data['inn'],  $c_data['passport_number'], '', '', $passportvidandata, $c_data['passport_who'],
                              $c_data['city'].' ул. '.$c_data['street'].' д.'.$c_data['building'].' кв.'.$c_data['apt'], '', '', 0, 0);
 
-                         // Добавим пациенту id из DP
+                         // Добавим пациенту по id из DP ссылку на DP
                          $db = new DB();
 
                          $create_time = date('Y-m-d H:i:s', time());
