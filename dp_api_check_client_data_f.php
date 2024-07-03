@@ -108,7 +108,7 @@
                 }else{
                     $rezult .= '<span style="color: #ff0000; font-weight: normal;">ФИО не найдены. Необходимо добавить. </span>';
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_acc_id' => $rezult_client_id));
+                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $_POST['client_id']));
                 }
                 //var_dump($rezult);
 

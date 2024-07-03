@@ -17269,7 +17269,7 @@
                         //Пробуем сразу добавить
                         //Еще раз получим данные пациента из DP по client_id
                         console.log (res.exist);
-                        console.log (res.client_acc_id);
+                        console.log (res.client_dp_id);
 
                     }else{
                         //$('#errror').html(res.data);
