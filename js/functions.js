@@ -17268,7 +17268,7 @@
 
                         //Пробуем сразу добавить
                         //Еще раз получим данные пациента из DP по client_id
-                        if (res.exist) {
+                        if (res.exist == 'False') {
                             console.log(res.exist);
                             console.log(res.client_dp_id);
                         }
