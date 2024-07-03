@@ -17236,6 +17236,7 @@
             let link = "dp_api_check_client_data_f.php";
 
             let reqData = {
+                client_id: id,
                 fio: $('td[client_id|="' + id + '"]').html(),
                 birth_phone: $('td[client_id|="' + id + '"]').attr("client_data_" + id)
             };
@@ -17263,6 +17264,12 @@
                         $('td[client_id|="' + id + '"]').append(res.data);
 
                         $('td[client_dp_id|="' + id + '"]').attr("client_acc_id", res.client_acc_id)
+
+
+                        //Пробуем сразу добавить
+                        //Еще раз получим данные пациента из DP по client_id
+                        console.log (res.exist);
+                        console.log (res.client_acc_id);
 
                     }else{
                         //$('#errror').html(res.data);
@@ -17454,7 +17461,7 @@
                 }
             }});
         //Сообщение о готовности таблицы с данными
-        $("#zapis_data_status").html("<div class='query_ok' style='padding: 12px;'><span style='font-size: 85%; color: #FF0202; margin-bottom: 5px;'><i class='fa fa-check-circle-o' aria-hidden='true' style='font-size: 170%;'></i></span>    Все данные загружены.</div>");
+        $("#zapis_data_status").html("<div class='query_ok' style='padding: 12px;'><span style='font-size: 85%; color: #ff0202; margin-bottom: 5px;'><i class='fa fa-check-circle-o' aria-hidden='true' style='font-size: 170%;'></i></span>    Все данные загружены.</div>");
 
     }
 

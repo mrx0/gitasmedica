@@ -22,7 +22,7 @@
             include_once('DBWorkPDO.php');
             include_once 'functions.php';
 
-            if (!isset($_POST['fio']) || !isset($_POST['birth_phone'])){
+            if (!isset($_POST['client_id']) || !isset($_POST['fio']) || !isset($_POST['birth_phone'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
 
@@ -103,11 +103,12 @@
                         }
                     }
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'client_acc_id' => $rezult_client_id));
+                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'True', 'client_acc_id' => $rezult_client_id));
 
                 }else{
                     $rezult .= '<span style="color: #ff0000; font-weight: normal;">ФИО не найдены. Необходимо добавить. </span>';
-                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>'));
+
+                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_acc_id' => $rezult_client_id));
                 }
                 //var_dump($rezult);
 
