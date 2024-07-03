@@ -124,7 +124,7 @@
                          $card = '';
 
                          if (!empty($c_data['cardNumbers'])){
-                             foreach ($c_data['card'] as $crd){
+                             foreach ($c_data['cardNumbers'] as $crd){
                                  if ($crd != 'null'){
                                      $card .= $crd.',';
                                  }
