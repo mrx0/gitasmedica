@@ -144,18 +144,23 @@
                              $sex = 1;
                          }
 
+                         if ($c_data['passport_when'] != 'null') {
+                             $passportvidandata  = explode('-', $c_data['passport_when'])[2].'.'.explode('-', $c_data['passport_when'])[1].'.'.explode('-', $c_data['passport_when'])[0]
+                         }else{
+                             $passportvidandata = '';
+                         }
 
                          $new_client = WriteClientToDB_Edit ($_SESSION['id'], $name, $full_name,
                              firspUpperCase(trim($c_data['surname'])), firspUpperCase(trim($c_data['name'])), firspUpperCase(trim($c_data['second_name'])),
                              firspUpperCase(trim($c_data['parent_surname'])), firspUpperCase(trim($c_data['parent_name'])), firspUpperCase(trim($c_data['parent_secondname'])),
                              'из DentalPro', $card, '', '', $birthday, $birthday2, $sex,
                              $c_data['mobile_phone'], $c_data['phone'], '', '', $c_data['email'],
-                             $c_data['inn'],  $c_data['passport_number'], '', '', explode('-', $c_data['passport_when'])[2].'.'.explode('-', $c_data['passport_when'])[1].'.'.explode('-', $c_data['passport_when'])[0], $c_data['passport_who'],
+                             $c_data['inn'],  $c_data['passport_number'], '', '', $passportvidandata, $c_data['passport_who'],
                              $c_data['city'].' ул. '.$c_data['street'].' д.'.$c_data['building'].' кв.'.$c_data['apt'], '', '', 0, 0);
 
 
                      }
-                    $rezult .= "<div class='query_ok' style='padding: 8px;'>Пациент добавлен в Акк.</div>";
+                    $rezult .= "<div class='query_ok' style='width: auto; padding: 1px;'>Пациент добавлен в Акк.</div>";
 
                     echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
