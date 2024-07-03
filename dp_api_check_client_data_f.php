@@ -176,7 +176,7 @@
 
 
                      }
-                    $rezult .= "<div class='query_ok' style='width: auto; padding: 1px;'>Пациент добавлен в Акк.</div>";
+                    $rezult .= "<div class='query_ok' style='width: auto; padding: 1px;'>Пациент <a href='client.php?id=".$new_client."' class='ahref' target='_blank' rel='nofollow noopener'>добавлен</a> в Акк.</div>";
 
                     echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
