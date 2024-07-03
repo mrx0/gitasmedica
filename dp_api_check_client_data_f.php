@@ -121,7 +121,7 @@
 
 
                         }else{
-                            $rezult .= '<span style="color: #ff0077; font-size: 90%; font-weight: normal;">ДР не совпадает. Требуется уточнение. </span>';
+                            $rezult .= '<span style="color: #ff0077; font-size: 90%; font-weight: normal;">ДР не совпадает. Требуется уточнение.<br><a href="client.php?id='.$res[0]['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">Пациент</a></span>';
                         }
                     }
 
@@ -194,7 +194,7 @@
 
 
                      }
-                    $rezult .= "<div class='query_ok' style='width: auto; padding: 1px;'>Пациент <a href='client.php?id=".$new_client."' class='ahref' target='_blank' rel='nofollow noopener'>добавлен</a> в Акк.</div>";
+                    $rezult .= "<div class='query_ok' style='width: auto; padding: 1px;'><a href='client.php?id=".$new_client."' class='ahref' style=' text-decoration: underline;' target='_blank' rel='nofollow noopener'>Пациент</a> добавлен в Аккaунт</div>";
 
                     echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
