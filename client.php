@@ -257,7 +257,18 @@ ORDER BY `name`;
 								<div class="cellsBlock2">
 									<div class="cellLeft">ФИО</div>
 									<div class="cellRight" style="font-weight: bolder; font-size: 105%;">'.$client_j['full_name'].'</div>
-								</div>
+								</div>';
+				if ($client_j['dp_client_id'] != 0){
+                    echo '
+				                <div class="cellsBlock2">
+									<div class="cellLeft">Карточка в DP</div>
+									<div class="cellRight" style="font-weight: bolder; font-size: 105%;">
+    									<a href="https://asstom.dental-pro.online/cbase/detail.html?id='.$client_j['dp_client_id'].'" class="ahref" style="text-align: center; color: #2ebdbd;" target="_blank" rel="nofollow noopener" title="Ссылка на профиль в DP">Открыть</a>
+                                    </div>
+								</div>';
+				}
+
+				echo '
 								
 								<div class="cellsBlock2">
 									<div class="cellLeft">Дата рождения</div>
