@@ -120,11 +120,8 @@ function dp_api($method, $year, $month, $day, $id){
 
         }
 
-        return json_encode(array('result' => 'success', 'data' => $rezult_arr,  'query' => $query, 'client_ids' => $client_ids_arr, 'doc_ids' => $doc_ids_arr, 'zapis_ids' => $zapis_ids_arr));
+    return $rezult_arr_dop;
 
-    }else{
-        return json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Ошибка! Данных нет.</div>'));
-    }
 }
 
 ?>
