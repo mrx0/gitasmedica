@@ -17268,8 +17268,10 @@
 
                         //Пробуем сразу добавить
                         //Еще раз получим данные пациента из DP по client_id
-                        console.log (res.exist);
-                        console.log (res.client_dp_id);
+                        if (res.exist) {
+                            console.log(res.exist);
+                            console.log(res.client_dp_id);
+                        }
 
                     }else{
                         //$('#errror').html(res.data);
@@ -17355,7 +17357,7 @@
         //Работаем с ID записей
         for (const id of ids_arr){
             // let resData = await DPloadZapisData("lm/doctors", id);
-            console.log(id);
+            // console.log(id);
             // console.log($('td[client_id|="' + id + '"]').html());
             // console.log($('td[client_id|="' + id + '"]').attr("client_data_" + id));
 
