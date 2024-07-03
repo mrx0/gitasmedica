@@ -113,6 +113,48 @@
                     //Пробуем сразу добавить
                     //Еще раз получим данные пациента из DP по client_id
                      $cRes = dp_api('i/client', 0, 0, 0, $_POST['client_id']);
+                     if (!empty($cRes)){
+                         $c_data = $cRes['data'];
+
+                         $full_name = CreateFullName(firspUpperCase(trim($c_data['surname'])), firspUpperCase(trim($c_data['name'])), firspUpperCase(trim($c_data['second_name'])));
+                         $name = CreateName(firspUpperCase(trim($c_data['surname'])), firspUpperCase(trim($c_data['name'])), firspUpperCase(trim($c_data['second_name'])));
+                         $birthday = strtotime($c_data['birthday_array']['d'].'.'.$c_data['birthday_array']['m'].'.'.$c_data['birthday_array']['Y']);
+                         $birthday2 = $c_data['birthday_array']['Y'].'-'.$c_data['birthday_array']['m'].'-'.$c_data['birthday_array']['d'];
+
+                         $card = '';
+
+                         if (!empty($c_data['cardNumbers'])){
+                             foreach ($c_data['card'] as $crd){
+                                 if ($crd != 'null'){
+                                     $card .= $crd.',';
+                                 }
+
+                             }
+                         }
+                         $card = str_replace(" ","",mb_substr($card, 0, -1));
+                         $card = mb_strtoupper($card, "UTF-8");
+                         $card = str_replace(";","; ",$card);
+                         $card = str_replace(",",", ",$card);
+                         $card = str_replace("/","/ ",$card);
+
+
+                         if ($c_data['sex'] == 0){
+                             $sex = 2;
+                         }else {
+                             $sex = 1;
+                         }
+
+
+                         $new_client = WriteClientToDB_Edit ($_SESSION['id'], $name, $full_name,
+                             firspUpperCase(trim($c_data['surname'])), firspUpperCase(trim($c_data['name'])), firspUpperCase(trim($c_data['second_name'])),
+                             firspUpperCase(trim($c_data['parent_surname'])), firspUpperCase(trim($c_data['parent_name'])), firspUpperCase(trim($c_data['parent_secondname'])),
+                             'из DentalPro', $card, '', '', $birthday, $birthday2, $sex,
+                             $c_data['mobile_phone'], $c_data['phone'], '', '', $c_data['email'],
+                             $c_data['inn'],  $c_data['passport_number'], '', '', explode('-', $c_data['passport_when'])[2].'.'.explode('-', $c_data['passport_when'])[1].'.'.explode('-', $c_data['passport_when'])[0], $c_data['passport_who'],
+                             $c_data['city'].' ул. '.$c_data['street'].' д.'.$c_data['building'].' кв.'.$c_data['apt'], '', '', 0, 0);
+
+
+                     }
 
                     echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
