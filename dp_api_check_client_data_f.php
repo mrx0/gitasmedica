@@ -112,7 +112,7 @@
 
                     //Пробуем сразу добавить
                     //Еще раз получим данные пациента из DP по client_id
-                     $cRes = dp_api('i/client', $year, $month, $day, $_POST['client_id']);
+                     $cRes = dp_api('i/client', 0, 0, 0, $_POST['client_id']);
 
                     echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
