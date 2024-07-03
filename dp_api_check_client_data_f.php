@@ -92,6 +92,15 @@
                                 $rezult .= '<span style="color: #36ff00; font-size: 90%; font-weight: normal;">ДР у <a href="client.php?id='.$item['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">одного</a> совпадает. Можно не добавлять. </span>';
 
                                 $rezult_client_id = $item['id'];
+
+                                // Добавим пациенту по id из DP ссылку на DP
+                                $args = [
+                                    'id' => $rezult_client_id,
+                                    'dp_client_id' => $_POST['client_id']
+                                ];
+
+                                $query = "UPDATE `spr_clients` SET `dp_client_id`=:dp_client_id WHERE `id`=:id;";
+                                $db::sql($query, $args);
                             }
                         }
                     }else{
@@ -100,6 +109,17 @@
                             $rezult .= '<span style="color: #36ff00; font-size: 90%; font-weight: normal;">ДР <a href="client.php?id='.$res[0]['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">пациента</a> совпадает. Можно не добавлять. </span>';
 
                             $rezult_client_id = $res[0]['id'];
+
+                            // Добавим пациенту по id из DP ссылку на DP
+                            $args = [
+                                'id' => $rezult_client_id,
+                                'dp_client_id' => $_POST['client_id']
+                            ];
+
+                            $query = "UPDATE `spr_clients` SET `dp_client_id`=:dp_client_id WHERE `id`=:id;";
+                            $db::sql($query, $args);
+
+
                         }else{
                             $rezult .= '<span style="color: #ff0077; font-size: 90%; font-weight: normal;">ДР не совпадает. Требуется уточнение. </span>';
                         }
@@ -159,18 +179,12 @@
                              $c_data['city'].' ул. '.$c_data['street'].' д.'.$c_data['building'].' кв.'.$c_data['apt'], '', '', 0, 0);
 
                          // Добавим пациенту по id из DP ссылку на DP
-                         $db = new DB();
-
-                         $create_time = date('Y-m-d H:i:s', time());
-
                          $args = [
                              'id' => $new_client,
                              'dp_client_id' => $_POST['client_id']
                          ];
 
-                         $query = "UPDATE `spr_clients` SET 
-                            `dp_client_id`=:dp_client_id
-                        WHERE `id`=:id;";
+                         $query = "UPDATE `spr_clients` SET `dp_client_id`=:dp_client_id WHERE `id`=:id;";
 
                          $db::sql($query, $args);
 
