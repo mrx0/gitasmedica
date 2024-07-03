@@ -145,7 +145,7 @@
                          }
 
                          if ($c_data['passport_when'] != 'null') {
-                             $passportvidandata  = explode('-', $c_data['passport_when'])[2].'.'.explode('-', $c_data['passport_when'])[1].'.'.explode('-', $c_data['passport_when'])[0]
+                             $passportvidandata  = explode('-', $c_data['passport_when'])[2].'.'.explode('-', $c_data['passport_when'])[1].'.'.explode('-', $c_data['passport_when'])[0];
                          }else{
                              $passportvidandata = '';
                          }
@@ -157,6 +157,22 @@
                              $c_data['mobile_phone'], $c_data['phone'], '', '', $c_data['email'],
                              $c_data['inn'],  $c_data['passport_number'], '', '', $passportvidandata, $c_data['passport_who'],
                              $c_data['city'].' ул. '.$c_data['street'].' д.'.$c_data['building'].' кв.'.$c_data['apt'], '', '', 0, 0);
+
+                         // Добавим пациенту id из DP
+                         $db = new DB();
+
+                         $create_time = date('Y-m-d H:i:s', time());
+
+                         $args = [
+                             'id' => $new_client,
+                             'dp_client_id' => $_POST['client_id']
+                         ];
+
+                         $query = "UPDATE `spr_clients` SET 
+                            `dp_client_id`=:dp_client_id
+                        WHERE `id`=:id;";
+
+                         $db::sql($query, $args);
 
 
                      }

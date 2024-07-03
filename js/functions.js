@@ -17266,10 +17266,10 @@
                         $('td[client_dp_id|="' + id + '"]').attr("client_acc_id", res.client_acc_id)
 
 
-                        if (res.exist == 'False') {
-                            console.log(res.exist);
-                            console.log(res.client_dp_id);
-                        }
+                        // if (res.exist == 'False') {
+                        //     console.log(res.exist);
+                        //     console.log(res.client_dp_id);
+                        // }
 
                     }else{
                         //$('#errror').html(res.data);
