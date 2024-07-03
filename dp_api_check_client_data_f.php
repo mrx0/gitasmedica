@@ -22,6 +22,8 @@
             include_once('DBWorkPDO.php');
             include_once 'functions.php';
 
+            include_once 'dp_api.php';
+
             if (!isset($_POST['client_id']) || !isset($_POST['fio']) || !isset($_POST['birth_phone'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
@@ -108,7 +110,11 @@
                 }else{
                     $rezult .= '<span style="color: #ff0000; font-weight: normal;">ФИО не найдены. Необходимо добавить. </span>';
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $_POST['client_id']));
+                    //Пробуем сразу добавить
+                    //Еще раз получим данные пациента из DP по client_id
+                     $cRes = dp_api('i/client', $year, $month, $day, $_POST['client_id']);
+
+                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
                 //var_dump($rezult);
 

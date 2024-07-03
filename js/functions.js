@@ -16976,8 +16976,8 @@
         if ((method == 'i/client') || (method == 'lm/doctors')){
             reqData['id'] = id;
         }
-        console.log('reqData');
-        console.log(reqData);
+        // console.log('reqData');
+        // console.log(reqData);
 
         return await $.ajax({
             url: link,
@@ -17266,13 +17266,9 @@
                         $('td[client_dp_id|="' + id + '"]').attr("client_acc_id", res.client_acc_id)
 
 
-                        //Пробуем сразу добавить
-                        //Еще раз получим данные пациента из DP по client_id
                         if (res.exist == 'False') {
                             console.log(res.exist);
                             console.log(res.client_dp_id);
-                            clientData = DPloadZapisData("i/client", res.client_dp_id);
-                            console.log(clientData.data);
                         }
 
                     }else{
