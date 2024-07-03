@@ -16941,7 +16941,7 @@
     //DP функция получения данных
     async function DPloadZapisData(method, id, day, month, year) {
         //console.log("Итерация 0. Загружаем данные по записи");
-        // console.log(arguments)
+        console.log(arguments)
         // console.log(day);
 
         let fin_result = {};
@@ -17271,8 +17271,8 @@
                         if (res.exist == 'False') {
                             console.log(res.exist);
                             console.log(res.client_dp_id);
-                            let resData = DPloadZapisData("i/client", res.client_dp_id);
-                            console.log(resData.data);
+                            clientData = DPloadZapisData("i/client", res.client_dp_id);
+                            console.log(clientData.data);
                         }
 
                     }else{
