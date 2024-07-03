@@ -164,7 +164,7 @@
                              $sex = 1;
                          }
 
-                         if ($c_data['passport_when'] != 'null') {
+                         if ($c_data['passport_when'] !== 'null') {
                              $passportvidandata  = explode('-', $c_data['passport_when'])[2].'.'.explode('-', $c_data['passport_when'])[1].'.'.explode('-', $c_data['passport_when'])[0];
                          }else{
                              $passportvidandata = '';
