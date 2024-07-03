@@ -16941,7 +16941,7 @@
     //DP функция получения данных
     async function DPloadZapisData(method, id, day, month, year) {
         //console.log("Итерация 0. Загружаем данные по записи");
-        console.log(arguments)
+        // console.log(arguments)
         // console.log(day);
 
         let fin_result = {};
@@ -16976,8 +16976,8 @@
         if ((method == 'i/client') || (method == 'lm/doctors')){
             reqData['id'] = id;
         }
-        // console.log('reqData');
-        // console.log(reqData);
+        console.log('reqData');
+        console.log(reqData);
 
         return await $.ajax({
             url: link,
