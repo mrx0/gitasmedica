@@ -13,10 +13,10 @@ function dp_api($method, $year, $month, $day, $id){
     $zapis_ids_arr = array();
 
     require 'config_dentalpro_api.php';
-    include_once('DBWorkPDO.php');
+    // include_once('DBWorkPDO.php');
     include_once 'functions.php';
 
-    $db = new DB();
+    // $db = new DB();
 
     //URI он же метод
     $dopURL_api = $method;
