@@ -164,8 +164,12 @@
                              $sex = 1;
                          }
 
-                         if ($c_data['passport_when'] !== 'null') {
-                             $passportvidandata  = explode('-', $c_data['passport_when'])[2].'.'.explode('-', $c_data['passport_when'])[1].'.'.explode('-', $c_data['passport_when'])[0];
+                         if ($c_data['passport_when'] != 'null') {
+                             if (isset(explode('-', $c_data['passport_when'])[2]) && isset(explode('-', $c_data['passport_when'])[1])) {
+                                 $passportvidandata = explode('-', $c_data['passport_when'])[2] . '.' . explode('-', $c_data['passport_when'])[1] . '.' . explode('-', $c_data['passport_when'])[0];
+                             }else{
+                                 $passportvidandata = $c_data['passport_when'];
+                             }
                          }else{
                              $passportvidandata = '';
                          }
