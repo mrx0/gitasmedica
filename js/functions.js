@@ -17271,6 +17271,8 @@
                         if (res.exist == 'False') {
                             console.log(res.exist);
                             console.log(res.client_dp_id);
+                            let resData = DPloadZapisData("i/client", res.client_dp_id);
+                            console.log(resData.data);
                         }
 
                     }else{
