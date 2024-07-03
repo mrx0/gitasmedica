@@ -71,7 +71,7 @@ function dp_api($method, $year, $month, $day, $id){
     //Если есть данные - работаем
     if (!empty($rezult_arr)) {
         //Если запись, надо проверить, а все ли мы  выгрузили. Если нет, грузим все остальное
-        if ($dopURL_api == 'lm/appointments'){
+        if ($dopURL_api == 'lm/appointments') {
 //                        var_dump('total');
 //                        var_dump($rezult_arr['total']);
 //                        var_dump('limit');
@@ -79,7 +79,7 @@ function dp_api($method, $year, $month, $day, $id){
 //                        var_dump('page');Показания счётчика солярия/лазеров
 //                        var_dump($rezult_arr['page']);
 //                        var_dump($rezult_arr['data']);
-            if ($rezult_arr['total'] > $rezult_arr['limit']){
+            if ($rezult_arr['total'] > $rezult_arr['limit']) {
 //                            var_dump('> TRUE');
 
                 //Даты от - до
@@ -90,11 +90,11 @@ function dp_api($method, $year, $month, $day, $id){
 
                 $query_req_str = 'date_from=' . $date_from . '&date_to=' . $date_to;
 
-                $pages_count = (int)ceil($rezult_arr['total']/$rezult_arr['limit']);
+                $pages_count = (int)ceil($rezult_arr['total'] / $rezult_arr['limit']);
                 //var_dump($pages_count);
 
-                for($i = 1; $i < $pages_count; $i++){
-                    $query_req_str_f = $query_req_str.'&page=' . $i;
+                for ($i = 1; $i < $pages_count; $i++) {
+                    $query_req_str_f = $query_req_str . '&page=' . $i;
                     //var_dump($query_req_str_f);
 
                     //Строка запроса
@@ -104,21 +104,22 @@ function dp_api($method, $year, $month, $day, $id){
                     $rezult_arr_dop = getDataFromAPI_DP($query);
 //                                var_dump($rezult_arr_dop['data']);
 
-                    if (!empty($rezult_arr_dop)){
-                        if (!empty($rezult_arr_dop['data'])){
-                            $rezult_arr['data'] = array_merge($rezult_arr['data'],$rezult_arr_dop['data']);
+                    if (!empty($rezult_arr_dop)) {
+                        if (!empty($rezult_arr_dop['data'])) {
+                            $rezult_arr['data'] = array_merge($rezult_arr['data'], $rezult_arr_dop['data']);
                         }
                     }
                 }
             }
 
-            foreach ($rezult_arr['data'] as $zapis_data){
+            foreach ($rezult_arr['data'] as $zapis_data) {
                 array_push($client_ids_arr, $zapis_data['client_id']);
                 array_push($doc_ids_arr, $zapis_data['doctor_id']);
                 array_push($zapis_ids_arr, $zapis_data['id']);
             }
 
         }
+    }
 
     return $rezult_arr_dop;
 
