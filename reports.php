@@ -355,10 +355,10 @@
 								<a href="reportLamps.php" class="b3 reportElement" style="">Отчет по лампам</a>
 							</li>';
 
-                echo '				
-							<li class="cellsBlock" style="margin: 1px;">
-								<a href="sclad.php" class="b3 reportElement" style="">Склад (тест)</a>
-							</li>';
+                // echo '
+				// 			<li class="cellsBlock" style="margin: 1px;">
+				// 				<a href="sclad.php" class="b3 reportElement" style="">Склад (тест)</a>
+				// 			</li>';
 
                 echo '
 						</ul>';

@@ -54,6 +54,7 @@
 				<header>
                     <div class="nav">
                         <a href="sclad_prihods.php" class="b">Приходные накладные</a>
+                        <a href="test_parsing.php" class="b">Сканировать накладную</a>
                     </div>
 					<h1>Склад</h1>
 				</header>';
