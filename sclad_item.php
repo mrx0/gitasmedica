@@ -28,12 +28,22 @@
                 //$msql_cnnct = ConnectToDB ();
                 $db = new DB();
 
-                $query = "SELECT ssi.*, scc.name AS cat_name
-                FROM `spr_sclad_items` ssi
-                RIGHT JOIN `spr_sclad_category` scc
-                ON scc.id = ssi.parent_id
-                WHERE ssi.id = :id LIMIT 1
-                ";
+                // $query = "SELECT ssi.*, scc.name AS cat_name
+                // FROM `spr_sclad_items` ssi
+                // RIGHT JOIN `spr_sclad_category` scc
+                // ON scc.id = ssi.parent_id
+                // WHERE ssi.id = :id LIMIT 1
+                // ";
+
+                $query = "SELECT 
+                            ssi.*, 
+                            scc.name AS cat_name
+                        FROM spr_sclad_items AS ssi
+                        LEFT JOIN spr_sclad_category AS scc 
+                            ON scc.id = ssi.parent_id
+                        WHERE ssi.id = :id
+                        LIMIT 1;
+                        ";
 
                 $args = [
                     'id' => $_GET['id']
@@ -196,7 +206,6 @@
                     LEFT JOIN `sclad_prihod` sp
                     ON sp.id = sp_ex.prihod_id
                     WHERE sp_ex.sclad_item_id = :id
-                    AND sp.status = '7'
                     LIMIT 10
                     ";
 

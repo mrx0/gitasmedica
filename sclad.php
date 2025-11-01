@@ -87,7 +87,7 @@
                             </div>
                         </div>
                         
-                        <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative;">';
+                        <div style="display: inline-block; border: 1px solid #c5c5c5; position: relative; ; overflow-y: scroll; overflow-x: hidden;">';
 
             echo '
                             <div style="box-shadow: -1px 1px 5px rgba(51, 51, 51, 0.32); position: relative;">
@@ -95,7 +95,7 @@
                                 <!--<input type="text" id="" name="" class="" placeholder="&#xF002;" value="">-->
                                 
                                 <!--!!!Пример замена placeholder на иконку fontawesome плейсхолдер-->
-                                <input type="text" name="search_sclad_items" id="search_sclad_items" placeholder="&#xF002;" value="" class="" style="font-family:Verdana, FontAwesome; width: 99%;" autocomplete="off">
+                                <input type="text" name="search_sclad_items" id="search_sclad_items" placeholder="&#xF002;" value="" class="" style="font-family:Verdana, FontAwesome; width: 99%;" autocomplete="off" >
                                 <!--<div class="button_in_input" onclick=clearSearchInput();><i class="fa fa-times" aria-hidden="true" style="color: #CCC; font-size: 130%;" title="Очистить"></i></div>-->
                             </div>';
 
