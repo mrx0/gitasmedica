@@ -68,6 +68,7 @@
                     <header id="header">
                         <div class="nav">
                             <a href="sclad.php" class="b">Склад</a>
+                            <a href="test_parsing.php" class="b">Сканировать накладную</a>
                         </div>
                         <h2 style="">Приходные накладные</h2>
                     </header>';
@@ -78,26 +79,18 @@
                         <div id="errrror"></div>';
 
 
-            echo '<div class="no_print">';
-            echo widget_calendar ($month, $year, 'sclad_prihods.php', $dop);
-            echo '</div>';
+            // echo '<div class="no_print">';
+            // echo widget_calendar ($month, $year, 'sclad_prihods.php', $dop);
+            // echo '</div>';
 
             //Выбор филиала
-            echo '
-                        <div style="font-size: 90%; margin: 10px 0; display: inline-block;">
-                            Филиал:
+            // echo '
+            //             <div style="font-size: 90%; margin: 10px 0; display: inline-block;">
+            //                 Филиал:
+            //
+            //                 <select name="SelectFilial" id="SelectFilial">
+			// 				    <option value="0" selected>Все</option>';
 
-                            <select name="SelectFilial" id="SelectFilial">
-							    <option value="0" selected>Все</option>';
-            if (!empty($filials_j)){
-                foreach($filials_j as $f_id => $filial_item){
-                    $selected = '';
-                    if ($f_id == $filial_id){
-                        $selected = 'selected';
-                    }
-                    echo "<option value='".$f_id."' $selected>".$filial_item['name']."</option>";
-                }
-            }
             echo '
                             </select>
 
@@ -113,18 +106,20 @@
 
             $db = new DB();
 
-            $args = [
-                'month' => $month,
-                'year' => $year
-            ];
+            // $args = [
+            //     'month' => $month,
+            //     'year' => $year
+            // ];
+
+            $args = [];
 
             $query_dop = '';
 
-            if ($filial_id != 0) {
-                $query_dop .= 'AND s_p.filial_id = :filial_id';
-
-                $args['filial_id'] = $filial_id;
-            }
+            // if ($filial_id != 0) {
+            //     $query_dop .= 'AND s_p.filial_id = :filial_id';
+            //
+            //     $args['filial_id'] = $filial_id;
+            // }
 
             if ($status == 1) {
                 $query_dop .= 'AND s_p.status = :status';
@@ -134,12 +129,18 @@
 
 
             //Выбрать все категории prihod_status
+            // $query = "
+            // SELECT s_p.*
+            // FROM `sclad_prihod` s_p
+            // WHERE MONTH(s_p.prihod_time) = :month AND YEAR(s_p.prihod_time) = :year ".$query_dop."
+            // ORDER BY s_p.prihod_time DESC, s_p.create_time DESC";
+            //var_dump($query);
+
             $query = "
             SELECT s_p.*
             FROM `sclad_prihod` s_p
-            WHERE MONTH(s_p.prihod_time) = :month AND YEAR(s_p.prihod_time) = :year ".$query_dop."
+            WHERE TRUE ".$query_dop."
             ORDER BY s_p.prihod_time DESC, s_p.create_time DESC";
-            //var_dump($query);
 
             $prihods_j = $db::getRows($query, $args);
             //var_dump($prihods_j);
@@ -167,7 +168,9 @@
                             <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">
                                 <a href="sclad_prihod.php?id='.$prihod_item['id'].'" class="ahref">#'.$prihod_item['id'].'</a>
                             </td>
-                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.date('d.m.Y', strtotime($prihod_item['prihod_time'])).'</td>
+                            <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">
+                                 <a href="sclad_prihod.php?id='.$prihod_item['id'].'" class="ahref">'.date('d.m.Y', strtotime($prihod_item['prihod_time'])).'</a>
+                             </td>
                             <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.$filials_j[$prihod_item['filial_id']]['name2'].'</td>
                             <td style="border: 1px solid #BFBCB5; padding: 2px 5px;"><!--'.$prihod_item['id'].'-->'.$prihod_item['provider_name'].'</td>
                             <td style="border: 1px solid #BFBCB5; padding: 2px 5px;">'.number_format($prihod_item['summ']/100, 2, '.', '').' руб.</td>

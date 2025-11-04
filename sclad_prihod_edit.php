@@ -201,13 +201,22 @@ if ($enter_ok){
                             if (isset($_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']])) {
                                 $items_arr = $_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']];
                             }
+
+                        }else{
+
+                            $_SESSION['sclad']['items_prihod_data_edit'] = array();
+                            $_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']] = array();
+                            $_SESSION['sclad']['items_prihod_data_edit'][$_GET['id']] = $items_arr = $prihod_ex_j;
+
                         }
                     }
                     //var_dump($_SESSION['sclad']['items_prihod_data_edit']);
 
                     $itemsArr = implode(",", array_keys ($items_arr));
+                    // var_dump($items_arr);
+                    // var_dump($itemsArr);
 
-                    $query = "SELECT `id`, `name`,`unit` FROM `spr_sclad_items` WHERE `id` IN ($itemsArr) AND `status` <> '9'";
+                    $query = "SELECT `id`, `name`, `unit` FROM `spr_sclad_items` WHERE `id` IN ($itemsArr) AND `status` <> '9'";
 
                     $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
 

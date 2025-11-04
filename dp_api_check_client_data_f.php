@@ -22,12 +22,14 @@
             include_once('DBWorkPDO.php');
             include_once 'functions.php';
 
-            if (!isset($_POST['fio']) || !isset($_POST['birth_phone'])){
+            include_once 'dp_api.php';
+
+            if (!isset($_POST['client_id']) || !isset($_POST['fio']) || !isset($_POST['birth_phone'])){
                 echo json_encode(array('result' => 'error', 'data' => '<div class="query_neok">Что-то пошло не так</div>'));
             }else {
 
                 $fio_post = trim(strip_tags(stripcslashes(htmlspecialchars($_POST['fio']))));
-                $temp_data_fio = explode(' ', $fio_post);
+                $temp_data_fio = explode(' ', str_replace('*', '', $fio_post));
                 $f = $temp_data_fio[0];
                 $i = $temp_data_fio[1];
                 $o = $temp_data_fio[2];
@@ -90,6 +92,15 @@
                                 $rezult .= '<span style="color: #36ff00; font-size: 90%; font-weight: normal;">ДР у <a href="client.php?id='.$item['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">одного</a> совпадает. Можно не добавлять. </span>';
 
                                 $rezult_client_id = $item['id'];
+
+                                // Добавим пациенту по id из DP ссылку на DP
+                                $args = [
+                                    'id' => $rezult_client_id,
+                                    'dp_client_id' => $_POST['client_id']
+                                ];
+
+                                $query = "UPDATE `spr_clients` SET `dp_client_id`=:dp_client_id WHERE `id`=:id;";
+                                $db::sql($query, $args);
                             }
                         }
                     }else{
@@ -98,16 +109,94 @@
                             $rezult .= '<span style="color: #36ff00; font-size: 90%; font-weight: normal;">ДР <a href="client.php?id='.$res[0]['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">пациента</a> совпадает. Можно не добавлять. </span>';
 
                             $rezult_client_id = $res[0]['id'];
+
+                            // Добавим пациенту по id из DP ссылку на DP
+                            $args = [
+                                'id' => $rezult_client_id,
+                                'dp_client_id' => $_POST['client_id']
+                            ];
+
+                            $query = "UPDATE `spr_clients` SET `dp_client_id`=:dp_client_id WHERE `id`=:id;";
+                            $db::sql($query, $args);
+
+
                         }else{
-                            $rezult .= '<span style="color: #ff0077; font-size: 90%; font-weight: normal;">ДР не совпадает. Требуется уточнение. </span>';
+                            $rezult .= '<span style="color: #ff0077; font-size: 90%; font-weight: normal;">ДР не совпадает. Требуется уточнение.<br><a href="client.php?id='.$res[0]['id'].'" class="ahref" style="text-align: center; color: #2ebdbd; text-decoration: underline;" target="_blank" rel="nofollow noopener">Пациент</a></span>';
                         }
                     }
 
-                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'client_acc_id' => $rezult_client_id));
+                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'True', 'client_acc_id' => $rezult_client_id));
 
                 }else{
                     $rezult .= '<span style="color: #ff0000; font-weight: normal;">ФИО не найдены. Необходимо добавить. </span>';
-                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>'));
+
+                    //Пробуем сразу добавить
+                    //Еще раз получим данные пациента из DP по client_id
+                     $cRes = dp_api('i/client', 0, 0, 0, $_POST['client_id']);
+                     if (!empty($cRes)){
+                         $c_data = $cRes['data'];
+
+                         $full_name = CreateFullName(firspUpperCase(trim($c_data['surname'])), firspUpperCase(trim($c_data['name'])), firspUpperCase(trim($c_data['second_name'])));
+                         $name = CreateName(firspUpperCase(trim($c_data['surname'])), firspUpperCase(trim($c_data['name'])), firspUpperCase(trim($c_data['second_name'])));
+                         $birthday = strtotime($c_data['birthday_array']['d'].'.'.$c_data['birthday_array']['m'].'.'.$c_data['birthday_array']['Y']);
+                         $birthday2 = $c_data['birthday_array']['Y'].'-'.$c_data['birthday_array']['m'].'-'.$c_data['birthday_array']['d'];
+
+                         $card = '';
+
+                         if (!empty($c_data['cardNumbers'])){
+                             foreach ($c_data['cardNumbers'] as $crd){
+                                 if ($crd != 'null'){
+                                     $card .= $crd.',';
+                                 }
+
+                             }
+                         }
+                         $card = str_replace(" ","",mb_substr($card, 0, -1));
+                         $card = mb_strtoupper($card, "UTF-8");
+                         $card = str_replace(";","; ",$card);
+                         $card = str_replace(",",", ",$card);
+                         $card = str_replace("/","/ ",$card);
+
+
+                         if ($c_data['sex'] == 0){
+                             $sex = 2;
+                         }else {
+                             $sex = 1;
+                         }
+
+                         if ($c_data['passport_when'] != 'null') {
+                             if (isset(explode('-', $c_data['passport_when'])[2]) && isset(explode('-', $c_data['passport_when'])[1])) {
+                                 $passportvidandata = explode('-', $c_data['passport_when'])[2] . '.' . explode('-', $c_data['passport_when'])[1] . '.' . explode('-', $c_data['passport_when'])[0];
+                             }else{
+                                 $passportvidandata = $c_data['passport_when'];
+                             }
+                         }else{
+                             $passportvidandata = '';
+                         }
+
+                         $new_client = WriteClientToDB_Edit ($_SESSION['id'], $name, $full_name,
+                             firspUpperCase(trim($c_data['surname'])), firspUpperCase(trim($c_data['name'])), firspUpperCase(trim($c_data['second_name'])),
+                             firspUpperCase(trim($c_data['parent_surname'])), firspUpperCase(trim($c_data['parent_name'])), firspUpperCase(trim($c_data['parent_secondname'])),
+                             'из DentalPro', $card, '', '', $birthday, $birthday2, $sex,
+                             $c_data['mobile_phone'], $c_data['phone'], '', '', $c_data['email'],
+                             $c_data['inn'],  $c_data['passport_number'], '', '', $passportvidandata, $c_data['passport_who'],
+                             $c_data['city'].' ул. '.$c_data['street'].' д.'.$c_data['building'].' кв.'.$c_data['apt'], '', '', 0, 0);
+
+                         // Добавим пациенту по id из DP ссылку на DP
+                         $args = [
+                             'id' => $new_client,
+                             'dp_client_id' => $_POST['client_id']
+                         ];
+
+                         $query = "UPDATE `spr_clients` SET `dp_client_id`=:dp_client_id WHERE `id`=:id;";
+
+                         $db::sql($query, $args);
+
+
+                     }
+                    $rezult .= "<div class='query_ok' style='width: auto; padding: 1px;'><a href='client.php?id=".$new_client."' class='ahref' style=' text-decoration: underline;' target='_blank' rel='nofollow noopener'>Пациент</a> добавлен в Аккaунт</div>";
+
+                    echo json_encode(array('result' => 'success', 'data' => '<div>'.$rezult.'</div>', 'exist' => 'False', 'client_dp_id' => $cRes));
                 }
                 //var_dump($rezult);
 
