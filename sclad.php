@@ -82,7 +82,7 @@
                             <!--<span class="dotyel a-action lasttreedrophide">скрыть всё</span>, <span class="dotyel a-action lasttreedropshow">раскрыть всё</span>-->
                             </div>
                             
-                            <div id="sclad_cat_rezult" style="width: 350px; max-width: 350px; min-width: 350px; height: 500px; overflow: hidden;">
+                            <div id="sclad_cat_rezult" style="width: 350px; max-width: 350px; min-width: 350px; height: 600px; overflow: hidden;">
                             
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                                 <span id="cat_name_show"></span>
                             </div>
                             
-                            <div id="sclad_items_rezult" style="width: 700px; max-width: 700px; min-width: 700px; height: 479px;">
+                            <div id="sclad_items_rezult" style="width: 900px; max-width: 900px; min-width: 900px; height: 600px;">
                             
                             </div>
 
@@ -117,22 +117,42 @@
             echo '
                         <div id="sclad_items_in_set" style="display: none; width: 700px; border: 1px solid #c5c5c5; border-radius: 3px; position: relative;">';
 
-        echo '
-                            <div id="errror" class="invoceHeader" style="position: relative; padding: 5px 10px;">
-                                <div>
-                                    <div style="">Выбрано позиций: <span id="itemInSetCount" style="">0</span> шт.</div>
-                                </div>
-                                <div style="font-size: 11px;">
-                                    <div style="display: inline-block;">
-                                        <a href="sclad_prihod_add.php" class="ahref b">Добавить приход</a>
-                                    </div>
-                                    <div style="display: inline-block;">
-                                        <a href="sclad_transfer_add.php" class="ahref b">Добавить перемещение</a>
-                                    </div>
-                                </div>
-                                <div style="position: absolute; top: 10px; right: 10px; font-size: 11px;">
-                                     <div class="settings_text" onclick="deleteScladItemsFromSet();">Очистить всё</div>
-                                </div>';
+        // echo '
+        //                     <div id="errror" class="invoceHeader" style="position: relative; padding: 5px 10px;">
+        //                         <div>
+        //                             <div style="">Выбрано позиций: <span id="itemInSetCount" style="">0</span> шт.</div>
+        //                         </div>
+        //                         <div style="font-size: 11px;">
+        //                             <div style="display: inline-block;">
+        //                                 <a href="sclad_prihod_add.php" class="ahref b">Добавить приход</a>
+        //                             </div>
+        //                             <div style="display: inline-block;">
+        //                                 <a href="sclad_transfer_add.php" class="ahref b">Добавить перемещение</a>
+        //                             </div>
+        //                         </div>
+        //                         <div style="position: absolute; top: 10px; right: 10px; font-size: 11px;">
+        //                              <div class="settings_text" onclick="deleteScladItemsFromSet();">Очистить всё</div>
+        //                         </div>';
+
+            echo '
+                    <div id="errror" class="invoceHeader" style="position: relative; padding: 5px 10px;">
+                        <div>
+                            <div style="">Выбрано позиций: <span id="itemInSetCount" style="">0</span> шт.</div>
+                        </div>
+                        <div style="font-size: 11px;">
+                            <div style="display: inline-block;">
+                                <a href="sclad_prihod_add.php" class="ahref b">Добавить приход</a>
+                            </div>
+                            <div style="display: inline-block;">
+                                <a href="sclad_transfer_add.php" class="ahref b">Добавить перемещение</a>
+                            </div>
+                            <div style="display: inline-block;">
+                                <a href="#" class="ahref b" style="background: #17a2b8;" onclick="goToPriceAnalysis(); return false;">📊 Анализ цен</a>
+                            </div>
+                        </div>
+                        <div style="position: absolute; top: 10px; right: 10px; font-size: 11px;">
+                             <div class="settings_text" onclick="deleteScladItemsFromSet();">Очистить всё</div>
+                        </div>';
 
         echo '
                             </div>';
@@ -301,6 +321,33 @@
             </script>
             
             ';
+
+            echo '
+                <script>
+                    function goToPriceAnalysis() {
+                        $.ajax({
+                            url: "ajax_get_selected_items.php",
+                            type: "POST",
+                            dataType: "json",
+                            success: function(response) {
+                                console.log("Response:", response); // Для отладки
+                                
+                                if (response.success && response.items && response.items.length > 0) {
+                                    var itemIds = response.items.join(",");
+                                    console.log("Item IDs:", itemIds); // Для отладки
+                                    window.location.href = "test_price_analysis.php?item_ids=" + itemIds;
+                                } else {
+                                    alert("Выберите хотя бы одну позицию для анализа");
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("AJAX Error:", error);
+                                alert("Ошибка при получении данных");
+                            }
+                        });
+                    }
+                </script>
+                ';
 
 		}else{
 			echo '<h1>Не хватает прав доступа.</h1><a href="index.php">На главную</a>';

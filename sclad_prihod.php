@@ -44,6 +44,7 @@
                                     <div class="nav">
                                         <a href="sclad.php" class="b">Склад</a>
                                         <a href="sclad_prihods.php" class="b">Приходные накладные</a>
+                                        <a href="test_parsing.php" class="b">Сканировать накладную</a>
                                     </div>
 
 									<h2>Приходная накладная #'.$_GET['id'].'';
@@ -207,31 +208,44 @@
                             //Если статус не равен 7 то есть не проведено
                             if ($prihod_j[0]['status'] != 7) {
                                 echo '
-                                                    <div style="color: red; ">
-                                                        Накладная не проведена
-                                                    </div>';
+                                <div style="color: red; ">
+                                    Накладная не проведена
+                                </div>';
 
-                                echo '
-                                                    <div style="display: inline-block;">
-                                                        <!--<a href="invoice_status_close.php?invoice_id=' . $prihod_j[0]['id'] . '" class="b">Закрыть работу</a>-->
-                                                        <input type="button" class="b" value="Провести" onclick="showPrihodClose(' . $prihod_j[0]['id'] . ')">
-                                                    </div>';
+                                                    echo '
+                                <div style="display: inline-block;">
+                                    <!--<a href="invoice_status_close.php?invoice_id=' . $prihod_j[0]['id'] . '" class="b">Закрыть работу</a>-->
+                                    <input type="button" class="b" value="Провести" onclick="showPrihodClose(' . $prihod_j[0]['id'] . ')">
+                                </div>';
 
-                            }else{
-                                echo '
-                                                    <div style="margin-top: 5px;">
-                                                        <div style="display: inline-block; color: green;">
-                                                            Накладная проведена';
+                                                }else{
+                                                    echo '
+                                <div style="margin-top: 5px;">
+                                    <div style="display: inline-block; color: green;">
+                                        Накладная проведена';
 
 
-                                if (($finances['see_all'] == 1) || $god_mode){
-                                    echo '
-                                                            <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%; cursor: pointer;" title="Распровести" onclick="showPrihodOpen(' . $prihod_j[0]['id'] . ')"></i>';
-                                }
-                                echo '
-                                                        </div>
-                                                    </div>';
-                            }
+                                                    if (($finances['see_all'] == 1) || $god_mode){
+                                                        echo '
+                                    <i class="fa fa-times" aria-hidden="true" style="color: red; font-size: 110%; cursor: pointer;" title="Распровести" onclick="showPrihodOpen(' . $prihod_j[0]['id'] . ')"></i>';
+                                                    }
+                                                    echo '
+                                    </div>
+                                </div>';
+
+                                                    // Кнопка анализа цен (только для проведенных накладных)
+                                                    if (!empty($prihod_ex_j)) {
+                                                        $itemIdsForAnalysis = array_keys($prihod_ex_j);
+                                                        $itemIdsString = implode(',', $itemIdsForAnalysis);
+
+                                                        echo '
+                                <div style="margin-top: 10px;">
+                                    <a href="test_price_analysis.php?prihod_id=' . $_GET['id'] . '&item_ids=' . $itemIdsString . '" class="b" style="background: #17a2b8; text-decoration: none; display: inline-block; padding: 5px 15px;">
+                                        📊 Анализ цен
+                                    </a>
+                                </div>';
+                                                    }
+                                                }
 
                             echo '
 										        </div>
