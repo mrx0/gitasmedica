@@ -139,7 +139,7 @@
             $query = "
             SELECT s_p.*
             FROM `sclad_prihod` s_p
-            WHERE TRUE ".$query_dop."
+            WHERE status <> 9 ".$query_dop."
             ORDER BY s_p.prihod_time DESC, s_p.create_time DESC";
 
             $prihods_j = $db::getRows($query, $args);

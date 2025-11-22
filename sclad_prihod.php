@@ -170,7 +170,7 @@
 							//!!! Внимание костыль! временно поставил проверку между суммой общей в приходе и суммой всех позиций
                             //потом надо оставить сумму из приходной только
                             if ((int)$prihod_j[0]['summ'] !==(int)$summ){
-                                echo '<i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="Обратитесь к разработчику"></i>';
+                                echo '<i class="fa fa-warning" aria-hidden="true" style="color: red; text-shadow: 1px 1px rgba(111, 111, 111, 0.8);" title="Общая сумма не совпадает с суммой всех позиций"></i>';
                             }
 							echo '
                                                         </div>

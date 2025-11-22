@@ -205,7 +205,7 @@
                     FROM `sclad_prihod_ex` sp_ex
                     LEFT JOIN `sclad_prihod` sp
                     ON sp.id = sp_ex.prihod_id
-                    WHERE sp_ex.sclad_item_id = :id
+                    WHERE sp_ex.sclad_item_id = :id AND sp.status = 7
                     LIMIT 10
                     ";
 

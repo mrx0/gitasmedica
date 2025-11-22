@@ -1433,6 +1433,40 @@
 		})
 	};
 
+	//Удаление блокировка накладной
+	function Ajax_del_prihod(id) {
+
+        $.ajax({
+			url:"prihod_del_f.php",
+            global: false,
+            type: "POST",
+            dataType: "JSON",
+			data:
+			data:
+			{
+				id: id
+			},
+            cache: false,
+            beforeSend: function() {
+                //$('#errrror').html("<div style='width: 120px; height: 32px; padding: 10px; text-align: center; vertical-align: middle; border: 1px dotted rgb(255, 179, 0); background-color: rgba(255, 236, 24, 0.5);'><img src='img/wait.gif' style='float:left;'><span style='float: right;  font-size: 90%;'> обработка...</span></div>");
+            },
+            // действие, при ответе с сервера
+            success:function(res){
+                if(res.result == 'success') {
+                    //console.log(1);
+                    $('#data').html(res.data);
+                    setTimeout(function () {
+                        window.location.replace('sclad_prihod.php?id=' + id);
+                        //console.log('client.php?id='+id);
+                    }, 100);
+                }else{
+                    //console.log(2);
+                     $("#errrror").html(res.data);
+                }
+            }
+		})
+	};
+
 	//Удаление блокировка наряда
 	function Ajax_del_invoice(id, client_id) {
 
