@@ -14703,7 +14703,7 @@
 
     //Показываем блок для добавления позиции склада
     function showScladCatItemEdit(id, type){
-        console.log(type);
+        // console.log(type);
 
         $(".context-menu").remove();
 
@@ -14712,9 +14712,9 @@
 
         if (type == 'category') {
             var descr = 'Редактировать категорию';
-            var oldName = $("#cat_" + id).attr("cat_name");
+            var oldName = $("#catSclad_" + id).attr("cat_name");
 
-            console.log(oldName);
+            // console.log(oldName);
         }
 
         if (type == 'item') {
