@@ -14703,7 +14703,7 @@
 
     //Показываем блок для добавления позиции склада
     function showScladCatItemEdit(id, type){
-        // console.log(type);
+        console.log(type);
 
         $(".context-menu").remove();
 
