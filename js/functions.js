@@ -1442,7 +1442,6 @@
             type: "POST",
             dataType: "JSON",
 			data:
-			data:
 			{
 				id: id
 			},
