@@ -14713,6 +14713,8 @@
         if (type == 'category') {
             var descr = 'Редактировать категорию';
             var oldName = $("#cat_" + id).attr("cat_name");
+
+            console.log(oldName);
         }
 
         if (type == 'item') {

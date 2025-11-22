@@ -60,7 +60,7 @@
                 ON sav.sclad_item_id = sit.id
                 WHERE TRUE $dop_cat
                 GROUP BY sit.id
-                ORDER BY sit.id
+                ORDER BY sit.name 
                 LIMIT $start , $count";
 
                 $res = mysqli_query($msql_cnnct, $query) or die(mysqli_error($msql_cnnct) . ' -> ' . $query);
