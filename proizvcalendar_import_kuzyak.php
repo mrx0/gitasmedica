@@ -104,22 +104,33 @@ if ($holData === null) {
  */
 function add_date_list(&$set, $list) {
     if (!is_array($list)) return;
+
     foreach ($list as $v) {
-        if (is_string($v) && preg_match('~^\d{4}-\d{2}-\d{2}$~', $v)) {
-            $set[$v] = true;
+        // 1) если строка
+        if (is_string($v)) {
+            // ISO или YYYY-MM-DD
+            $d = substr($v, 0, 10);
+            if (preg_match('~^\d{4}-\d{2}-\d{2}$~', $d)) {
+                $set[$d] = true;
+            }
+            continue;
+        }
+
+        // 2) если объект-массив вида {date,name}
+        if (is_array($v) && isset($v['date'])) {
+            $d = substr($v['date'], 0, 10); // "2026-01-01T..." -> "2026-01-01"
+            if (preg_match('~^\d{4}-\d{2}-\d{2}$~', $d)) {
+                $set[$d] = true;
+            }
         }
     }
 }
 
 if ($holData !== null) {
-    // Частый вариант: {"holidays":[...], "preholidays":[...]} или {"days":[...], ...}
     if (isset($holData['holidays'])) {
-        add_date_list($nonWorking, $holData['holidays']);
+        add_date_list($nonWorking, $holData['holidays']); // <-- теперь добавит праздники
     }
-    if (isset($holData['days'])) {
-        add_date_list($nonWorking, $holData['days']);
-    }
-    // preholidays игнорируем специально
+    // shortDays НЕ добавляем, если вам они не нужны (как раньше со '*')
 } else {
     // Разбор годового ответа
     if (isset($yearData['holidays'])) {
@@ -170,6 +181,8 @@ if ($holData !== null) {
         }
     }
 }
+
+echo "Нерабочих дат собрано: " . count($nonWorking) . "<br>";
 
 // --- пишем в БД ---
 
