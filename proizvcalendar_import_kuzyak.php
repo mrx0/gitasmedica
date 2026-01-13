@@ -119,28 +119,46 @@ if ($holData !== null) {
         add_date_list($nonWorking, $yearData['holidays']);
     }
     if (isset($yearData['days']) && is_array($yearData['days'])) {
-        // days может быть либо ["YYYY-MM-DD"], либо [{...}]
-        $first = reset($yearData['days']);
-        if (is_string($first)) {
-            add_date_list($nonWorking, $yearData['days']);
-        } elseif (is_array($first)) {
-            foreach ($yearData['days'] as $dayObj) {
-                $date = $dayObj['date'] ?? $dayObj['day'] ?? null;
-                if (!is_string($date) || !preg_match('~^\d{4}-\d{2}-\d{2}$~', $date)) continue;
 
-                // Попытка понять “нерабочий” по разным возможным полям
-                $type = strtolower((string)($dayObj['type'] ?? $dayObj['kind'] ?? ''));
-                $isWorking = $dayObj['isWorking'] ?? $dayObj['working'] ?? null;
+        foreach ($yearData['days'] as $dayObj) {
 
-                $nonWorkByType =
-                    in_array($type, ['holiday', 'weekend', 'dayoff', 'nonworking', 'non-working'], true);
+            // дата
+            if (isset($dayObj['date'])) {
+                $date = $dayObj['date'];
+            } elseif (isset($dayObj['day'])) {
+                $date = $dayObj['day'];
+            } else {
+                continue;
+            }
 
-                $nonWorkByFlag =
-                    (is_bool($isWorking) ? ($isWorking === false) : false);
+            if (!preg_match('~^\d{4}-\d{2}-\d{2}$~', $date)) {
+                continue;
+            }
 
-                if ($nonWorkByType || $nonWorkByFlag) {
-                    $nonWorking[$date] = true;
-                }
+            // тип дня
+            if (isset($dayObj['type'])) {
+                $type = strtolower($dayObj['type']);
+            } elseif (isset($dayObj['kind'])) {
+                $type = strtolower($dayObj['kind']);
+            } else {
+                $type = '';
+            }
+
+            // рабочий / нерабочий
+            if (isset($dayObj['isWorking'])) {
+                $isWorking = $dayObj['isWorking'];
+            } elseif (isset($dayObj['working'])) {
+                $isWorking = $dayObj['working'];
+            } else {
+                $isWorking = null;
+            }
+
+            // считаем нерабочим
+            if (
+                in_array($type, array('holiday','weekend','dayoff','nonworking','non-working'), true)
+                || ($isWorking === false)
+            ) {
+                $nonWorking[$date] = true;
             }
         }
     }
@@ -173,3 +191,5 @@ foreach (array_keys($nonWorking) as $dateStr) {
 }
 
 echo "Готово: импортировал нерабочих дней за $year: <b>$count</b><br>\n";
+
+?>
