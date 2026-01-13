@@ -29,6 +29,13 @@ function http_get_json($url) {
         CURLOPT_SSL_VERIFYHOST => 2,
         CURLOPT_HTTPHEADER => ['Accept: application/json'],
     ]);
+    //Временно отключаем SSL-проверку в cURL, чтобы не было такой ошибки
+    //Не удалось получить данные API.
+    // holidays: HTTP 0, cURL: SSL certificate problem, verify that the CA cert is OK. Details: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed, url=https://calendar.kuzyak.in/api/calendar/2026/holidays
+    // year: HTTP 0, cURL: SSL certificate problem, verify that the CA cert is OK. Details: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed, url=https://calendar.kuzyak.in/api/calendar/2026
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
     $body = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $err  = curl_error($ch);
